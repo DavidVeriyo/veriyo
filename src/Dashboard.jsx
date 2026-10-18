@@ -1,5 +1,20 @@
 import { useState, useRef } from "react";
 
+function VeriyoLogo({ size = 26 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="url(#vgd)"/>
+      <defs>
+        <linearGradient id="vgd" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#22a060"/>
+          <stop offset="100%" stopColor="#1a7a4a"/>
+        </linearGradient>
+      </defs>
+      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
 // ─── VERIYO COMPLIANCE DASHBOARD ─────────────────────────────────────────────
 // Full dashboard wrapped with a logout bar at the top
 
@@ -9,7 +24,7 @@ export default function Dashboard({ user, onLogout }) {
       {/* Top bar with logout */}
       <div style={barStyles.bar}>
         <div style={barStyles.left}>
-          <div style={barStyles.logo}>V</div>
+          <VeriyoLogo size={26} />
           <span style={barStyles.logoText}>Veriyo</span>
           <span style={barStyles.divider}>|</span>
           <span style={barStyles.userName}>
@@ -48,7 +63,7 @@ const barStyles = {
     width: "26px",
     height: "26px",
     borderRadius: "6px",
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     fontWeight: "800",
     fontSize: "13px",
@@ -98,10 +113,10 @@ const C = {
   green: "#1a7a4a", greenBg: "#e8f5ee", greenBorder: "#b8deca",
   amber: "#d97706", amberBg: "#fef3e2", amberBorder: "#fcd48a",
   red: "#dc2626", redBg: "#fef2f2", redBorder: "#fca5a5",
-  blue: "#2563eb", blueBg: "#eff6ff", blueBorder: "#bfdbfe",
+  blue: "#1a7a4a", blueBg: "#e8f5ee", blueBorder: "#b8deca",
   purple: "#7c3aed", purpleBg: "#f5f3ff", purpleBorder: "#ddd6fe",
   grey: "#64748b", greyBg: "#f8fafc", greyBorder: "#e2e8f0",
-  teal: "#0e7490", tealBg: "#ecfeff", tealBorder: "#a5f3fc",
+  teal: "#166840", tealBg: "#e8f5ee", tealBorder: "#b8deca",
 };
 
 const FACILITIES = [

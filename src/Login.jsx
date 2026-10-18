@@ -1,5 +1,20 @@
 import { useState } from "react";
 
+function VeriyoLogo({ size = 40 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="url(#vgl)"/>
+      <defs>
+        <linearGradient id="vgl" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#22a060"/>
+          <stop offset="100%" stopColor="#1a7a4a"/>
+        </linearGradient>
+      </defs>
+      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
 const DEMO_USERS = [
   { email: "david@veriyo.com.au", password: "veriyo2024", name: "David Truong", role: "Admin" },
   { email: "demo@hammondcare.com.au", password: "demo123", name: "HammondCare Demo", role: "HR Manager" },
@@ -35,7 +50,7 @@ export default function Login({ onLogin, onBack }) {
       <div style={styles.card}>
         {/* Logo */}
         <div style={styles.logoRow}>
-          <div style={styles.logoMark}>V</div>
+          <VeriyoLogo size={40} />
           <span style={styles.logoText}>Veriyo</span>
         </div>
 
@@ -115,7 +130,7 @@ const styles = {
     width: "36px",
     height: "36px",
     borderRadius: "8px",
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     fontWeight: "800",
     fontSize: "18px",
@@ -176,7 +191,7 @@ const styles = {
     color: "#dc2626",
   },
   btn: {
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     border: "none",
     borderRadius: "10px",
@@ -191,11 +206,11 @@ const styles = {
   demoHint: {
     marginTop: "20px",
     padding: "10px 14px",
-    background: "#f0f9ff",
-    border: "1px solid #bae6fd",
+    background: "#f0f8f4",
+    border: "1px solid #b8deca",
     borderRadius: "8px",
     fontSize: "13px",
-    color: "#0369a1",
+    color: "#1a7a4a",
     textAlign: "center",
   },
   demoLabel: {

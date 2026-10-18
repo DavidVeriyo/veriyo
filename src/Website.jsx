@@ -1,5 +1,22 @@
 import { useState } from "react";
 
+function VeriyoLogo({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="url(#vg)"/>
+      <defs>
+        <linearGradient id="vg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#22a060"/>
+          <stop offset="100%" stopColor="#1a7a4a"/>
+        </linearGradient>
+      </defs>
+      {/* V checkmark shield shape */}
+      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <circle cx="28" cy="13" r="0" fill="white"/>
+    </svg>
+  );
+}
+
 export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
@@ -16,7 +33,7 @@ export default function Website({ onLogin }) {
       <nav style={styles.nav}>
         <div style={styles.navInner}>
           <div style={styles.logoRow}>
-            <div style={styles.logoMark}>V</div>
+            <VeriyoLogo size={32} />
             <span style={styles.logoText}>Veriyo</span>
           </div>
           <div style={styles.navLinks}>
@@ -140,7 +157,7 @@ export default function Website({ onLogin }) {
                 {[
                   { name: "Sarah Chen", role: "Support Worker", status: "Complete", pct: 100, color: "#22c55e" },
                   { name: "James O'Brien", role: "Registered Nurse", status: "2 pending", pct: 75, color: "#f59e0b" },
-                  { name: "Amara Diallo", role: "Personal Carer", status: "In progress", pct: 45, color: "#3b82f6" },
+                  { name: "Amara Diallo", role: "Personal Carer", status: "In progress", pct: 45, color: "#22a060" },
                   { name: "Michael Tran", role: "Team Leader", status: "Not started", pct: 10, color: "#ef4444" },
                 ].map((r, i) => (
                   <div key={i} style={styles.mockRow}>
@@ -162,9 +179,9 @@ export default function Website({ onLogin }) {
           </div>
 
           {/* Veriyo Connect */}
-          <div style={{ ...styles.productCard, flexDirection: "row-reverse", background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)" }}>
+          <div style={{ ...styles.productCard, flexDirection: "row-reverse", background: "linear-gradient(135deg, #f0f8f4 0%, #d4ede1 100%)" }}>
             <div style={styles.productLeft}>
-              <div style={{ ...styles.productBadge, background: "linear-gradient(135deg, #0891b2, #0e7490)" }}>Veriyo Connect</div>
+              <div style={{ ...styles.productBadge, background: "linear-gradient(135deg, #1a7a4a, #166840)" }}>Veriyo Connect</div>
               <h3 style={styles.productH3}>Pre-verified talent, ready to work</h3>
               <p style={styles.productDesc}>
                 Connect links compliant workers directly with organisations that need them. Every worker
@@ -182,17 +199,17 @@ export default function Website({ onLogin }) {
                   "Workforce pipeline for growing providers",
                 ].map((f, i) => (
                   <div key={i} style={styles.featureItem}>
-                    <span style={{ ...styles.featureTick, color: "#0891b2" }}>✓</span>
+                    <span style={{ ...styles.featureTick, color: "#1a7a4a" }}>✓</span>
                     <span>{f}</span>
                   </div>
                 ))}
               </div>
             </div>
             <div style={styles.productRight}>
-              <div style={{ ...styles.mockDashboard, borderColor: "#bae6fd" }}>
+              <div style={{ ...styles.mockDashboard, borderColor: "#b8deca" }}>
                 <div style={styles.mockHeader}>
                   <span style={styles.mockTitle}>Veriyo Connect</span>
-                  <span style={{ ...styles.mockBadgeGreen, background: "#0891b2" }}>Active</span>
+                  <span style={{ ...styles.mockBadgeGreen, background: "#1a7a4a" }}>Active</span>
                 </div>
                 {[
                   { name: "Priya Sharma", role: "NDIS Support Worker", badge: "Passport ✓", avail: "Available now" },
@@ -201,13 +218,13 @@ export default function Website({ onLogin }) {
                   { name: "David Osei", role: "Registered Nurse", badge: "Passport ✓", avail: "Available Tue" },
                 ].map((r, i) => (
                   <div key={i} style={styles.mockRow}>
-                    <div style={{ ...styles.mockAvatar, background: "#0891b2" }}>{r.name[0]}</div>
+                    <div style={{ ...styles.mockAvatar, background: "#1a7a4a" }}>{r.name[0]}</div>
                     <div style={styles.mockInfo}>
                       <div style={styles.mockName}>{r.name}</div>
                       <div style={styles.mockRole}>{r.role}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: "11px", color: "#0891b2", fontWeight: "600" }}>{r.badge}</div>
+                      <div style={{ fontSize: "11px", color: "#1a7a4a", fontWeight: "600" }}>{r.badge}</div>
                       <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>{r.avail}</div>
                     </div>
                   </div>
@@ -321,7 +338,7 @@ export default function Website({ onLogin }) {
         <div style={styles.footerInner}>
           <div style={styles.footerLeft}>
             <div style={styles.logoRow}>
-              <div style={{ ...styles.logoMark, width: "28px", height: "28px", fontSize: "14px" }}>V</div>
+              <VeriyoLogo size={28} />
               <span style={{ ...styles.logoText, fontSize: "18px", color: "#fff" }}>Veriyo</span>
             </div>
             <p style={styles.footerTagline}>
@@ -380,7 +397,7 @@ const styles = {
     width: "32px",
     height: "32px",
     borderRadius: "7px",
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     fontWeight: "800",
     fontSize: "16px",
@@ -425,7 +442,7 @@ const styles = {
     fontFamily: "inherit",
   },
   demoNavBtn: {
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     borderRadius: "8px",
     padding: "9px 18px",
@@ -452,7 +469,7 @@ const styles = {
     borderRadius: "20px",
     padding: "6px 16px",
     fontSize: "13px",
-    color: "#93c5fd",
+    color: "#6ecf9a",
     fontWeight: "600",
     marginBottom: "28px",
     letterSpacing: "0.3px",
@@ -466,7 +483,7 @@ const styles = {
     letterSpacing: "-1.5px",
   },
   heroAccent: {
-    background: "linear-gradient(135deg, #3b82f6, #60a5fa)",
+    background: "linear-gradient(135deg, #22a060, #34d17a)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     backgroundClip: "text",
@@ -488,7 +505,7 @@ const styles = {
     marginBottom: "60px",
   },
   heroPrimary: {
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     padding: "16px 32px",
     borderRadius: "12px",
@@ -524,7 +541,7 @@ const styles = {
   heroStatNum: {
     fontSize: "28px",
     fontWeight: "800",
-    color: "#3b82f6",
+    color: "#22a060",
     letterSpacing: "-1px",
   },
   heroStatLabel: {
@@ -548,8 +565,8 @@ const styles = {
   },
   sectionBadge: {
     display: "inline-block",
-    background: "#eff6ff",
-    color: "#2563eb",
+    background: "#e8f5ee",
+    color: "#1a7a4a",
     fontSize: "12px",
     fontWeight: "700",
     letterSpacing: "1px",
@@ -627,11 +644,11 @@ const styles = {
     display: "flex",
     gap: "64px",
     alignItems: "center",
-    background: "linear-gradient(135deg, #f8faff 0%, #eff6ff 100%)",
+    background: "linear-gradient(135deg, #f8faff 0%, #e8f5ee 100%)",
     borderRadius: "24px",
     padding: "56px 48px",
     marginBottom: "32px",
-    border: "1px solid #dbeafe",
+    border: "1px solid #b8deca",
     flexWrap: "wrap",
   },
   productLeft: {
@@ -639,7 +656,7 @@ const styles = {
   },
   productBadge: {
     display: "inline-block",
-    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    background: "linear-gradient(135deg, #1a7a4a, #166840)",
     color: "#fff",
     fontSize: "13px",
     fontWeight: "700",
@@ -674,7 +691,7 @@ const styles = {
     alignItems: "flex-start",
   },
   featureTick: {
-    color: "#2563eb",
+    color: "#1a7a4a",
     fontWeight: "700",
     flexShrink: 0,
     fontSize: "16px",
@@ -685,7 +702,7 @@ const styles = {
   mockDashboard: {
     background: "#fff",
     borderRadius: "16px",
-    border: "1.5px solid #dbeafe",
+    border: "1.5px solid #b8deca",
     padding: "20px",
     boxShadow: "0 8px 32px rgba(37,99,235,0.1)",
   },
@@ -723,7 +740,7 @@ const styles = {
     width: "32px",
     height: "32px",
     borderRadius: "50%",
-    background: "#2563eb",
+    background: "#1a7a4a",
     color: "#fff",
     fontWeight: "700",
     fontSize: "13px",
@@ -794,7 +811,7 @@ const styles = {
   stepNum: {
     fontSize: "36px",
     fontWeight: "900",
-    color: "#2563eb",
+    color: "#1a7a4a",
     lineHeight: 1,
     marginBottom: "16px",
     letterSpacing: "-1px",
@@ -851,19 +868,19 @@ const styles = {
     gap: "8px",
   },
   tag: {
-    background: "#eff6ff",
-    color: "#2563eb",
+    background: "#e8f5ee",
+    color: "#1a7a4a",
     fontSize: "12px",
     fontWeight: "600",
     padding: "4px 10px",
     borderRadius: "20px",
-    border: "1px solid #dbeafe",
+    border: "1px solid #b8deca",
   },
 
   // DEMO CTA
   demoSection: {
     padding: "100px 24px",
-    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+    background: "linear-gradient(135deg, #1a7a4a 0%, #166840 100%)",
     textAlign: "center",
   },
   demoInner: {
@@ -903,7 +920,7 @@ const styles = {
   },
   demoBtn: {
     background: "#fff",
-    color: "#2563eb",
+    color: "#1a7a4a",
     border: "none",
     borderRadius: "10px",
     padding: "14px 24px",
