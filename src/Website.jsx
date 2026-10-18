@@ -408,9 +408,9 @@ export default function Website({ onLogin }) {
       <section id="products" style={s.productsSection}>
         <div style={s.container}>
           <div style={s.eyebrow}>Our Products</div>
-          <h2 style={s.sectionH2}>Two products. One compliance engine.</h2>
+          <h2 style={s.sectionH2}>Three products. One compliance engine.</h2>
           <p style={s.sectionSub}>
-            Veriyo covers the full compliance lifecycle — from the moment a candidate applies to the moment they're on shift.
+            Veriyo covers the full compliance lifecycle — employees, contractors, and pre-verified talent — so nothing falls through the gaps.
           </p>
 
           {/* Veriyo Onboard */}
@@ -467,6 +467,68 @@ export default function Website({ onLogin }) {
                 ))}
               </div>
               <a href="#demo" style={s.productCta}>Learn more →</a>
+            </div>
+          </div>
+
+          {/* Veriyo Verify */}
+          <div style={{ ...s.productCard, flexDirection: "row-reverse" }}>
+            <div style={s.productPhoto}>
+              <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80"
+                alt="Contractor being checked in at a care facility"
+                style={s.productImg}
+              />
+              <div style={{ ...s.productImgOverlay, background: "linear-gradient(135deg, rgba(15,23,42,0.75), rgba(245,158,11,0.55))" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+                  <div style={{ ...s.productImgBadge, background: "rgba(245,158,11,0.25)", border: "1px solid rgba(245,158,11,0.4)" }}>Veriyo Verify</div>
+                  {/* Contractor check-in card */}
+                  <div style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(255,255,255,0.2)" }}>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>Contractor Check-in</div>
+                    {[
+                      { name: "Metro Cleaning Co.", type: "Facility Contractor", status: "Verified", color: "#4ade80" },
+                      { name: "Allied Health Locums", type: "Agency · 3 staff", status: "2 pending", color: "#fbbf24" },
+                      { name: "MedEquip Services", type: "Maintenance", status: "Verified", color: "#4ade80" },
+                    ].map((c, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, paddingBottom: 6, borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+                        <div>
+                          <div style={{ fontSize: 11, color: "#fff", fontWeight: 600 }}>{c.name}</div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>{c.type}</div>
+                        </div>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: c.color, background: `${c.color}22`, border: `1px solid ${c.color}44`, borderRadius: 20, padding: "2px 8px" }}>{c.status}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={s.productContent}>
+              <div style={{ ...s.productTag, background: "#fef3c7", color: "#92400e" }}>Veriyo Verify</div>
+              <h3 style={s.productH3}>Every contractor. Every visit. Compliant.</h3>
+              <p style={s.productDesc}>
+                Contractors, agency staff, locums, and allied health professionals walk through your doors every day.
+                Veriyo Verify ensures every single one is screened, credentialled, and cleared before they set foot
+                on site — closing the compliance gap that agencies and providers both assume someone else is covering.
+              </p>
+              <div style={s.featureList}>
+                {[
+                  "Contractor & agency staff compliance tracking",
+                  "One-time verification, reusable across sites",
+                  "Cleaning, maintenance, allied health & locum staff",
+                  "Site-specific induction and clearance records",
+                  "Instant check-in status for facility managers",
+                  "Expired credential alerts before each visit",
+                  "Full audit trail — who was on site, when, verified",
+                ].map((f, i) => (
+                  <div key={i} style={s.featureItem}>
+                    <span style={{ ...s.featureTick, color: "#d97706" }}>✓</span>
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "#92400e", lineHeight: 1.5 }}>
+                <strong>The gap nobody talks about:</strong> Most providers assume the agency checked their contractors. Most agencies assume the provider will. Veriyo Verify closes it.
+              </div>
+              <a href="#demo" style={{ ...s.productCta, color: "#d97706" }}>Learn more →</a>
             </div>
           </div>
 
@@ -688,6 +750,7 @@ export default function Website({ onLogin }) {
             <div style={s.footerLinkCol}>
               <div style={s.footerLinkHead}>Products</div>
               <a href="#products" style={s.footerLink}>Veriyo Onboard</a>
+              <a href="#products" style={s.footerLink}>Veriyo Verify</a>
               <a href="#products" style={s.footerLink}>Veriyo Connect</a>
             </div>
             <div style={s.footerLinkCol}>
