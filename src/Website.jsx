@@ -408,9 +408,9 @@ export default function Website({ onLogin }) {
       <section id="products" style={s.productsSection}>
         <div style={s.container}>
           <div style={s.eyebrow}>Our Products</div>
-          <h2 style={s.sectionH2}>Three products. One compliance engine.</h2>
+          <h2 style={s.sectionH2}>Two products. One compliance engine.</h2>
           <p style={s.sectionSub}>
-            Veriyo covers the full compliance lifecycle — employees, contractors, and pre-verified talent — so nothing falls through the gaps.
+            Veriyo covers the full compliance lifecycle — from the moment a candidate applies to the moment they're on site — so nothing falls through the gaps.
           </p>
 
           {/* Veriyo Onboard */}
@@ -532,61 +532,6 @@ export default function Website({ onLogin }) {
             </div>
           </div>
 
-          {/* Veriyo Connect */}
-          <div style={{ ...s.productCard, flexDirection: "row-reverse" }}>
-            <div style={s.productPhoto}>
-              <img
-                src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&q=80"
-                alt="Support worker in uniform smiling confidently"
-                style={s.productImg}
-              />
-              <div style={{ ...s.productImgOverlay, background: "linear-gradient(135deg, rgba(15,23,42,0.72), rgba(26,122,74,0.65))" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
-                  <div style={s.productImgBadge}>Veriyo Connect</div>
-                  {/* Veriyo Passport card */}
-                  <div style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(255,255,255,0.2)" }}>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>Veriyo Passport</div>
-                    <div style={{ fontSize: 13, color: "#fff", fontWeight: 700, marginBottom: 2 }}>Sarah Chen</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", marginBottom: 10 }}>Support Worker · NDIS Registered</div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      {["NDIS ✓", "WWCC ✓", "Police ✓", "First Aid ✓"].map((tag, i) => (
-                        <span key={i} style={{ background: "rgba(34,197,94,0.25)", border: "1px solid rgba(34,197,94,0.5)", borderRadius: 20, padding: "3px 8px", fontSize: 10, color: "#86efac", fontWeight: 700 }}>{tag}</span>
-                      ))}
-                    </div>
-                    <div style={{ marginTop: 10, background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.4)", borderRadius: 6, padding: "5px 10px", display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 10, color: "#4ade80", fontWeight: 700 }}>● FULLY VERIFIED · Ready to place</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style={s.productContent}>
-              <div style={{ ...s.productTag, background: "#e8f5ee", color: "#1a7a4a" }}>Veriyo Connect</div>
-              <h3 style={s.productH3}>Pre-verified talent, ready to work</h3>
-              <p style={s.productDesc}>
-                Connect links compliant workers directly with organisations that need them. Every worker
-                on the platform has a verified Veriyo Passport — a live profile showing their complete
-                compliance status, ready to share with any participating employer.
-              </p>
-              <div style={s.featureList}>
-                {[
-                  "Pre-verified worker profiles (Veriyo Passport)",
-                  "Instant compliance status visibility",
-                  "NDIS registration support (July 2027 deadline ready)",
-                  "Aged care, NDIS, and early learning talent pools",
-                  "No double-checking — compliance already done",
-                  "Direct employer-to-worker connection",
-                  "Workforce pipeline for growing providers",
-                ].map((f, i) => (
-                  <div key={i} style={s.featureItem}>
-                    <span style={s.featureTick}>✓</span>
-                    <span>{f}</span>
-                  </div>
-                ))}
-              </div>
-              <a href="#demo" style={s.productCta}>Learn more →</a>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -751,7 +696,6 @@ export default function Website({ onLogin }) {
               <div style={s.footerLinkHead}>Products</div>
               <a href="#products" style={s.footerLink}>Veriyo Onboard</a>
               <a href="#products" style={s.footerLink}>Veriyo Verify</a>
-              <a href="#products" style={s.footerLink}>Veriyo Connect</a>
             </div>
             <div style={s.footerLinkCol}>
               <div style={s.footerLinkHead}>Sectors</div>
