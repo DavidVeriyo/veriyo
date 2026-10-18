@@ -296,13 +296,13 @@ function AddWorkerModal({ onClose, onAdd }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 500, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
       <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 520, maxHeight: "92vh", overflowY: "auto", boxShadow: "0 -8px 40px rgba(0,0,0,0.18)" }}>
         <div style={{ padding: "20px 24px 16px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>Add New Worker</div>
+          <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>Add New Candidate</div>
           <button onClick={onClose} style={{ background: C.greyBg, border: "none", borderRadius: 8, width: 34, height: 34, cursor: "pointer", fontSize: 20, color: C.textMid, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
         </div>
         {saved ? (
           <div style={{ padding: "48px 24px", textAlign: "center" }}>
             <div style={{ fontSize: 48, marginBottom: 14 }}>✅</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: C.green }}>Worker added!</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: C.green }}>Candidate added!</div>
             <div style={{ fontSize: 13, color: C.textMuted, marginTop: 6 }}>Compliance checklist created automatically.</div>
           </div>
         ) : (
@@ -341,7 +341,7 @@ function AddWorkerModal({ onClose, onAdd }) {
             </div>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 4 }}>
               <button type="button" onClick={onClose} style={{ padding: "10px 20px", borderRadius: 8, border: `1.5px solid ${C.border}`, background: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", color: C.textMid }}>Cancel</button>
-              <button type="submit" style={{ padding: "10px 28px", borderRadius: 8, border: "none", background: C.primary, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Add Worker</button>
+              <button type="submit" style={{ padding: "10px 28px", borderRadius: 8, border: "none", background: C.primary, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Add Candidate</button>
             </div>
           </form>
         )}
@@ -373,7 +373,7 @@ function OverviewTab({ stats, workers }) {
           <TrendChart />
         </div>
         <div style={card}>
-          <div style={cardTitle}><span>Worker Status Breakdown</span></div>
+          <div style={cardTitle}><span>Candidate Status Breakdown</span></div>
           <StatusDonut stats={stats} />
           <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.borderLight}` }}>
             <div style={{ fontSize: 11, color: C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10 }}>By Sector</div>
@@ -399,7 +399,7 @@ function OverviewTab({ stats, workers }) {
         <div style={card}>
           <div style={cardTitle}><span>⚠️ Needs Attention</span></div>
           {needsAttention.length === 0 ? (
-            <div style={{ fontSize: 13, color: C.textMuted, padding: "12px 0" }}>All workers are compliant — great work!</div>
+            <div style={{ fontSize: 13, color: C.textMuted, padding: "12px 0" }}>All candidates are compliant — great work!</div>
           ) : needsAttention.map(w => (
             <div key={w.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${C.borderLight}` }}>
               <div style={{ width: 36, height: 36, borderRadius: "50%", background: workerStatusMeta[w.status].bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -680,13 +680,13 @@ function VeriyoDashboard({ user }) {
                 {greeting}, {firstName} 👋
               </div>
               <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
-                {FACILITIES.length} facilities · {allWorkers.length} workers tracked
+                {FACILITIES.length} facilities · {allWorkers.length} candidates tracked
               </div>
             </div>
             {/* tabs + add */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div className="dash-tabs">
-                {["overview","workers","documents"].map(t => (
+                {["overview","candidates","documents"].map(t => (
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
@@ -711,7 +711,7 @@ function VeriyoDashboard({ user }) {
                   cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
                 }}
               >
-                + Add Worker
+                + Add Candidate
               </button>
             </div>
           </div>
@@ -737,21 +737,21 @@ function VeriyoDashboard({ user }) {
           {activeTab === "overview" && (
             <>
               <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Workers"   color={C.primary} bg={C.primaryXLight} onClick={() => { setFilterStatus("all");        setActiveTab("workers"); }} active={false} />
-                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => { setFilterStatus("compliant");   setActiveTab("workers"); }} active={false} />
-                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => { setFilterStatus("inprogress");  setActiveTab("workers"); }} active={false} />
-                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => { setFilterStatus("attention");   setActiveTab("workers"); }} active={false} />
-                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => { setFilterStatus("risk");        setActiveTab("workers"); }} active={false} />
+                <StatCard num={stats.total}     label="Total Candidates"   color={C.primary} bg={C.primaryXLight} onClick={() => { setFilterStatus("all");        setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => { setFilterStatus("compliant");   setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => { setFilterStatus("inprogress");  setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => { setFilterStatus("attention");   setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => { setFilterStatus("risk");        setActiveTab("candidates"); }} active={false} />
               </div>
               <OverviewTab stats={stats} workers={allWorkers} />
             </>
           )}
 
           {/* ── WORKERS TAB ── */}
-          {activeTab === "workers" && (
+          {activeTab === "candidates" && (
             <>
               <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Workers"   color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStatus("all")}        active={filterStatus === "all"} />
+                <StatCard num={stats.total}     label="Total Candidates"   color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStatus("all")}        active={filterStatus === "all"} />
                 <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => setFilterStatus(s => s === "compliant"  ? "all" : "compliant")}  active={filterStatus === "compliant"} />
                 <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => setFilterStatus(s => s === "inprogress" ? "all" : "inprogress")} active={filterStatus === "inprogress"} />
                 <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStatus(s => s === "attention"  ? "all" : "attention")}  active={filterStatus === "attention"} />
@@ -762,7 +762,7 @@ function VeriyoDashboard({ user }) {
               <div className="dash-filters">
                 <input
                   style={{ flex: "1 1 180px", padding: "9px 14px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: C.text, background: C.white, outline: "none" }}
-                  placeholder="🔍  Search workers…"
+                  placeholder="🔍  Search candidates…"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                 />
@@ -797,7 +797,7 @@ function VeriyoDashboard({ user }) {
                 <table style={{ width: "100%", borderCollapse: "collapse", background: C.white, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` }}>
                   <thead>
                     <tr>
-                      {["Worker","Facility","Sector","Compliance","Status"].map(h => (
+                      {["Candidate","Facility","Sector","Compliance","Status"].map(h => (
                         <th key={h} style={{ padding: "10px 14px", fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", textAlign: "left", background: "#f4f8f6", borderBottom: `1px solid ${C.border}` }}>{h}</th>
                       ))}
                     </tr>
@@ -838,7 +838,7 @@ function VeriyoDashboard({ user }) {
                   </tbody>
                 </table>
                 {filtered.length === 0 && (
-                  <div style={{ textAlign: "center", padding: "60px 20px", color: C.textMuted, fontSize: 14 }}>No workers match your filters.</div>
+                  <div style={{ textAlign: "center", padding: "60px 20px", color: C.textMuted, fontSize: 14 }}>No candidates match your filters.</div>
                 )}
               </div>
             </>
