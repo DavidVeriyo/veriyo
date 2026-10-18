@@ -1,6 +1,65 @@
 import { useState } from "react";
 import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
+function NDISIllustration() {
+  return (
+    <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #e8f5ee 0%, #d1edd9 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+      <svg viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 300 }}>
+        {/* Background circles */}
+        <circle cx="160" cy="100" r="90" fill="#c8e6d0" opacity="0.4" />
+        <circle cx="160" cy="100" r="65" fill="#b8deca" opacity="0.4" />
+
+        {/* Wheelchair */}
+        <circle cx="118" cy="155" r="16" stroke="#1a7a4a" strokeWidth="3" fill="none" />
+        <circle cx="118" cy="155" r="4" fill="#1a7a4a" />
+        <circle cx="152" cy="155" r="10" stroke="#1a7a4a" strokeWidth="3" fill="none" />
+        <circle cx="152" cy="155" r="3" fill="#1a7a4a" />
+        {/* Wheelchair frame */}
+        <path d="M118 139 L118 115 L138 115 L152 139 L118 139Z" stroke="#1a7a4a" strokeWidth="2.5" fill="#e8f5ee" strokeLinejoin="round" />
+        <line x1="118" y1="139" x2="152" y2="139" stroke="#1a7a4a" strokeWidth="2.5" />
+        <path d="M125 115 L130 100" stroke="#1a7a4a" strokeWidth="2.5" strokeLinecap="round" />
+
+        {/* Person in wheelchair - body */}
+        <circle cx="130" cy="92" r="10" fill="#f4a261" /> {/* head */}
+        <path d="M120 105 Q130 110 140 105 L142 130 L118 130Z" fill="#4a90d9" /> {/* torso */}
+        <path d="M125 130 L122 145" stroke="#4a90d9" strokeWidth="3" strokeLinecap="round" /> {/* legs */}
+        <path d="M135 130 L138 145" stroke="#4a90d9" strokeWidth="3" strokeLinecap="round" />
+        {/* arm reaching out */}
+        <path d="M140 112 L158 118" stroke="#f4a261" strokeWidth="3" strokeLinecap="round" />
+
+        {/* Support worker */}
+        <circle cx="185" cy="88" r="12" fill="#f4a261" /> {/* head */}
+        <path d="M173 102 Q185 108 197 102 L200 145 L170 145Z" fill="#1a7a4a" /> {/* torso - green uniform */}
+        <path d="M176 145 L174 160" stroke="#555" strokeWidth="3" strokeLinecap="round" />
+        <path d="M194 145 L196 160" stroke="#555" strokeWidth="3" strokeLinecap="round" />
+        {/* support worker arm reaching to person */}
+        <path d="M173 110 L158 118" stroke="#f4a261" strokeWidth="3" strokeLinecap="round" />
+        {/* hands clasped */}
+        <circle cx="158" cy="119" r="5" fill="#f4a261" />
+
+        {/* Clipboard in other hand */}
+        <rect x="196" y="100" width="20" height="26" rx="2" fill="#fff" stroke="#1a7a4a" strokeWidth="1.5" />
+        <line x1="200" y1="107" x2="212" y2="107" stroke="#1a7a4a" strokeWidth="1.5" />
+        <line x1="200" y1="112" x2="212" y2="112" stroke="#1a7a4a" strokeWidth="1.5" />
+        <line x1="200" y1="117" x2="208" y2="117" stroke="#22c55e" strokeWidth="2" />
+        <path d="M200 122 L203 125 L208 119" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Shield / compliance badge */}
+        <path d="M75 60 L75 80 Q75 90 85 95 Q95 90 95 80 L95 60 L85 57Z" fill="#1a7a4a" opacity="0.9" />
+        <path d="M80 75 L83 79 L91 70" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Stars / sparkles */}
+        <path d="M230 55 L232 60 L237 60 L233 63 L235 68 L230 65 L225 68 L227 63 L223 60 L228 60Z" fill="#22c55e" opacity="0.7" />
+        <path d="M85 35 L86 38 L89 38 L87 40 L88 43 L85 41 L82 43 L83 40 L81 38 L84 38Z" fill="#1a7a4a" opacity="0.5" />
+
+        {/* Label */}
+        <rect x="95" y="168" width="130" height="22" rx="11" fill="#1a7a4a" />
+        <text x="160" y="183" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="700" fontFamily="system-ui, sans-serif">NDIS Compliant Worker</text>
+      </svg>
+    </div>
+  );
+}
+
 export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
   const [demoName, setDemoName] = useState("");
@@ -307,20 +366,21 @@ export default function Website({ onLogin }) {
           <div style={s.sectorsGrid}>
             {[
               {
-                photo: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&q=80",
-                alt: "Carer sitting with elderly person",
+                visual: "photo",
+                photo: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=500&q=80",
+                alt: "Aged care worker with elderly resident",
                 title: "Aged Care",
                 desc: "NDIS Worker Screening, police checks, aged care-specific qualifications, and award classification tracking for residential and community aged care providers.",
                 tags: ["NDIS Screening", "Police Check", "Aged Care Cert III/IV", "Award Classification"],
               },
               {
-                photo: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=500&q=80",
-                alt: "Support worker assisting person with disability",
+                visual: "illustration",
                 title: "NDIS",
                 desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, and worker registration support ahead of the July 2027 independent registration deadline.",
                 tags: ["Worker Screening", "Banning Order Check", "Participant Safety", "2027 Registration"],
               },
               {
+                visual: "photo",
                 photo: "https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=500&q=80",
                 alt: "Early childhood educator playing with toddlers",
                 title: "Early Learning",
@@ -330,7 +390,10 @@ export default function Website({ onLogin }) {
             ].map((sector, i) => (
               <div key={i} style={s.sectorCard}>
                 <div style={s.sectorPhotoWrap}>
-                  <img src={sector.photo} alt={sector.alt} style={s.sectorPhoto} />
+                  {sector.visual === "illustration"
+                    ? <NDISIllustration />
+                    : <img src={sector.photo} alt={sector.alt} style={s.sectorPhoto} />
+                  }
                 </div>
                 <div style={s.sectorBody}>
                   <h3 style={s.sectorTitle}>{sector.title}</h3>
