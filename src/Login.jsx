@@ -74,10 +74,6 @@ export default function Login({ onLogin, onBack }) {
           </button>
         </form>
 
-        <div style={styles.demoHint}>
-          <span style={styles.demoLabel}>Demo access:</span> demo@veriyo.com.au / demo123
-        </div>
-
         <button onClick={onBack} style={styles.back}>
           ← Back to website
         </button>
