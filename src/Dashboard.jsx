@@ -151,14 +151,26 @@ function ProgressBar({ pct, status }) {
   );
 }
 
-function StatCard({ num, label, color, bg, border }) {
+function StatCard({ num, label, color, bg, border, onClick, active }) {
   return (
-    <div style={{
-      background: bg, border: `1px solid ${border || color + "30"}`, borderRadius: 14,
-      padding: "18px 20px", display: "flex", flexDirection: "column", gap: 6, minWidth: 0,
-    }}>
-      <div style={{ fontSize: 34, fontWeight: 900, color, lineHeight: 1, letterSpacing: "-1.5px" }}>{num}</div>
-      <div style={{ fontSize: 11, color: C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</div>
+    <div
+      onClick={onClick}
+      style={{
+        background: active ? color : bg,
+        border: `2px solid ${active ? color : (border || color + "30")}`,
+        borderRadius: 14, padding: "18px 20px",
+        display: "flex", flexDirection: "column", gap: 6, minWidth: 0,
+        cursor: onClick ? "pointer" : "default",
+        transition: "all 0.15s",
+        boxShadow: active ? `0 4px 16px ${color}40` : "none",
+      }}
+      onMouseEnter={e => { if (onClick && !active) e.currentTarget.style.boxShadow = `0 2px 10px ${color}30`; }}
+      onMouseLeave={e => { if (!active) e.currentTarget.style.boxShadow = "none"; }}
+    >
+      <div style={{ fontSize: 34, fontWeight: 900, color: active ? "#fff" : color, lineHeight: 1, letterSpacing: "-1.5px" }}>{num}</div>
+      <div style={{ fontSize: 11, color: active ? "rgba(255,255,255,0.85)" : C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+        {label}{active ? " ✕" : ""}
+      </div>
     </div>
   );
 }
@@ -725,11 +737,11 @@ function VeriyoDashboard({ user }) {
           {activeTab === "overview" && (
             <>
               <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Workers"    color={C.primary} bg={C.primaryXLight} />
-                <StatCard num={stats.compliant}  label="Fully Compliant"  color={C.green}   bg={C.greenBg}       />
-                <StatCard num={stats.inprogress} label="In Progress"      color={C.blue}    bg={C.blueBg}        />
-                <StatCard num={stats.attention}  label="Need Attention"   color={C.amber}   bg={C.amberBg}       />
-                <StatCard num={stats.risk}       label="At Risk"          color={C.red}     bg={C.redBg}         />
+                <StatCard num={stats.total}     label="Total Workers"   color={C.primary} bg={C.primaryXLight} onClick={() => { setFilterStatus("all");        setActiveTab("workers"); }} active={false} />
+                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => { setFilterStatus("compliant");   setActiveTab("workers"); }} active={false} />
+                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => { setFilterStatus("inprogress");  setActiveTab("workers"); }} active={false} />
+                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => { setFilterStatus("attention");   setActiveTab("workers"); }} active={false} />
+                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => { setFilterStatus("risk");        setActiveTab("workers"); }} active={false} />
               </div>
               <OverviewTab stats={stats} workers={allWorkers} />
             </>
@@ -739,11 +751,11 @@ function VeriyoDashboard({ user }) {
           {activeTab === "workers" && (
             <>
               <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Workers"    color={C.primary} bg={C.primaryXLight} />
-                <StatCard num={stats.compliant}  label="Fully Compliant"  color={C.green}   bg={C.greenBg}       />
-                <StatCard num={stats.inprogress} label="In Progress"      color={C.blue}    bg={C.blueBg}        />
-                <StatCard num={stats.attention}  label="Need Attention"   color={C.amber}   bg={C.amberBg}       />
-                <StatCard num={stats.risk}       label="At Risk"          color={C.red}     bg={C.redBg}         />
+                <StatCard num={stats.total}     label="Total Workers"   color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStatus("all")}        active={filterStatus === "all"} />
+                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => setFilterStatus(s => s === "compliant"  ? "all" : "compliant")}  active={filterStatus === "compliant"} />
+                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => setFilterStatus(s => s === "inprogress" ? "all" : "inprogress")} active={filterStatus === "inprogress"} />
+                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStatus(s => s === "attention"  ? "all" : "attention")}  active={filterStatus === "attention"} />
+                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => setFilterStatus(s => s === "risk"       ? "all" : "risk")}       active={filterStatus === "risk"} />
               </div>
 
               {/* filters */}
