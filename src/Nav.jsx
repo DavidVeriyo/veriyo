@@ -1,8 +1,7 @@
 // ─── Veriyo shared top navigation ────────────────────────────────────────────
 
-// Hexagon icon with white checkmark — matches the official Veriyo brand logo
+// Hexagon icon only (used standalone in tight spaces)
 export function VeriyoIcon({ size = 32 }) {
-  // Regular hexagon: flat-top orientation, centred in viewBox 0 0 100 100
   const cx = 50, cy = 50, r = 46;
   const pts = Array.from({ length: 6 }, (_, i) => {
     const a = (Math.PI / 180) * (60 * i - 30);
@@ -10,45 +9,73 @@ export function VeriyoIcon({ size = 32 }) {
   }).join(" ");
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
-      <polygon points={pts} fill="url(#hexgrad)" />
       <defs>
         <linearGradient id="hexgrad" x1="20" y1="10" x2="80" y2="90" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#34c274" />
           <stop offset="100%" stopColor="#1a7a4a" />
         </linearGradient>
       </defs>
-      {/* Bold white checkmark */}
-      <path d="M30 52 L43 65 L70 36" stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <polygon points={pts} fill="url(#hexgrad)" />
+      <path d="M29 52 L43 66 L71 35" stroke="white" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   );
 }
 
-// Full wordmark: hexagon icon + "veriyo" text + green dot on the "o"
-export function VeriyoLogo({ size = 28 }) {
-  return <VeriyoIcon size={size} />;
+/**
+ * Full brand lockup as a single SVG — hexagon + "veriyo" wordmark + green dot
+ * The dot sits flush on the top-right of the "o", exactly like the brand logo.
+ *
+ * height prop scales the whole lockup. Default 36 ≈ nav bar size.
+ * darkText=false renders the wordmark white (for dark backgrounds).
+ */
+export function VeriyoLogo({ height = 36, darkText = false }) {
+  // ViewBox: 340 wide × 100 tall. Hexagon occupies left ~100px, text right of it.
+  const textColor = darkText ? "#1a2e24" : "#ffffff";
+  // Hexagon points (same proportions as VeriyoIcon, scaled to 86×100 within the 340×100 box)
+  const hx = 43, hy = 50, hr = 42;
+  const hpts = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 180) * (60 * i - 30);
+    return `${hx + hr * Math.cos(a)},${hy + hr * Math.sin(a)}`;
+  }).join(" ");
+
+  return (
+    <svg
+      viewBox="0 0 340 100"
+      height={height}
+      width={(340 / 100) * height}
+      fill="none"
+      style={{ display: "block" }}
+    >
+      <defs>
+        <linearGradient id="vhg" x1="5" y1="10" x2="80" y2="90" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34c274" />
+          <stop offset="100%" stopColor="#1a7a4a" />
+        </linearGradient>
+      </defs>
+
+      {/* Hexagon */}
+      <polygon points={hpts} fill="url(#vhg)" />
+      <path d="M25 52 L38 66 L62 35" stroke="white" strokeWidth="9.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
+      {/* Wordmark "veriyo" — heavy weight, tight tracking */}
+      <text
+        x="100" y="74"
+        fontFamily="'Segoe UI Black','Arial Black',system-ui,sans-serif"
+        fontWeight="900"
+        fontSize="68"
+        letterSpacing="-2"
+        fill={textColor}
+      >veriyo</text>
+
+      {/* Green dot — sits top-right of the "o", touching it snugly */}
+      <circle cx="330" cy="14" r="13" fill="#34c274" />
+    </svg>
+  );
 }
 
-// Combined lockup for wider spaces (marketing site header etc.)
-export function VeriyoWordmark({ iconSize = 36, textSize = 24 }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <VeriyoIcon size={iconSize} />
-      <div style={{ lineHeight: 1 }}>
-        <div style={{ position: "relative", display: "inline-block" }}>
-          <span style={{
-            fontSize: textSize, fontWeight: 900, color: "#1a2e24",
-            fontFamily: "'Segoe UI', system-ui, sans-serif", letterSpacing: "-0.5px",
-          }}>veriyo</span>
-          {/* Green dot replacing the dot on the "o" — positioned top-right of the wordmark */}
-          <span style={{
-            position: "absolute", top: 0, right: -5,
-            width: textSize * 0.28, height: textSize * 0.28,
-            background: "#34c274", borderRadius: "50%", display: "block",
-          }} />
-        </div>
-      </div>
-    </div>
-  );
+// Keep VeriyoWordmark as alias for legacy use
+export function VeriyoWordmark({ height = 36, darkText = false }) {
+  return <VeriyoLogo height={height} darkText={darkText} />;
 }
 
 const ROLE_COLOURS = {
@@ -74,14 +101,7 @@ export default function Nav({ user, section, onSection, onLogout }) {
   return (
     <div style={s.bar}>
       <div style={s.left}>
-        <VeriyoIcon size={28} />
-        <div style={{ lineHeight: 1, position: "relative" }}>
-          <span style={s.logoText}>veriyo</span>
-          <span style={{
-            position: "absolute", top: -1, right: -7,
-            width: 7, height: 7, background: "#34c274", borderRadius: "50%",
-          }} />
-        </div>
+        <VeriyoLogo height={30} darkText={false} />
         <span style={s.divider} />
         <nav style={s.navLinks}>
           {navItems.map(item => (

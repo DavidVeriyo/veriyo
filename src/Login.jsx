@@ -1,9 +1,5 @@
 import { useState } from "react";
-import { VeriyoIcon } from "./Nav";
-
-function VeriyoLogo({ size = 40 }) {
-  return <VeriyoIcon size={size} />;
-}
+import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 const DEMO_USERS = [
   { email: "david@veriyo.com.au", password: "veriyo2024", name: "David Truong", role: "Admin" },
@@ -40,11 +36,7 @@ export default function Login({ onLogin, onBack }) {
       <div style={styles.card}>
         {/* Logo */}
         <div style={styles.logoRow}>
-          <VeriyoLogo size={40} />
-          <div style={{ position: "relative", lineHeight: 1 }}>
-            <span style={styles.logoText}>veriyo</span>
-            <span style={{ position: "absolute", top: 0, right: -10, width: 9, height: 9, background: "#34c274", borderRadius: "50%" }} />
-          </div>
+          <VeriyoLogoSVG height={40} darkText={true} />
         </div>
 
         <h2 style={styles.heading}>Welcome back</h2>

@@ -45,6 +45,7 @@ const FACILITIES = [
 const ALL_CHECKS = [
   { id: "police", label: "National Police Check", sector: "all", mandatory: true, renewYears: 3 },
   { id: "ndis", label: "NDIS Worker Screening", sector: "ndis", mandatory: true, renewYears: 5 },
+  { id: "banning", label: "NDIS Banning Order Check", sector: "ndis", mandatory: true, renewYears: null },
   { id: "wwcc", label: "Working With Children Check", sector: "earlyLearning", mandatory: true, renewYears: 5 },
   { id: "firstaid", label: "First Aid Certificate", sector: "all", mandatory: true, renewYears: 3 },
   { id: "cpr", label: "CPR Certificate", sector: "all", mandatory: true, renewYears: 1 },
@@ -349,11 +350,11 @@ function AddWorkerModal({ onClose, onAdd }) {
 function OverviewTab({ stats, workers }) {
   const expiringSoon = workers.filter(w => w.status === "attention" || w.status === "risk").slice(0, 5);
   const checkBreakdown = [
-    { label: "Police Check",   verified: 18, pending: 2, expired: 1, missing: 1 },
-    { label: "NDIS Screening", verified: 10, pending: 3, expired: 1, missing: 0 },
-    { label: "WWCC",           verified: 7,  pending: 1, expired: 1, missing: 1 },
-    { label: "First Aid",      verified: 17, pending: 3, expired: 2, missing: 0 },
-    { label: "CPR",            verified: 14, pending: 4, expired: 3, missing: 1 },
+    { label: "Police Check",        verified: 18, pending: 2, expired: 1, missing: 1 },
+    { label: "NDIS Screening",      verified: 10, pending: 3, expired: 1, missing: 0 },
+    { label: "Banning Order Check", verified: 13, pending: 0, expired: 0, missing: 1 },
+    { label: "WWCC",                verified: 7,  pending: 1, expired: 1, missing: 1 },
+    { label: "First Aid",           verified: 17, pending: 3, expired: 2, missing: 0 },
   ];
   const card = { background: "#fff", border: "1px solid #e3ede8", borderRadius: 14, padding: "20px 22px" };
   const cardTitle = { fontSize: 13, fontWeight: 800, color: "#1a2e24", marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between" };

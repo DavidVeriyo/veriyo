@@ -1,9 +1,5 @@
 import { useState } from "react";
-import { VeriyoIcon } from "./Nav";
-
-function VeriyoLogo({ size = 32 }) {
-  return <VeriyoIcon size={size} />;
-}
+import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
@@ -21,11 +17,7 @@ export default function Website({ onLogin }) {
       <nav style={styles.nav}>
         <div style={styles.navInner}>
           <div style={styles.logoRow}>
-            <VeriyoLogo size={32} />
-            <div style={{ position: "relative", lineHeight: 1 }}>
-              <span style={styles.logoText}>veriyo</span>
-              <span style={{ position: "absolute", top: 0, right: -8, width: 8, height: 8, background: "#34c274", borderRadius: "50%" }} />
-            </div>
+            <VeriyoLogoSVG height={34} darkText={true} />
           </div>
           <div style={styles.navLinks}>
             <a href="#products" style={styles.navLink}>Products</a>
@@ -264,8 +256,8 @@ export default function Website({ onLogin }) {
               {
                 icon: "♿",
                 title: "NDIS",
-                desc: "Full NDIS Worker Screening compliance, participant safety documentation, and worker registration support ahead of the July 2027 independent worker registration deadline.",
-                tags: ["Worker Screening", "Participant Safety", "2027 Registration", "Support Worker Cert"],
+                desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, participant safety documentation, and worker registration support ahead of the July 2027 independent worker registration deadline. Veriyo automatically flags any worker or provider that appears on the NDIS banning order list — protecting your organisation before they step foot on site.",
+                tags: ["Worker Screening", "Banning Order Check", "Participant Safety", "2027 Registration"],
               },
               {
                 icon: "🧒",
@@ -329,11 +321,7 @@ export default function Website({ onLogin }) {
         <div style={styles.footerInner}>
           <div style={styles.footerLeft}>
             <div style={styles.logoRow}>
-              <VeriyoLogo size={28} />
-              <div style={{ position: "relative", lineHeight: 1 }}>
-                <span style={{ ...styles.logoText, fontSize: "18px", color: "#fff" }}>veriyo</span>
-                <span style={{ position: "absolute", top: 0, right: -8, width: 7, height: 7, background: "#34c274", borderRadius: "50%" }} />
-              </div>
+              <VeriyoLogoSVG height={30} darkText={false} />
             </div>
             <p style={styles.footerTagline}>
               Workforce compliance for Australian care sectors.<br />
