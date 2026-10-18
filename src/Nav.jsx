@@ -1,6 +1,20 @@
 // ─── Veriyo shared top navigation ────────────────────────────────────────────
 import { useState, useRef, useLayoutEffect } from "react";
 
+const NAV_STYLE = `
+  .nav-bar { padding: 0 20px; }
+  .nav-username { display: inline; }
+  .nav-role { display: inline-flex; }
+  .nav-links-wrap { display: flex; }
+  @media (max-width: 600px) {
+    .nav-bar { padding: 0 12px; }
+    .nav-username { display: none; }
+    .nav-role { display: none; }
+    .nav-links-wrap { display: none; }
+  }
+`;
+
+
 // Hexagon icon only (used standalone in tight spaces)
 export function VeriyoIcon({ size = 32 }) {
   const cx = 50, cy = 50, r = 46;
@@ -134,30 +148,33 @@ export default function Nav({ user, section, onSection, onLogout }) {
   ];
 
   return (
-    <div style={s.bar}>
-      <div style={s.left}>
-        <VeriyoLogo height={30} darkText={false} />
-        <span style={s.divider} />
-        <nav style={s.navLinks}>
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => onSection(item.id)}
-              style={s.navLink(section === item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
+    <>
+      <style>{NAV_STYLE}</style>
+      <div style={s.bar} className="nav-bar">
+        <div style={s.left}>
+          <VeriyoLogo height={30} darkText={false} />
+          <span style={s.divider} />
+          <nav style={s.navLinks} className="nav-links-wrap">
+            {navItems.map(item => (
+              <button
+                key={item.id}
+                onClick={() => onSection(item.id)}
+                style={s.navLink(section === item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+        <div style={s.right}>
+          <span style={{ ...s.roleBadge, background: roleStyle.bg, color: roleStyle.color }} className="nav-role">
+            {roleStyle.label}
+          </span>
+          <span style={s.userName} className="nav-username">{user?.name}</span>
+          <button onClick={onLogout} style={s.logoutBtn}>Sign out</button>
+        </div>
       </div>
-      <div style={s.right}>
-        <span style={{ ...s.roleBadge, background: roleStyle.bg, color: roleStyle.color }}>
-          {roleStyle.label}
-        </span>
-        <span style={s.userName}>{user?.name}</span>
-        <button onClick={onLogout} style={s.logoutBtn}>Sign out</button>
-      </div>
-    </div>
+    </>
   );
 }
 
