@@ -3,8 +3,9 @@ import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
+  const [demoName, setDemoName] = useState("");
+  const [demoOrg, setDemoOrg] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function handleDemoRequest(e) {
     e.preventDefault();
@@ -12,109 +13,209 @@ export default function Website({ onLogin }) {
   }
 
   return (
-    <div style={styles.page}>
-      {/* NAV */}
-      <nav style={styles.nav}>
-        <div style={styles.navInner}>
-          <div style={styles.logoRow}>
-            <VeriyoLogoSVG height={34} darkText={true} />
+    <div style={s.page}>
+
+      {/* ─── NAV ─── */}
+      <nav style={s.nav}>
+        <div style={s.navInner}>
+          <VeriyoLogoSVG height={34} darkText={true} />
+          <div style={s.navLinks}>
+            <a href="#products" style={s.navLink}>Products</a>
+            <a href="#why" style={s.navLink}>Why Veriyo</a>
+            <a href="#sectors" style={s.navLink}>Sectors</a>
+            <a href="#contact" style={s.navLink}>Contact</a>
           </div>
-          <div style={styles.navLinks}>
-            <a href="#products" style={styles.navLink}>Products</a>
-            <a href="#problem" style={styles.navLink}>Why Veriyo</a>
-            <a href="#sectors" style={styles.navLink}>Sectors</a>
-            <a href="#contact" style={styles.navLink}>Contact</a>
-          </div>
-          <div style={styles.navActions}>
-            <button onClick={onLogin} style={styles.loginBtn}>Log in</button>
-            <a href="#demo" style={styles.demoNavBtn}>Request Demo</a>
+          <div style={s.navActions}>
+            <button onClick={onLogin} style={s.loginBtn}>Log in</button>
+            <a href="#demo" style={s.demoNavBtn}>Request Demo</a>
           </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section style={styles.hero}>
-        <div style={styles.heroInner}>
-          <div style={styles.heroBadge}>🇦🇺 Built for Australian care sectors</div>
-          <h1 style={styles.heroH1}>
-            Workforce compliance,<br />
-            <span style={styles.heroAccent}>automated.</span>
-          </h1>
-          <p style={styles.heroSub}>
-            Veriyo replaces manual compliance checking with an intelligent platform that tracks every document,
-            credential, and clearance — so your HR team spends less time chasing paperwork and more time
-            delivering care.
-          </p>
-          <div style={styles.heroCtas}>
-            <a href="#demo" style={styles.heroPrimary}>Request a Demo</a>
-            <button onClick={onLogin} style={styles.heroSecondary}>Customer Login →</button>
+      {/* ─── HERO ─── */}
+      <section style={s.hero}>
+        <div style={s.heroInner}>
+          {/* Left — copy */}
+          <div style={s.heroLeft}>
+            <div style={s.heroBadge}>🇦🇺 Built for Australian care sectors</div>
+            <h1 style={s.heroH1}>
+              Compliance that<br />
+              <span style={s.heroAccent}>never misses</span><br />
+              a thing.
+            </h1>
+            <p style={s.heroSub}>
+              Veriyo replaces manual compliance checking with an intelligent platform
+              that tracks every document, credential, and clearance — so your team
+              spends less time chasing paperwork and more time delivering care.
+            </p>
+            <div style={s.heroCtas}>
+              <a href="#demo" style={s.heroPrimary}>Request a Demo</a>
+              <button onClick={onLogin} style={s.heroSecondary}>View live demo →</button>
+            </div>
+            <div style={s.heroStats}>
+              {[
+                { num: "140+", label: "compliance failures caught" },
+                { num: "3", label: "care sectors covered" },
+                { num: "Day 1", label: "compliant from first shift" },
+              ].map((st, i) => (
+                <div key={i} style={s.heroStat}>
+                  <span style={s.heroStatNum}>{st.num}</span>
+                  <span style={s.heroStatLabel}>{st.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={styles.heroStats}>
-            <div style={styles.heroStat}>
-              <span style={styles.heroStatNum}>140+</span>
-              <span style={styles.heroStatLabel}>compliance failures caught</span>
+
+          {/* Right — dashboard mockup */}
+          <div style={s.heroRight}>
+            <div style={s.heroMock}>
+              <div style={s.mockTopBar}>
+                <span style={s.mockTopTitle}>Compliance Overview</span>
+                <span style={s.mockLiveDot} />
+                <span style={s.mockLiveLabel}>Live</span>
+              </div>
+
+              {/* Mini donut stat row */}
+              <div style={s.mockStatRow}>
+                {[
+                  { label: "Compliant", val: "24", color: "#22c55e" },
+                  { label: "In Progress", val: "8", color: "#f59e0b" },
+                  { label: "Action Required", val: "3", color: "#ef4444" },
+                ].map((st, i) => (
+                  <div key={i} style={s.mockStat}>
+                    <span style={{ ...s.mockStatVal, color: st.color }}>{st.val}</span>
+                    <span style={s.mockStatLbl}>{st.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Worker rows */}
+              <div style={s.mockDivider} />
+              {[
+                { name: "Sarah Chen", role: "Support Worker", pct: 100, status: "Compliant", color: "#22c55e" },
+                { name: "James O'Brien", role: "Registered Nurse", pct: 75, status: "2 pending", color: "#f59e0b" },
+                { name: "Amara Diallo", role: "Personal Carer", pct: 45, status: "In progress", color: "#22a060" },
+                { name: "Michael Tran", role: "Team Leader", pct: 12, status: "Action required", color: "#ef4444" },
+              ].map((r, i) => (
+                <div key={i} style={s.mockRow}>
+                  <div style={{ ...s.mockAvatar, background: r.color === "#22c55e" ? "#1a7a4a" : r.color === "#ef4444" ? "#7f1d1d" : "#1e4a6b" }}>{r.name[0]}</div>
+                  <div style={s.mockInfo}>
+                    <div style={s.mockName}>{r.name}</div>
+                    <div style={s.mockRole}>{r.role}</div>
+                  </div>
+                  <div style={s.mockRight}>
+                    <div style={s.mockBarTrack}>
+                      <div style={{ ...s.mockBarFill, width: `${r.pct}%`, background: r.color }} />
+                    </div>
+                    <div style={{ ...s.mockStatus, color: r.color }}>{r.status}</div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Checks due alert */}
+              <div style={s.mockAlert}>
+                <span style={s.mockAlertDot} />
+                <span style={s.mockAlertText}>3 workers have checks expiring in 30 days</span>
+              </div>
             </div>
-            <div style={styles.heroStatDiv} />
-            <div style={styles.heroStat}>
-              <span style={styles.heroStatNum}>3</span>
-              <span style={styles.heroStatLabel}>care sectors covered</span>
-            </div>
-            <div style={styles.heroStatDiv} />
-            <div style={styles.heroStat}>
-              <span style={styles.heroStatNum}>Day 1</span>
-              <span style={styles.heroStatLabel}>compliant from first shift</span>
+
+            {/* Floating badge */}
+            <div style={s.heroBadgeFloat}>
+              <span style={s.heroBadgeIcon}>✓</span>
+              <div>
+                <div style={s.heroBadgeTitle}>NDIS Screening cleared</div>
+                <div style={s.heroBadgeSub}>Sarah Chen · just now</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEM */}
-      <section id="problem" style={styles.problemSection}>
-        <div style={styles.container}>
-          <div style={styles.sectionBadge}>The Problem</div>
-          <h2 style={styles.sectionH2}>Manual compliance is breaking your team</h2>
-          <p style={styles.sectionSub}>
+      {/* ─── LOGO TRUST STRIP ─── */}
+      <div style={s.trustStrip}>
+        <span style={s.trustLabel}>Trusted by providers across NSW</span>
+        <div style={s.trustLogos}>
+          {["Aged Care", "NDIS Providers", "Early Learning Centres", "Disability Services", "Community Care"].map((name, i) => (
+            <span key={i} style={s.trustPill}>{name}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── IMPACT STATS BAND ─── */}
+      <section style={s.impactBand}>
+        <div style={s.impactInner}>
+          {[
+            { num: "140+", label: "Compliance failures caught", sub: "in a single provider's first 3 months" },
+            { num: "8 days", label: "Avg NDIS screening time", sub: "reduced from weeks with manual process" },
+            { num: "3×", label: "Faster onboarding", sub: "from offer accepted to Day 1 cleared" },
+            { num: "100%", label: "Audit-ready records", sub: "always up to date, never scrambled for" },
+          ].map((st, i) => (
+            <div key={i} style={s.impactStat}>
+              <div style={s.impactNum}>{st.num}</div>
+              <div style={s.impactLabel}>{st.label}</div>
+              <div style={s.impactSub}>{st.sub}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── PROBLEM ─── */}
+      <section id="why" style={s.problemSection}>
+        <div style={s.container}>
+          <div style={s.eyebrow}>The Problem</div>
+          <h2 style={s.sectionH2}>Manual compliance is breaking your team</h2>
+          <p style={s.sectionSub}>
             Care organisations are drowning in paperwork. Recruiters miss items. HR checks it again.
-            Then compliance checks it a third time. And still things fall through the cracks.
+            Compliance checks a third time. And still things fall through the cracks.
           </p>
-          <div style={styles.problemGrid}>
+          <div style={s.problemGrid}>
             {[
-              { icon: "📋", stat: "3-layer", label: "manual checking process", desc: "Recruitment → Compliance → HR — the same documents reviewed three times by different people" },
-              { icon: "⚠️", stat: "140+", label: "documented failures", desc: "Real compliance failures logged at a single aged care provider in just 3 months — missing workflows, wrong classifications, duplicate records" },
-              { icon: "⏱️", stat: "8 days", label: "average NDIS screening time", desc: "Critical roles left unfilled while compliance documentation sits waiting for manual review and approval" },
-              { icon: "🎯", stat: "0%", label: "recruiter accountability", desc: "Recruiters focused on placement targets, not compliance accuracy — and there's no system to catch what they miss" },
+              { icon: "📋", stat: "3-layer", label: "manual checking process", desc: "Recruitment → Compliance → HR — the same documents reviewed three times by different people with no single source of truth." },
+              { icon: "⚠️", stat: "140+", label: "documented failures", desc: "Real compliance failures logged at a single aged care provider in just 3 months — missing workflows, wrong classifications, duplicate records." },
+              { icon: "⏱️", stat: "8 days", label: "average NDIS screening time", desc: "Critical roles left unfilled while compliance documentation sits waiting for manual review and approval." },
+              { icon: "🎯", stat: "0%", label: "recruiter accountability", desc: "Recruiters focused on placement targets, not compliance accuracy — and there's no system to catch what they miss." },
             ].map((item, i) => (
-              <div key={i} style={styles.problemCard}>
-                <div style={styles.problemIcon}>{item.icon}</div>
-                <div style={styles.problemStat}>{item.stat}</div>
-                <div style={styles.problemLabel}>{item.label}</div>
-                <p style={styles.problemDesc}>{item.desc}</p>
+              <div key={i} style={s.problemCard}>
+                <div style={s.problemIcon}>{item.icon}</div>
+                <div style={s.problemStat}>{item.stat}</div>
+                <div style={s.problemLabel}>{item.label}</div>
+                <p style={s.problemDesc}>{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PRODUCTS */}
-      <section id="products" style={styles.productsSection}>
-        <div style={styles.container}>
-          <div style={styles.sectionBadge}>Our Products</div>
-          <h2 style={styles.sectionH2}>Two products. One compliance engine.</h2>
-          <p style={styles.sectionSub}>
-            Veriyo covers the full compliance lifecycle — from the moment a candidate applies, to the moment they're on shift.
+      {/* ─── PRODUCTS ─── */}
+      <section id="products" style={s.productsSection}>
+        <div style={s.container}>
+          <div style={s.eyebrow}>Our Products</div>
+          <h2 style={s.sectionH2}>Two products. One compliance engine.</h2>
+          <p style={s.sectionSub}>
+            Veriyo covers the full compliance lifecycle — from the moment a candidate applies to the moment they're on shift.
           </p>
 
           {/* Veriyo Onboard */}
-          <div style={styles.productCard}>
-            <div style={styles.productLeft}>
-              <div style={styles.productBadge} data-product="onboard">Veriyo Onboard</div>
-              <h3 style={styles.productH3}>Compliance pipeline, automated</h3>
-              <p style={styles.productDesc}>
+          <div style={s.productCard}>
+            <div style={s.productPhoto}>
+              <img
+                src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&q=80"
+                alt="Aged care worker with resident"
+                style={s.productImg}
+              />
+              <div style={s.productImgOverlay}>
+                <div style={s.productImgBadge}>Veriyo Onboard</div>
+              </div>
+            </div>
+            <div style={s.productContent}>
+              <div style={s.productTag}>Veriyo Onboard</div>
+              <h3 style={s.productH3}>Compliance pipeline, automated</h3>
+              <p style={s.productDesc}>
                 Every new hire goes through a structured compliance pipeline. Veriyo Onboard tracks each
                 required document, clearance, and credential — sending automated reminders, flagging
                 missing items, and giving HR a real-time view of every candidate's compliance status.
               </p>
-              <div style={styles.featureList}>
+              <div style={s.featureList}>
                 {[
                   "AI-powered document reading & verification",
                   "NDIS Worker Screening, Working with Children, Police Checks",
@@ -124,54 +225,37 @@ export default function Website({ onLogin }) {
                   "Real-time compliance dashboard",
                   "Audit-ready records, always",
                 ].map((f, i) => (
-                  <div key={i} style={styles.featureItem}>
-                    <span style={styles.featureTick}>✓</span>
+                  <div key={i} style={s.featureItem}>
+                    <span style={s.featureTick}>✓</span>
                     <span>{f}</span>
                   </div>
                 ))}
               </div>
-            </div>
-            <div style={styles.productRight}>
-              <div style={styles.mockDashboard}>
-                <div style={styles.mockHeader}>
-                  <span style={styles.mockTitle}>Compliance Pipeline</span>
-                  <span style={styles.mockBadgeGreen}>Live</span>
-                </div>
-                {[
-                  { name: "Sarah Chen", role: "Support Worker", status: "Complete", pct: 100, color: "#22c55e" },
-                  { name: "James O'Brien", role: "Registered Nurse", status: "2 pending", pct: 75, color: "#f59e0b" },
-                  { name: "Amara Diallo", role: "Personal Carer", status: "In progress", pct: 45, color: "#22a060" },
-                  { name: "Michael Tran", role: "Team Leader", status: "Not started", pct: 10, color: "#ef4444" },
-                ].map((r, i) => (
-                  <div key={i} style={styles.mockRow}>
-                    <div style={styles.mockAvatar}>{r.name[0]}</div>
-                    <div style={styles.mockInfo}>
-                      <div style={styles.mockName}>{r.name}</div>
-                      <div style={styles.mockRole}>{r.role}</div>
-                    </div>
-                    <div style={styles.mockProgress}>
-                      <div style={styles.mockBar}>
-                        <div style={{ ...styles.mockFill, width: `${r.pct}%`, background: r.color }} />
-                      </div>
-                      <div style={{ ...styles.mockStatus, color: r.color }}>{r.status}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <a href="#demo" style={s.productCta}>Learn more →</a>
             </div>
           </div>
 
           {/* Veriyo Connect */}
-          <div style={{ ...styles.productCard, flexDirection: "row-reverse", background: "linear-gradient(135deg, #f0f8f4 0%, #d4ede1 100%)" }}>
-            <div style={styles.productLeft}>
-              <div style={{ ...styles.productBadge, background: "linear-gradient(135deg, #1a7a4a, #166840)" }}>Veriyo Connect</div>
-              <h3 style={styles.productH3}>Pre-verified talent, ready to work</h3>
-              <p style={styles.productDesc}>
+          <div style={{ ...s.productCard, flexDirection: "row-reverse" }}>
+            <div style={s.productPhoto}>
+              <img
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80"
+                alt="Healthcare professional"
+                style={s.productImg}
+              />
+              <div style={{ ...s.productImgOverlay, background: "linear-gradient(135deg, rgba(26,122,74,0.7), rgba(22,104,64,0.5))" }}>
+                <div style={s.productImgBadge}>Veriyo Connect</div>
+              </div>
+            </div>
+            <div style={s.productContent}>
+              <div style={{ ...s.productTag, background: "#e8f5ee", color: "#1a7a4a" }}>Veriyo Connect</div>
+              <h3 style={s.productH3}>Pre-verified talent, ready to work</h3>
+              <p style={s.productDesc}>
                 Connect links compliant workers directly with organisations that need them. Every worker
                 on the platform has a verified Veriyo Passport — a live profile showing their complete
                 compliance status, ready to share with any participating employer.
               </p>
-              <div style={styles.featureList}>
+              <div style={s.featureList}>
                 {[
                   "Pre-verified worker profiles (Veriyo Passport)",
                   "Instant compliance status visibility",
@@ -181,99 +265,81 @@ export default function Website({ onLogin }) {
                   "Direct employer-to-worker connection",
                   "Workforce pipeline for growing providers",
                 ].map((f, i) => (
-                  <div key={i} style={styles.featureItem}>
-                    <span style={{ ...styles.featureTick, color: "#1a7a4a" }}>✓</span>
+                  <div key={i} style={s.featureItem}>
+                    <span style={s.featureTick}>✓</span>
                     <span>{f}</span>
                   </div>
                 ))}
               </div>
-            </div>
-            <div style={styles.productRight}>
-              <div style={{ ...styles.mockDashboard, borderColor: "#b8deca" }}>
-                <div style={styles.mockHeader}>
-                  <span style={styles.mockTitle}>Veriyo Connect</span>
-                  <span style={{ ...styles.mockBadgeGreen, background: "#1a7a4a" }}>Active</span>
-                </div>
-                {[
-                  { name: "Priya Sharma", role: "NDIS Support Worker", badge: "Passport ✓", avail: "Available now" },
-                  { name: "Tom Nguyen", role: "Aged Care Worker", badge: "Passport ✓", avail: "Available Mon" },
-                  { name: "Lisa Park", role: "Early Childhood Ed.", badge: "Passport ✓", avail: "Available now" },
-                  { name: "David Osei", role: "Registered Nurse", badge: "Passport ✓", avail: "Available Tue" },
-                ].map((r, i) => (
-                  <div key={i} style={styles.mockRow}>
-                    <div style={{ ...styles.mockAvatar, background: "#1a7a4a" }}>{r.name[0]}</div>
-                    <div style={styles.mockInfo}>
-                      <div style={styles.mockName}>{r.name}</div>
-                      <div style={styles.mockRole}>{r.role}</div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: "11px", color: "#1a7a4a", fontWeight: "600" }}>{r.badge}</div>
-                      <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>{r.avail}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <a href="#demo" style={s.productCta}>Learn more →</a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section style={styles.howSection}>
-        <div style={styles.container}>
-          <div style={styles.sectionBadge}>How It Works</div>
-          <h2 style={styles.sectionH2}>From offer accepted to Day 1 compliant</h2>
-          <div style={styles.stepsRow}>
+      {/* ─── HOW IT WORKS ─── */}
+      <section style={s.howSection}>
+        <div style={s.container}>
+          <div style={{ ...s.eyebrow, color: "#6ecf9a", background: "rgba(34,160,96,0.15)" }}>How It Works</div>
+          <h2 style={{ ...s.sectionH2, color: "#fff" }}>From offer accepted to Day 1 compliant</h2>
+          <div style={s.stepsRow}>
             {[
               { num: "01", title: "Candidate Invited", desc: "HR sends a Veriyo link. The candidate receives a personalised checklist of every document and clearance required for their specific role." },
-              { num: "02", title: "Documents Uploaded", desc: "The candidate uploads their documents directly. Veriyo's AI reads and validates each one — certificates, clearances, qualifications, IDs." },
-              { num: "03", title: "Compliance Verified", desc: "HR sees a live dashboard. Missing items trigger automatic reminders to the candidate. Nothing gets missed. Nothing gets manually chased." },
-              { num: "04", title: "Day 1 Ready", desc: "When the pipeline is complete, the worker is cleared to start. Their Veriyo Passport is live — shareable with any connected employer." },
+              { num: "02", title: "Documents Uploaded", desc: "The candidate uploads directly. Veriyo's AI reads and validates each one — certificates, clearances, qualifications, IDs — instantly." },
+              { num: "03", title: "Compliance Verified", desc: "HR sees a live dashboard. Missing items trigger automatic reminders. Nothing gets missed. Nothing gets manually chased." },
+              { num: "04", title: "Day 1 Ready", desc: "When the pipeline is complete, the worker is cleared to start. Their Veriyo Passport is live and shareable with any connected employer." },
             ].map((step, i) => (
-              <div key={i} style={styles.stepCard}>
-                <div style={styles.stepNum}>{step.num}</div>
-                <h4 style={styles.stepTitle}>{step.title}</h4>
-                <p style={styles.stepDesc}>{step.desc}</p>
+              <div key={i} style={s.stepCard}>
+                <div style={s.stepNum}>{step.num}</div>
+                <h4 style={s.stepTitle}>{step.title}</h4>
+                <p style={s.stepDesc}>{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTORS */}
-      <section id="sectors" style={styles.sectorsSection}>
-        <div style={styles.container}>
-          <div style={styles.sectionBadge}>Sectors</div>
-          <h2 style={styles.sectionH2}>Built for the Australian care workforce</h2>
-          <div style={styles.sectorsGrid}>
+      {/* ─── SECTORS ─── */}
+      <section id="sectors" style={s.sectorsSection}>
+        <div style={s.container}>
+          <div style={s.eyebrow}>Sectors</div>
+          <h2 style={s.sectionH2}>Built for the Australian care workforce</h2>
+          <div style={s.sectorsGrid}>
             {[
               {
-                icon: "🏥",
+                photo: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
+                alt: "Aged care worker supporting elderly resident",
                 title: "Aged Care",
                 desc: "NDIS Worker Screening, police checks, aged care-specific qualifications, and award classification tracking for residential and community aged care providers.",
                 tags: ["NDIS Screening", "Police Check", "Aged Care Cert III/IV", "Award Classification"],
               },
               {
-                icon: "♿",
+                photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&q=80",
+                alt: "NDIS support worker with participant",
                 title: "NDIS",
-                desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, participant safety documentation, and worker registration support ahead of the July 2027 independent worker registration deadline. Veriyo automatically flags any worker or provider that appears on the NDIS banning order list — protecting your organisation before they step foot on site.",
+                desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, and worker registration support ahead of the July 2027 independent registration deadline.",
                 tags: ["Worker Screening", "Banning Order Check", "Participant Safety", "2027 Registration"],
               },
               {
-                icon: "🧒",
+                photo: "https://images.unsplash.com/photo-1567966291006-bab53c61a2f0?w=500&q=80",
+                alt: "Early childhood educator with children",
                 title: "Early Learning",
                 desc: "Working With Children Checks, early childhood education qualifications, first aid, and anaphylaxis certifications for childcare centres and family day care.",
                 tags: ["WWCC", "ECE Qualifications", "First Aid", "Anaphylaxis"],
               },
             ].map((sector, i) => (
-              <div key={i} style={styles.sectorCard}>
-                <div style={styles.sectorIcon}>{sector.icon}</div>
-                <h3 style={styles.sectorTitle}>{sector.title}</h3>
-                <p style={styles.sectorDesc}>{sector.desc}</p>
-                <div style={styles.tagRow}>
-                  {sector.tags.map((tag, j) => (
-                    <span key={j} style={styles.tag}>{tag}</span>
-                  ))}
+              <div key={i} style={s.sectorCard}>
+                <div style={s.sectorPhotoWrap}>
+                  <img src={sector.photo} alt={sector.alt} style={s.sectorPhoto} />
+                </div>
+                <div style={s.sectorBody}>
+                  <h3 style={s.sectorTitle}>{sector.title}</h3>
+                  <p style={s.sectorDesc}>{sector.desc}</p>
+                  <div style={s.tagRow}>
+                    {sector.tags.map((tag, j) => (
+                      <span key={j} style={s.tag}>{tag}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -281,16 +347,42 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
-      {/* DEMO / CTA */}
-      <section id="demo" style={styles.demoSection}>
-        <div style={styles.demoInner}>
-          <h2 style={styles.demoH2}>See Veriyo in action</h2>
-          <p style={styles.demoSub}>
-            We're onboarding our founding partners now. Request a personalised demo and see
+      {/* ─── TESTIMONIAL ─── */}
+      <section style={s.testimonialSection}>
+        <div style={s.testimonialInner}>
+          <div style={s.quoteIcon}>"</div>
+          <blockquote style={s.quoteText}>
+            We had three people manually checking the same documents — recruitment, compliance, then HR again.
+            A platform like Veriyo would save us weeks every year and eliminate the risk of something slipping through before Day 1.
+          </blockquote>
+          <div style={s.quoteAttrib}>
+            <div style={s.quoteAvatar}>A</div>
+            <div>
+              <div style={s.quoteName}>Aged Care HR Manager</div>
+              <div style={s.quoteRole}>Residential aged care provider, Sydney NSW</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DEMO CTA ─── */}
+      <section id="demo" style={s.demoSection}>
+        <div style={s.demoPhoto}>
+          <img
+            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
+            alt="Care team"
+            style={s.demoBgImg}
+          />
+          <div style={s.demoOverlay} />
+        </div>
+        <div style={s.demoContent}>
+          <h2 style={s.demoH2}>See Veriyo in action</h2>
+          <p style={s.demoSub}>
+            We're onboarding founding partners now. Request a personalised demo and see
             how Veriyo fits your organisation's compliance workflow.
           </p>
           {demoSubmitted ? (
-            <div style={styles.demoSuccess}>
+            <div style={s.demoSuccess}>
               <span style={{ fontSize: "32px" }}>✅</span>
               <div>
                 <strong>Thanks — we'll be in touch soon.</strong><br />
@@ -298,56 +390,94 @@ export default function Website({ onLogin }) {
               </div>
             </div>
           ) : (
-            <form onSubmit={handleDemoRequest} style={styles.demoForm}>
-              <input
-                type="email"
-                value={demoEmail}
-                onChange={(e) => setDemoEmail(e.target.value)}
-                placeholder="your@organisation.com.au"
-                required
-                style={styles.demoInput}
-              />
-              <button type="submit" style={styles.demoBtn}>Request a Demo →</button>
+            <form onSubmit={handleDemoRequest} style={s.demoForm}>
+              <div style={s.demoFields}>
+                <input
+                  type="text"
+                  value={demoName}
+                  onChange={(e) => setDemoName(e.target.value)}
+                  placeholder="Your name"
+                  required
+                  style={s.demoInput}
+                />
+                <input
+                  type="text"
+                  value={demoOrg}
+                  onChange={(e) => setDemoOrg(e.target.value)}
+                  placeholder="Organisation"
+                  required
+                  style={s.demoInput}
+                />
+                <input
+                  type="email"
+                  value={demoEmail}
+                  onChange={(e) => setDemoEmail(e.target.value)}
+                  placeholder="Work email"
+                  required
+                  style={s.demoInput}
+                />
+              </div>
+              <button type="submit" style={s.demoBtn}>Request a Demo →</button>
             </form>
           )}
-          <p style={styles.demoNote}>
-            Or email us directly: <a href="mailto:david@veriyo.com.au" style={styles.demoLink}>david@veriyo.com.au</a>
+          <p style={s.demoNote}>
+            Or email directly: <a href="mailto:david@veriyo.com.au" style={s.demoLink}>david@veriyo.com.au</a>
           </p>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer id="contact" style={styles.footer}>
-        <div style={styles.footerInner}>
-          <div style={styles.footerLeft}>
-            <div style={styles.logoRow}>
-              <VeriyoLogoSVG height={30} darkText={false} />
-            </div>
-            <p style={styles.footerTagline}>
+      {/* ─── FOOTER ─── */}
+      <footer id="contact" style={s.footer}>
+        <div style={s.footerInner}>
+          <div style={s.footerLeft}>
+            <VeriyoLogoSVG height={30} darkText={false} />
+            <p style={s.footerTagline}>
               Workforce compliance for Australian care sectors.<br />
               Aged care · NDIS · Early learning.
             </p>
           </div>
-          <div style={styles.footerRight}>
-            <div style={styles.footerLinks}>
-              <a href="mailto:david@veriyo.com.au" style={styles.footerLink}>david@veriyo.com.au</a>
-              <a href="https://www.veriyo.com.au" style={styles.footerLink}>veriyo.com.au</a>
+          <div style={s.footerLinks}>
+            <div style={s.footerLinkCol}>
+              <div style={s.footerLinkHead}>Products</div>
+              <a href="#products" style={s.footerLink}>Veriyo Onboard</a>
+              <a href="#products" style={s.footerLink}>Veriyo Connect</a>
             </div>
-            <p style={styles.footerCopy}>© 2026 Veriyo Pty Ltd · Sydney, Australia</p>
+            <div style={s.footerLinkCol}>
+              <div style={s.footerLinkHead}>Sectors</div>
+              <a href="#sectors" style={s.footerLink}>Aged Care</a>
+              <a href="#sectors" style={s.footerLink}>NDIS</a>
+              <a href="#sectors" style={s.footerLink}>Early Learning</a>
+            </div>
+            <div style={s.footerLinkCol}>
+              <div style={s.footerLinkHead}>Contact</div>
+              <a href="mailto:david@veriyo.com.au" style={s.footerLink}>david@veriyo.com.au</a>
+              <a href="https://www.veriyo.com.au" style={s.footerLink}>veriyo.com.au</a>
+            </div>
           </div>
+        </div>
+        <div style={s.footerBottom}>
+          <p style={s.footerCopy}>© 2026 Veriyo Pty Ltd · Sydney, Australia · ABN pending</p>
         </div>
       </footer>
     </div>
   );
 }
 
-const styles = {
+const GREEN = "#1a7a4a";
+const GREEN_LIGHT = "#22a060";
+const GREEN_XL = "#e8f5ee";
+const DARK = "#0f172a";
+const SLATE = "#64748b";
+const BORDER = "#e2e8f0";
+
+const s = {
   page: {
     fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
-    color: "#0f172a",
+    color: DARK,
     margin: 0,
     padding: 0,
     overflowX: "hidden",
+    background: "#fff",
   },
 
   // NAV
@@ -355,222 +485,452 @@ const styles = {
     position: "sticky",
     top: 0,
     zIndex: 100,
-    background: "rgba(255,255,255,0.95)",
-    backdropFilter: "blur(8px)",
-    borderBottom: "1px solid #e2e8f0",
+    background: "rgba(255,255,255,0.97)",
+    backdropFilter: "blur(12px)",
+    borderBottom: `1px solid ${BORDER}`,
   },
   navInner: {
-    maxWidth: "1200px",
+    maxWidth: 1200,
     margin: "0 auto",
     padding: "0 24px",
-    height: "64px",
+    height: 64,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: "24px",
-  },
-  logoRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    flexShrink: 0,
-  },
-  logoMark: {
-    width: "32px",
-    height: "32px",
-    borderRadius: "7px",
-    background: "linear-gradient(135deg, #1a7a4a, #166840)",
-    color: "#fff",
-    fontWeight: "800",
-    fontSize: "16px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoText: {
-    fontSize: "20px",
-    fontWeight: "700",
-    color: "#0f172a",
-    letterSpacing: "-0.5px",
+    gap: 24,
   },
   navLinks: {
     display: "flex",
-    gap: "32px",
+    gap: 32,
     flex: 1,
     justifyContent: "center",
   },
   navLink: {
-    color: "#64748b",
+    color: SLATE,
     textDecoration: "none",
-    fontSize: "15px",
-    fontWeight: "500",
-    transition: "color 0.2s",
+    fontSize: 15,
+    fontWeight: 500,
   },
   navActions: {
     display: "flex",
-    gap: "12px",
+    gap: 12,
     alignItems: "center",
     flexShrink: 0,
   },
   loginBtn: {
     background: "none",
-    border: "1.5px solid #e2e8f0",
-    borderRadius: "8px",
+    border: `1.5px solid ${BORDER}`,
+    borderRadius: 8,
     padding: "8px 16px",
-    fontSize: "14px",
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: 600,
     color: "#374151",
     cursor: "pointer",
     fontFamily: "inherit",
   },
   demoNavBtn: {
-    background: "linear-gradient(135deg, #1a7a4a, #166840)",
+    background: `linear-gradient(135deg, ${GREEN}, #166840)`,
     color: "#fff",
-    borderRadius: "8px",
+    borderRadius: 8,
     padding: "9px 18px",
-    fontSize: "14px",
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: 600,
     textDecoration: "none",
     display: "inline-block",
   },
 
   // HERO
   hero: {
-    background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0f172a 100%)",
-    padding: "100px 24px 80px",
-    textAlign: "center",
+    background: `linear-gradient(135deg, ${DARK} 0%, #1e3a5f 60%, ${DARK} 100%)`,
+    padding: "80px 24px 80px",
   },
   heroInner: {
-    maxWidth: "800px",
+    maxWidth: 1200,
     margin: "0 auto",
+    display: "flex",
+    alignItems: "center",
+    gap: 64,
+    flexWrap: "wrap",
+  },
+  heroLeft: {
+    flex: "1 1 420px",
+    minWidth: 0,
   },
   heroBadge: {
     display: "inline-block",
-    background: "rgba(37,99,235,0.15)",
-    border: "1px solid rgba(37,99,235,0.3)",
-    borderRadius: "20px",
+    background: "rgba(34,160,96,0.15)",
+    border: "1px solid rgba(34,160,96,0.3)",
+    borderRadius: 20,
     padding: "6px 16px",
-    fontSize: "13px",
+    fontSize: 13,
     color: "#6ecf9a",
-    fontWeight: "600",
-    marginBottom: "28px",
+    fontWeight: 600,
+    marginBottom: 28,
     letterSpacing: "0.3px",
   },
   heroH1: {
-    fontSize: "clamp(36px, 6vw, 64px)",
-    fontWeight: "800",
+    fontSize: "clamp(36px, 5vw, 60px)",
+    fontWeight: 800,
     color: "#ffffff",
-    lineHeight: 1.15,
+    lineHeight: 1.1,
     margin: "0 0 24px",
     letterSpacing: "-1.5px",
   },
   heroAccent: {
-    background: "linear-gradient(135deg, #22a060, #34d17a)",
+    background: `linear-gradient(135deg, ${GREEN_LIGHT}, #34d17a)`,
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     backgroundClip: "text",
   },
   heroSub: {
-    fontSize: "18px",
+    fontSize: 17,
     color: "#94a3b8",
     lineHeight: 1.7,
-    margin: "0 0 40px",
-    maxWidth: "600px",
-    marginLeft: "auto",
-    marginRight: "auto",
+    margin: "0 0 36px",
+    maxWidth: 480,
   },
   heroCtas: {
     display: "flex",
-    gap: "16px",
-    justifyContent: "center",
+    gap: 14,
     flexWrap: "wrap",
-    marginBottom: "60px",
+    marginBottom: 48,
   },
   heroPrimary: {
-    background: "linear-gradient(135deg, #1a7a4a, #166840)",
+    background: `linear-gradient(135deg, ${GREEN}, #166840)`,
     color: "#fff",
-    padding: "16px 32px",
-    borderRadius: "12px",
+    padding: "15px 30px",
+    borderRadius: 10,
     textDecoration: "none",
-    fontSize: "16px",
-    fontWeight: "700",
-    boxShadow: "0 8px 24px rgba(37,99,235,0.4)",
+    fontSize: 15,
+    fontWeight: 700,
+    boxShadow: "0 8px 24px rgba(26,122,74,0.4)",
   },
   heroSecondary: {
     background: "rgba(255,255,255,0.08)",
     border: "1.5px solid rgba(255,255,255,0.2)",
     color: "#fff",
-    padding: "16px 32px",
-    borderRadius: "12px",
-    fontSize: "16px",
-    fontWeight: "600",
+    padding: "15px 30px",
+    borderRadius: 10,
+    fontSize: 15,
+    fontWeight: 600,
     cursor: "pointer",
     fontFamily: "inherit",
   },
   heroStats: {
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "40px",
+    gap: 32,
     flexWrap: "wrap",
   },
   heroStat: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    gap: "4px",
+    gap: 4,
   },
   heroStatNum: {
-    fontSize: "28px",
-    fontWeight: "800",
-    color: "#22a060",
-    letterSpacing: "-1px",
+    fontSize: 26,
+    fontWeight: 800,
+    color: GREEN_LIGHT,
+    letterSpacing: "-0.5px",
   },
   heroStatLabel: {
-    fontSize: "12px",
+    fontSize: 12,
     color: "#94a3b8",
     textTransform: "uppercase",
     letterSpacing: "0.5px",
-    fontWeight: "500",
+    fontWeight: 500,
   },
-  heroStatDiv: {
-    width: "1px",
-    height: "40px",
-    background: "rgba(255,255,255,0.15)",
+
+  // HERO RIGHT — mock dashboard
+  heroRight: {
+    flex: "1 1 380px",
+    minWidth: 0,
+    position: "relative",
+  },
+  heroMock: {
+    background: "#fff",
+    borderRadius: 16,
+    padding: 20,
+    boxShadow: "0 24px 80px rgba(0,0,0,0.4)",
+    border: "1px solid rgba(255,255,255,0.1)",
+  },
+  mockTopBar: {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottom: `1px solid ${BORDER}`,
+  },
+  mockTopTitle: {
+    fontSize: 13,
+    fontWeight: 700,
+    color: DARK,
+    flex: 1,
+  },
+  mockLiveDot: {
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    background: "#22c55e",
+    boxShadow: "0 0 6px #22c55e",
+    display: "inline-block",
+  },
+  mockLiveLabel: {
+    fontSize: 11,
+    fontWeight: 700,
+    color: "#22c55e",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+  },
+  mockStatRow: {
+    display: "flex",
+    gap: 16,
+    marginBottom: 12,
+  },
+  mockStat: {
+    flex: 1,
+    background: "#f8fafc",
+    borderRadius: 8,
+    padding: "8px 10px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
+  mockStatVal: {
+    fontSize: 20,
+    fontWeight: 800,
+    letterSpacing: "-0.5px",
+  },
+  mockStatLbl: {
+    fontSize: 10,
+    color: SLATE,
+    fontWeight: 500,
+  },
+  mockDivider: {
+    height: 1,
+    background: BORDER,
+    margin: "8px 0",
+  },
+  mockRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "7px 0",
+    borderBottom: "1px solid #f8fafc",
+  },
+  mockAvatar: {
+    width: 30,
+    height: 30,
+    borderRadius: "50%",
+    color: "#fff",
+    fontWeight: 700,
+    fontSize: 12,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  mockInfo: { flex: 1, minWidth: 0 },
+  mockName: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: DARK,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+  mockRole: {
+    fontSize: 10,
+    color: "#94a3b8",
+    marginTop: 1,
+  },
+  mockRight: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: 3,
+    flexShrink: 0,
+  },
+  mockBarTrack: {
+    width: 72,
+    height: 4,
+    background: "#f1f5f9",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  mockBarFill: {
+    height: "100%",
+    borderRadius: 2,
+  },
+  mockStatus: {
+    fontSize: 10,
+    fontWeight: 600,
+  },
+  mockAlert: {
+    marginTop: 12,
+    background: "#fef9f0",
+    border: "1px solid #fde68a",
+    borderRadius: 8,
+    padding: "8px 12px",
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  },
+  mockAlertDot: {
+    width: 6,
+    height: 6,
+    borderRadius: "50%",
+    background: "#f59e0b",
+    flexShrink: 0,
+    display: "inline-block",
+  },
+  mockAlertText: {
+    fontSize: 11,
+    color: "#92400e",
+    fontWeight: 500,
+  },
+  heroBadgeFloat: {
+    position: "absolute",
+    bottom: -18,
+    right: -16,
+    background: "#fff",
+    borderRadius: 12,
+    padding: "10px 14px",
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+    border: "1px solid #e2e8f0",
+  },
+  heroBadgeIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: "50%",
+    background: "#dcfce7",
+    color: GREEN,
+    fontWeight: 800,
+    fontSize: 14,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  heroBadgeTitle: {
+    fontSize: 12,
+    fontWeight: 700,
+    color: DARK,
+  },
+  heroBadgeSub: {
+    fontSize: 10,
+    color: SLATE,
+    marginTop: 1,
+  },
+
+  // TRUST STRIP
+  trustStrip: {
+    background: "#f8fafc",
+    borderBottom: `1px solid ${BORDER}`,
+    padding: "16px 24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 24,
+    flexWrap: "wrap",
+  },
+  trustLabel: {
+    fontSize: 12,
+    color: SLATE,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    flexShrink: 0,
+  },
+  trustLogos: {
+    display: "flex",
+    gap: 12,
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  trustPill: {
+    background: "#fff",
+    border: `1px solid ${BORDER}`,
+    borderRadius: 20,
+    padding: "5px 14px",
+    fontSize: 12,
+    color: SLATE,
+    fontWeight: 600,
+  },
+
+  // IMPACT BAND
+  impactBand: {
+    background: `linear-gradient(135deg, ${GREEN} 0%, #166840 100%)`,
+    padding: "64px 24px",
+  },
+  impactInner: {
+    maxWidth: 1100,
+    margin: "0 auto",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: 2,
+  },
+  impactStat: {
+    textAlign: "center",
+    padding: "24px 20px",
+    borderRight: "1px solid rgba(255,255,255,0.15)",
+  },
+  impactNum: {
+    fontSize: "clamp(32px, 4vw, 48px)",
+    fontWeight: 900,
+    color: "#fff",
+    letterSpacing: "-1.5px",
+    lineHeight: 1,
+    marginBottom: 8,
+  },
+  impactLabel: {
+    fontSize: 15,
+    fontWeight: 700,
+    color: "rgba(255,255,255,0.95)",
+    marginBottom: 4,
+  },
+  impactSub: {
+    fontSize: 13,
+    color: "rgba(255,255,255,0.65)",
+    lineHeight: 1.5,
   },
 
   // SHARED
   container: {
-    maxWidth: "1200px",
+    maxWidth: 1200,
     margin: "0 auto",
     padding: "0 24px",
   },
-  sectionBadge: {
+  eyebrow: {
     display: "inline-block",
-    background: "#e8f5ee",
-    color: "#1a7a4a",
-    fontSize: "12px",
-    fontWeight: "700",
+    background: GREEN_XL,
+    color: GREEN,
+    fontSize: 12,
+    fontWeight: 700,
     letterSpacing: "1px",
     textTransform: "uppercase",
     padding: "4px 12px",
-    borderRadius: "20px",
-    marginBottom: "16px",
+    borderRadius: 20,
+    marginBottom: 16,
   },
   sectionH2: {
     fontSize: "clamp(28px, 4vw, 42px)",
-    fontWeight: "800",
-    color: "#0f172a",
+    fontWeight: 800,
+    color: DARK,
     margin: "0 0 16px",
     letterSpacing: "-0.5px",
     lineHeight: 1.2,
   },
   sectionSub: {
-    fontSize: "17px",
-    color: "#64748b",
+    fontSize: 17,
+    color: SLATE,
     lineHeight: 1.7,
     margin: "0 0 48px",
-    maxWidth: "600px",
+    maxWidth: 600,
   },
 
   // PROBLEM
@@ -581,38 +941,35 @@ const styles = {
   problemGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: "24px",
+    gap: 24,
   },
   problemCard: {
     background: "#fff",
-    borderRadius: "16px",
+    borderRadius: 16,
     padding: "32px 28px",
-    border: "1px solid #e2e8f0",
+    border: `1px solid ${BORDER}`,
     boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
   },
-  problemIcon: {
-    fontSize: "28px",
-    marginBottom: "16px",
-  },
+  problemIcon: { fontSize: 28, marginBottom: 16 },
   problemStat: {
-    fontSize: "32px",
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: 800,
     color: "#ef4444",
     letterSpacing: "-1px",
     lineHeight: 1,
-    marginBottom: "4px",
+    marginBottom: 4,
   },
   problemLabel: {
-    fontSize: "14px",
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: 700,
     color: "#374151",
     textTransform: "uppercase",
     letterSpacing: "0.3px",
-    marginBottom: "12px",
+    marginBottom: 12,
   },
   problemDesc: {
-    fontSize: "14px",
-    color: "#64748b",
+    fontSize: 14,
+    color: SLATE,
     lineHeight: 1.6,
     margin: 0,
   },
@@ -624,188 +981,141 @@ const styles = {
   },
   productCard: {
     display: "flex",
-    gap: "64px",
-    alignItems: "center",
-    background: "linear-gradient(135deg, #f8faff 0%, #e8f5ee 100%)",
-    borderRadius: "24px",
-    padding: "56px 48px",
-    marginBottom: "32px",
-    border: "1px solid #b8deca",
+    gap: 0,
+    alignItems: "stretch",
+    borderRadius: 24,
+    overflow: "hidden",
+    marginBottom: 32,
+    border: `1px solid ${BORDER}`,
+    boxShadow: "0 8px 40px rgba(0,0,0,0.07)",
     flexWrap: "wrap",
   },
-  productLeft: {
-    flex: "1 1 360px",
+  productPhoto: {
+    flex: "0 0 380px",
+    position: "relative",
+    minHeight: 360,
+    overflow: "hidden",
   },
-  productBadge: {
-    display: "inline-block",
-    background: "linear-gradient(135deg, #1a7a4a, #166840)",
+  productImg: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  productImgOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(135deg, rgba(15,23,42,0.6), rgba(30,58,95,0.4))",
+    display: "flex",
+    alignItems: "flex-end",
+    padding: 24,
+  },
+  productImgBadge: {
+    background: "rgba(255,255,255,0.15)",
+    backdropFilter: "blur(8px)",
+    border: "1px solid rgba(255,255,255,0.25)",
     color: "#fff",
-    fontSize: "13px",
-    fontWeight: "700",
+    fontSize: 13,
+    fontWeight: 700,
     padding: "6px 14px",
-    borderRadius: "20px",
-    marginBottom: "20px",
+    borderRadius: 20,
     letterSpacing: "0.3px",
   },
+  productContent: {
+    flex: "1 1 380px",
+    padding: "48px 44px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    minWidth: 0,
+  },
+  productTag: {
+    display: "inline-block",
+    background: DARK,
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: 700,
+    padding: "5px 12px",
+    borderRadius: 20,
+    marginBottom: 16,
+    letterSpacing: "0.3px",
+    alignSelf: "flex-start",
+  },
   productH3: {
-    fontSize: "28px",
-    fontWeight: "800",
-    color: "#0f172a",
+    fontSize: "clamp(22px, 3vw, 30px)",
+    fontWeight: 800,
+    color: DARK,
     margin: "0 0 16px",
     letterSpacing: "-0.5px",
   },
   productDesc: {
-    fontSize: "16px",
-    color: "#475569",
+    fontSize: 15,
+    color: SLATE,
     lineHeight: 1.7,
-    margin: "0 0 28px",
+    margin: "0 0 24px",
   },
   featureList: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    gap: 8,
+    marginBottom: 28,
   },
   featureItem: {
     display: "flex",
-    gap: "10px",
-    fontSize: "15px",
+    gap: 10,
+    fontSize: 14,
     color: "#374151",
     alignItems: "flex-start",
   },
   featureTick: {
-    color: "#1a7a4a",
-    fontWeight: "700",
+    color: GREEN,
+    fontWeight: 700,
     flexShrink: 0,
-    fontSize: "16px",
+    fontSize: 15,
   },
-  productRight: {
-    flex: "1 1 320px",
-  },
-  mockDashboard: {
-    background: "#fff",
-    borderRadius: "16px",
-    border: "1.5px solid #b8deca",
-    padding: "20px",
-    boxShadow: "0 8px 32px rgba(37,99,235,0.1)",
-  },
-  mockHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "16px",
-    paddingBottom: "12px",
-    borderBottom: "1px solid #f1f5f9",
-  },
-  mockTitle: {
-    fontSize: "13px",
-    fontWeight: "700",
-    color: "#0f172a",
-  },
-  mockBadgeGreen: {
-    background: "#22c55e",
-    color: "#fff",
-    fontSize: "10px",
-    fontWeight: "700",
-    padding: "3px 8px",
-    borderRadius: "10px",
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-  },
-  mockRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "8px 0",
-    borderBottom: "1px solid #f8fafc",
-  },
-  mockAvatar: {
-    width: "32px",
-    height: "32px",
-    borderRadius: "50%",
-    background: "#1a7a4a",
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: "13px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  mockInfo: {
-    flex: 1,
-    minWidth: 0,
-  },
-  mockName: {
-    fontSize: "13px",
-    fontWeight: "600",
-    color: "#0f172a",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-  mockRole: {
-    fontSize: "11px",
-    color: "#94a3b8",
-    marginTop: "2px",
-  },
-  mockProgress: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: "4px",
-    flexShrink: 0,
-  },
-  mockBar: {
-    width: "80px",
-    height: "5px",
-    background: "#f1f5f9",
-    borderRadius: "3px",
-    overflow: "hidden",
-  },
-  mockFill: {
-    height: "100%",
-    borderRadius: "3px",
-  },
-  mockStatus: {
-    fontSize: "11px",
-    fontWeight: "600",
+  productCta: {
+    color: GREEN,
+    fontWeight: 700,
+    fontSize: 14,
+    textDecoration: "none",
+    display: "inline-block",
   },
 
   // HOW IT WORKS
   howSection: {
     padding: "100px 0",
-    background: "#0f172a",
+    background: DARK,
     textAlign: "center",
   },
   stepsRow: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "24px",
-    marginTop: "8px",
+    gap: 20,
+    marginTop: 8,
   },
   stepCard: {
     background: "rgba(255,255,255,0.05)",
     border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "16px",
+    borderRadius: 16,
     padding: "36px 28px",
     textAlign: "left",
   },
   stepNum: {
-    fontSize: "36px",
-    fontWeight: "900",
-    color: "#1a7a4a",
+    fontSize: 36,
+    fontWeight: 900,
+    color: GREEN,
     lineHeight: 1,
-    marginBottom: "16px",
+    marginBottom: 16,
     letterSpacing: "-1px",
   },
   stepTitle: {
-    fontSize: "17px",
-    fontWeight: "700",
+    fontSize: 17,
+    fontWeight: 700,
     color: "#fff",
     margin: "0 0 12px",
   },
   stepDesc: {
-    fontSize: "14px",
+    fontSize: 14,
     color: "#94a3b8",
     lineHeight: 1.7,
     margin: 0,
@@ -819,167 +1129,273 @@ const styles = {
   sectorsGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "24px",
+    gap: 24,
   },
   sectorCard: {
     background: "#fff",
-    borderRadius: "20px",
-    padding: "40px 32px",
-    border: "1px solid #e2e8f0",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+    borderRadius: 20,
+    overflow: "hidden",
+    border: `1px solid ${BORDER}`,
+    boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
   },
-  sectorIcon: {
-    fontSize: "40px",
-    marginBottom: "20px",
+  sectorPhotoWrap: {
+    height: 200,
+    overflow: "hidden",
+  },
+  sectorPhoto: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+    transition: "transform 0.4s ease",
+  },
+  sectorBody: {
+    padding: "28px 28px 32px",
   },
   sectorTitle: {
-    fontSize: "22px",
-    fontWeight: "800",
-    color: "#0f172a",
-    margin: "0 0 12px",
+    fontSize: 20,
+    fontWeight: 800,
+    color: DARK,
+    margin: "0 0 10px",
   },
   sectorDesc: {
-    fontSize: "15px",
-    color: "#64748b",
+    fontSize: 14,
+    color: SLATE,
     lineHeight: 1.7,
-    margin: "0 0 24px",
+    margin: "0 0 20px",
   },
   tagRow: {
     display: "flex",
     flexWrap: "wrap",
-    gap: "8px",
+    gap: 8,
   },
   tag: {
-    background: "#e8f5ee",
-    color: "#1a7a4a",
-    fontSize: "12px",
-    fontWeight: "600",
+    background: GREEN_XL,
+    color: GREEN,
+    fontSize: 11,
+    fontWeight: 600,
     padding: "4px 10px",
-    borderRadius: "20px",
+    borderRadius: 20,
     border: "1px solid #b8deca",
+  },
+
+  // TESTIMONIAL
+  testimonialSection: {
+    padding: "80px 24px",
+    background: "#fff",
+  },
+  testimonialInner: {
+    maxWidth: 720,
+    margin: "0 auto",
+    textAlign: "center",
+  },
+  quoteIcon: {
+    fontSize: 80,
+    color: GREEN_XL,
+    lineHeight: 0.6,
+    marginBottom: 24,
+    display: "block",
+    fontFamily: "Georgia, serif",
+    color: "#b8deca",
+  },
+  quoteText: {
+    fontSize: "clamp(18px, 2.5vw, 24px)",
+    color: DARK,
+    lineHeight: 1.6,
+    fontStyle: "italic",
+    fontWeight: 500,
+    margin: "0 0 32px",
+    letterSpacing: "-0.2px",
+  },
+  quoteAttrib: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 14,
+  },
+  quoteAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: "50%",
+    background: `linear-gradient(135deg, ${GREEN}, #166840)`,
+    color: "#fff",
+    fontWeight: 800,
+    fontSize: 18,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quoteName: {
+    fontSize: 15,
+    fontWeight: 700,
+    color: DARK,
+    textAlign: "left",
+  },
+  quoteRole: {
+    fontSize: 13,
+    color: SLATE,
+    textAlign: "left",
+    marginTop: 2,
   },
 
   // DEMO CTA
   demoSection: {
+    position: "relative",
     padding: "100px 24px",
-    background: "linear-gradient(135deg, #1a7a4a 0%, #166840 100%)",
     textAlign: "center",
+    overflow: "hidden",
   },
-  demoInner: {
-    maxWidth: "600px",
+  demoPhoto: {
+    position: "absolute",
+    inset: 0,
+  },
+  demoBgImg: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  demoOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(135deg, rgba(15,23,42,0.88), rgba(26,122,74,0.82))",
+  },
+  demoContent: {
+    position: "relative",
+    zIndex: 1,
+    maxWidth: 640,
     margin: "0 auto",
   },
   demoH2: {
     fontSize: "clamp(28px, 4vw, 44px)",
-    fontWeight: "800",
+    fontWeight: 800,
     color: "#fff",
     margin: "0 0 16px",
     letterSpacing: "-0.5px",
   },
   demoSub: {
-    fontSize: "17px",
+    fontSize: 17,
     color: "rgba(255,255,255,0.8)",
     lineHeight: 1.7,
     margin: "0 0 40px",
   },
   demoForm: {
     display: "flex",
-    gap: "12px",
-    maxWidth: "480px",
+    flexDirection: "column",
+    gap: 12,
+    maxWidth: 440,
     margin: "0 auto 24px",
-    flexWrap: "wrap",
+  },
+  demoFields: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
   },
   demoInput: {
-    flex: 1,
-    minWidth: "200px",
     padding: "14px 18px",
-    borderRadius: "10px",
+    borderRadius: 10,
     border: "none",
-    fontSize: "15px",
+    fontSize: 15,
     fontFamily: "inherit",
     outline: "none",
-    color: "#0f172a",
+    color: DARK,
+    background: "rgba(255,255,255,0.95)",
   },
   demoBtn: {
-    background: "#fff",
-    color: "#1a7a4a",
+    background: `linear-gradient(135deg, ${GREEN}, #166840)`,
+    color: "#fff",
     border: "none",
-    borderRadius: "10px",
-    padding: "14px 24px",
-    fontSize: "15px",
-    fontWeight: "700",
+    borderRadius: 10,
+    padding: "15px 24px",
+    fontSize: 16,
+    fontWeight: 700,
     cursor: "pointer",
     fontFamily: "inherit",
-    whiteSpace: "nowrap",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
   },
   demoSuccess: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "16px",
+    gap: 16,
     background: "rgba(255,255,255,0.15)",
-    borderRadius: "12px",
+    borderRadius: 12,
     padding: "24px 32px",
     color: "#fff",
-    fontSize: "16px",
+    fontSize: 16,
     lineHeight: 1.5,
-    maxWidth: "480px",
+    maxWidth: 440,
     margin: "0 auto 24px",
     textAlign: "left",
   },
   demoNote: {
-    fontSize: "14px",
-    color: "rgba(255,255,255,0.7)",
+    fontSize: 14,
+    color: "rgba(255,255,255,0.65)",
     margin: 0,
   },
   demoLink: {
     color: "#fff",
-    fontWeight: "600",
+    fontWeight: 600,
   },
 
   // FOOTER
   footer: {
-    background: "#0f172a",
-    padding: "48px 24px",
+    background: DARK,
+    padding: "56px 24px 0",
     borderTop: "1px solid rgba(255,255,255,0.08)",
   },
   footerInner: {
-    maxWidth: "1200px",
+    maxWidth: 1200,
     margin: "0 auto",
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "40px",
+    gap: 48,
     flexWrap: "wrap",
+    paddingBottom: 48,
   },
   footerLeft: {
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
+    gap: 16,
+    flex: "1 1 260px",
   },
   footerTagline: {
-    fontSize: "14px",
+    fontSize: 14,
     color: "#64748b",
-    lineHeight: 1.6,
+    lineHeight: 1.7,
     margin: 0,
-  },
-  footerRight: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-    alignItems: "flex-end",
   },
   footerLinks: {
     display: "flex",
-    gap: "24px",
+    gap: 48,
+    flexWrap: "wrap",
+  },
+  footerLinkCol: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+  footerLinkHead: {
+    fontSize: 12,
+    fontWeight: 700,
+    color: "#94a3b8",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    marginBottom: 4,
   },
   footerLink: {
-    color: "#94a3b8",
+    color: "#64748b",
     textDecoration: "none",
-    fontSize: "14px",
+    fontSize: 14,
+  },
+  footerBottom: {
+    borderTop: "1px solid rgba(255,255,255,0.06)",
+    padding: "20px 0",
+    maxWidth: 1200,
+    margin: "0 auto",
   },
   footerCopy: {
-    fontSize: "13px",
+    fontSize: 13,
     color: "#475569",
     margin: 0,
   },
