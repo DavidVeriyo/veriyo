@@ -237,7 +237,6 @@ export default function Website({ onLogin }) {
       <style>{`
         @media (max-width: 640px) {
           .nav-links { display: none !important; }
-          .nav-login { display: none !important; }
           .nav-inner { padding: 0 16px !important; }
         }
       `}</style>
