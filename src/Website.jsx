@@ -234,17 +234,24 @@ export default function Website({ onLogin }) {
     <div style={s.page}>
 
       {/* ─── NAV ─── */}
+      <style>{`
+        @media (max-width: 640px) {
+          .nav-links { display: none !important; }
+          .nav-login { display: none !important; }
+          .nav-inner { padding: 0 16px !important; }
+        }
+      `}</style>
       <nav style={s.nav}>
-        <div style={s.navInner}>
-          <VeriyoLogoSVG height={34} darkText={true} />
-          <div style={s.navLinks}>
+        <div style={s.navInner} className="nav-inner">
+          <VeriyoLogoSVG height={36} darkText={true} />
+          <div style={s.navLinks} className="nav-links">
             <a href="#products" style={s.navLink}>Products</a>
             <a href="#why" style={s.navLink}>Why Veriyo</a>
             <a href="#sectors" style={s.navLink}>Sectors</a>
             <a href="#contact" style={s.navLink}>Contact</a>
           </div>
           <div style={s.navActions}>
-            <button onClick={onLogin} style={s.loginBtn}>Log in</button>
+            <button onClick={onLogin} style={s.loginBtn} className="nav-login">Log in</button>
             <a href="#demo" style={s.demoNavBtn}>Request Demo</a>
           </div>
         </div>
@@ -633,7 +640,7 @@ export default function Website({ onLogin }) {
         <div style={s.demoContent}>
           <h2 style={s.demoH2}>See Veriyo in action</h2>
           <p style={s.demoSub}>
-            We're onboarding founding partners now. Request a personalised demo and see
+            We're selectively onboarding founding partners. Request a personalised demo and see
             how Veriyo fits your organisation's compliance workflow.
           </p>
           {demoSubmitted ? (
