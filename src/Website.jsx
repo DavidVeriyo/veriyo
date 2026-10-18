@@ -1,62 +1,221 @@
 import { useState } from "react";
 import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
-function NDISIllustration() {
+// Shared illustration wrapper
+function IllustrationWrap({ children, bg = "#f0f9f4" }) {
   return (
-    <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #e8f5ee 0%, #d1edd9 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-      <svg viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 300 }}>
-        {/* Background circles */}
-        <circle cx="160" cy="100" r="90" fill="#c8e6d0" opacity="0.4" />
-        <circle cx="160" cy="100" r="65" fill="#b8deca" opacity="0.4" />
-
-        {/* Wheelchair */}
-        <circle cx="118" cy="155" r="16" stroke="#1a7a4a" strokeWidth="3" fill="none" />
-        <circle cx="118" cy="155" r="4" fill="#1a7a4a" />
-        <circle cx="152" cy="155" r="10" stroke="#1a7a4a" strokeWidth="3" fill="none" />
-        <circle cx="152" cy="155" r="3" fill="#1a7a4a" />
-        {/* Wheelchair frame */}
-        <path d="M118 139 L118 115 L138 115 L152 139 L118 139Z" stroke="#1a7a4a" strokeWidth="2.5" fill="#e8f5ee" strokeLinejoin="round" />
-        <line x1="118" y1="139" x2="152" y2="139" stroke="#1a7a4a" strokeWidth="2.5" />
-        <path d="M125 115 L130 100" stroke="#1a7a4a" strokeWidth="2.5" strokeLinecap="round" />
-
-        {/* Person in wheelchair - body */}
-        <circle cx="130" cy="92" r="10" fill="#f4a261" /> {/* head */}
-        <path d="M120 105 Q130 110 140 105 L142 130 L118 130Z" fill="#4a90d9" /> {/* torso */}
-        <path d="M125 130 L122 145" stroke="#4a90d9" strokeWidth="3" strokeLinecap="round" /> {/* legs */}
-        <path d="M135 130 L138 145" stroke="#4a90d9" strokeWidth="3" strokeLinecap="round" />
-        {/* arm reaching out */}
-        <path d="M140 112 L158 118" stroke="#f4a261" strokeWidth="3" strokeLinecap="round" />
-
-        {/* Support worker */}
-        <circle cx="185" cy="88" r="12" fill="#f4a261" /> {/* head */}
-        <path d="M173 102 Q185 108 197 102 L200 145 L170 145Z" fill="#1a7a4a" /> {/* torso - green uniform */}
-        <path d="M176 145 L174 160" stroke="#555" strokeWidth="3" strokeLinecap="round" />
-        <path d="M194 145 L196 160" stroke="#555" strokeWidth="3" strokeLinecap="round" />
-        {/* support worker arm reaching to person */}
-        <path d="M173 110 L158 118" stroke="#f4a261" strokeWidth="3" strokeLinecap="round" />
-        {/* hands clasped */}
-        <circle cx="158" cy="119" r="5" fill="#f4a261" />
-
-        {/* Clipboard in other hand */}
-        <rect x="196" y="100" width="20" height="26" rx="2" fill="#fff" stroke="#1a7a4a" strokeWidth="1.5" />
-        <line x1="200" y1="107" x2="212" y2="107" stroke="#1a7a4a" strokeWidth="1.5" />
-        <line x1="200" y1="112" x2="212" y2="112" stroke="#1a7a4a" strokeWidth="1.5" />
-        <line x1="200" y1="117" x2="208" y2="117" stroke="#22c55e" strokeWidth="2" />
-        <path d="M200 122 L203 125 L208 119" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-
-        {/* Shield / compliance badge */}
-        <path d="M75 60 L75 80 Q75 90 85 95 Q95 90 95 80 L95 60 L85 57Z" fill="#1a7a4a" opacity="0.9" />
-        <path d="M80 75 L83 79 L91 70" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-
-        {/* Stars / sparkles */}
-        <path d="M230 55 L232 60 L237 60 L233 63 L235 68 L230 65 L225 68 L227 63 L223 60 L228 60Z" fill="#22c55e" opacity="0.7" />
-        <path d="M85 35 L86 38 L89 38 L87 40 L88 43 L85 41 L82 43 L83 40 L81 38 L84 38Z" fill="#1a7a4a" opacity="0.5" />
-
-        {/* Label */}
-        <rect x="95" y="168" width="130" height="22" rx="11" fill="#1a7a4a" />
-        <text x="160" y="183" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="700" fontFamily="system-ui, sans-serif">NDIS Compliant Worker</text>
+    <div style={{ width: "100%", height: "100%", background: bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <svg viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%" }}>
+        {/* soft background circle */}
+        <circle cx="140" cy="105" r="82" fill="#e0f0e8" />
+        {children}
       </svg>
     </div>
+  );
+}
+
+// Aged Care: worker gently holding hands with elderly resident
+function AgedCareIllustration() {
+  return (
+    <IllustrationWrap>
+      {/* Elderly person (left) */}
+      {/* head + white hair */}
+      <circle cx="90" cy="82" r="18" fill="#f5c5a3" />
+      <path d="M72 74 Q90 58 108 74" fill="#d1d5db" />
+      <ellipse cx="90" cy="68" rx="18" ry="10" fill="#d1d5db" />
+      {/* glasses */}
+      <circle cx="84" cy="82" r="5" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <circle cx="96" cy="82" r="5" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <line x1="89" y1="82" x2="91" y2="82" stroke="#6b7280" strokeWidth="1.5" />
+      {/* smile */}
+      <path d="M86 88 Q90 92 94 88" stroke="#c084a0" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      {/* body - pink top */}
+      <path d="M70 100 Q90 95 110 100 L112 150 L68 150Z" fill="#f9a8d4" />
+      {/* grey trousers */}
+      <rect x="72" y="148" width="16" height="28" rx="6" fill="#9ca3af" />
+      <rect x="90" y="148" width="16" height="28" rx="6" fill="#9ca3af" />
+      {/* walking cane */}
+      <line x1="108" y1="120" x2="115" y2="178" stroke="#6b7280" strokeWidth="3" strokeLinecap="round" />
+      <path d="M105 120 Q108 115 113 118" stroke="#6b7280" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      {/* arm reaching right */}
+      <path d="M108 110 Q120 108 128 115" stroke="#f5c5a3" strokeWidth="7" strokeLinecap="round" fill="none" />
+      <circle cx="130" cy="116" r="6" fill="#f5c5a3" />
+
+      {/* Care worker (right) */}
+      {/* head */}
+      <circle cx="188" cy="76" r="20" fill="#c8956c" />
+      {/* dark hair */}
+      <path d="M168 68 Q188 52 208 68 Q208 58 188 54 Q168 58 168 68Z" fill="#374151" />
+      {/* smile */}
+      <path d="M182 82 Q188 87 194 82" stroke="#92400e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      {/* body - green uniform */}
+      <path d="M166 98 Q188 92 210 98 L214 158 L162 158Z" fill="#1a7a4a" />
+      {/* collar detail */}
+      <path d="M180 98 L188 108 L196 98" fill="#166840" />
+      {/* navy trousers */}
+      <rect x="168" y="156" width="18" height="24" rx="6" fill="#1e3a5f" />
+      <rect x="188" y="156" width="18" height="24" rx="6" fill="#1e3a5f" />
+      {/* arm reaching left */}
+      <path d="M166 108 Q152 110 144 118" stroke="#c8956c" strokeWidth="7" strokeLinecap="round" fill="none" />
+      <circle cx="142" cy="119" r="6" fill="#c8956c" />
+
+      {/* Joined hands in middle */}
+      <ellipse cx="136" cy="118" rx="10" ry="7" fill="#f5c5a3" opacity="0.8" />
+
+      {/* Heart */}
+      <path d="M134 58 C134 54 128 50 128 56 C128 62 134 66 134 66 C134 66 140 62 140 56 C140 50 134 54 134 58Z" fill="#f472b6" />
+
+      {/* compliance badge bottom right */}
+      <rect x="210" y="138" width="44" height="28" rx="8" fill="#fff" />
+      <path d="M218 148 L222 153 L230 144" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="233" y="147" width="16" height="3" rx="1.5" fill="#d1d5db" />
+      <rect x="233" y="153" width="11" height="3" rx="1.5" fill="#d1d5db" />
+
+      {/* sparkles */}
+      <circle cx="52" cy="60" r="3" fill="#22c55e" opacity="0.6" />
+      <circle cx="46" cy="72" r="2" fill="#22c55e" opacity="0.4" />
+      <circle cx="230" cy="60" r="2.5" fill="#1a7a4a" opacity="0.5" />
+    </IllustrationWrap>
+  );
+}
+
+// NDIS: support worker alongside wheelchair user, both looking at tablet
+function NDISIllustration() {
+  return (
+    <IllustrationWrap bg="#f0f7ff">
+      {/* background circle override */}
+      <circle cx="140" cy="105" r="82" fill="#dbeafe" />
+
+      {/* Wheelchair */}
+      <circle cx="100" cy="162" r="18" fill="none" stroke="#3b82f6" strokeWidth="3" />
+      <circle cx="100" cy="162" r="5" fill="#3b82f6" />
+      {/* spokes */}
+      <line x1="100" y1="144" x2="100" y2="162" stroke="#3b82f6" strokeWidth="1.5" />
+      <line x1="82" y1="162" x2="100" y2="162" stroke="#3b82f6" strokeWidth="1.5" />
+      <line x1="87" y1="149" x2="100" y2="162" stroke="#3b82f6" strokeWidth="1.5" />
+      <line x1="113" y1="149" x2="100" y2="162" stroke="#3b82f6" strokeWidth="1.5" />
+      {/* small front wheel */}
+      <circle cx="130" cy="162" r="10" fill="none" stroke="#3b82f6" strokeWidth="2.5" />
+      <circle cx="130" cy="162" r="3" fill="#3b82f6" />
+      {/* seat + back */}
+      <rect x="96" y="128" width="40" height="8" rx="4" fill="#93c5fd" /> {/* seat */}
+      <rect x="134" y="108" width="8" height="28" rx="4" fill="#93c5fd" /> {/* back */}
+      {/* footrest */}
+      <line x1="96" y1="148" x2="86" y2="160" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="86" y1="160" x2="96" y2="160" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+      {/* armrest */}
+      <line x1="96" y1="120" x2="96" y2="136" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Person in wheelchair */}
+      <circle cx="114" cy="94" r="16" fill="#f5c5a3" />
+      <path d="M98 86 Q114 72 130 86 Q128 78 114 76 Q100 78 98 86Z" fill="#374151" />
+      <path d="M100 86 Q114 80 128 86" fill="#374151" />
+      <path d="M98 110 Q114 104 130 110 L132 134 L96 134Z" fill="#7c3aed" />
+      <path d="M104 110 Q106 125 100 134" stroke="#6d28d9" strokeWidth="2" fill="none" />
+      {/* legs resting on footrest */}
+      <path d="M100 134 Q94 148 88 158" stroke="#7c3aed" strokeWidth="6" strokeLinecap="round" fill="none" />
+      <path d="M118 134 Q112 148 106 158" stroke="#7c3aed" strokeWidth="6" strokeLinecap="round" fill="none" />
+
+      {/* Support worker (standing right) */}
+      <circle cx="190" cy="82" r="18" fill="#c8956c" />
+      <path d="M172 74 Q190 58 208 74 Q206 64 190 62 Q174 64 172 74Z" fill="#1e3a5f" />
+      <path d="M172 100 Q190 94 208 100 L210 152 L170 152Z" fill="#1a7a4a" />
+      <rect x="174" y="150" width="14" height="22" rx="6" fill="#1e3a5f" />
+      <rect x="192" y="150" width="14" height="22" rx="6" fill="#1e3a5f" />
+      {/* arm pointing at tablet */}
+      <path d="M172 112 Q155 118 148 124" stroke="#c8956c" strokeWidth="7" strokeLinecap="round" fill="none" />
+
+      {/* Tablet between them */}
+      <rect x="138" y="116" width="32" height="42" rx="4" fill="#fff" stroke="#d1d5db" strokeWidth="2" />
+      <rect x="141" y="120" width="26" height="30" rx="2" fill="#dbeafe" />
+      {/* screen content - checkmarks */}
+      <path d="M145 128 L147 131 L153 125" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M145 136 L147 139 L153 133" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="156" y="127" width="9" height="2.5" rx="1.2" fill="#93c5fd" />
+      <rect x="156" y="135" width="7" height="2.5" rx="1.2" fill="#93c5fd" />
+      <path d="M145 143 L147 146 L151 141" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="154" y="142" width="11" height="2.5" rx="1.2" fill="#fcd34d" />
+
+      {/* person in wheelchair arm reaching to tablet */}
+      <path d="M128 116 Q136 118 140 122" stroke="#f5c5a3" strokeWidth="6" strokeLinecap="round" fill="none" />
+
+      {/* sparkle */}
+      <path d="M60 72 L62 78 L68 78 L63 82 L65 88 L60 84 L55 88 L57 82 L52 78 L58 78Z" fill="#3b82f6" opacity="0.5" />
+      <circle cx="222" cy="68" r="3" fill="#1a7a4a" opacity="0.5" />
+    </IllustrationWrap>
+  );
+}
+
+// Early Learning: educator on floor with toddlers
+function EarlyLearningIllustration() {
+  return (
+    <IllustrationWrap bg="#fff8f0">
+      <circle cx="140" cy="105" r="82" fill="#fed7aa" opacity="0.6" />
+
+      {/* Floor mat */}
+      <ellipse cx="140" cy="170" rx="85" ry="14" fill="#fde68a" opacity="0.7" />
+
+      {/* Educator (centre, seated/kneeling) */}
+      <circle cx="140" cy="88" r="19" fill="#a16207" />
+      {/* hair bun */}
+      <ellipse cx="140" cy="70" rx="16" ry="10" fill="#92400e" />
+      <circle cx="152" cy="68" r="6" fill="#92400e" />
+      {/* smile */}
+      <path d="M134 94 Q140 100 146 94" stroke="#7c2d12" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      {/* eyes */}
+      <circle cx="135" cy="88" r="2.5" fill="#fff" />
+      <circle cx="145" cy="88" r="2.5" fill="#fff" />
+      <circle cx="135.8" cy="88.8" r="1.5" fill="#1e3a5f" />
+      <circle cx="145.8" cy="88.8" r="1.5" fill="#1e3a5f" />
+      {/* body - pink top */}
+      <path d="M120 108 Q140 102 160 108 L162 155 L118 155Z" fill="#ec4899" />
+      {/* skirt */}
+      <path d="M118 150 Q140 158 162 150 L165 175 L115 175Z" fill="#f472b6" />
+      {/* arms out to sides with kids */}
+      <path d="M120 115 Q104 118 96 124" stroke="#a16207" strokeWidth="8" strokeLinecap="round" fill="none" />
+      <path d="M160 115 Q176 118 184 124" stroke="#a16207" strokeWidth="8" strokeLinecap="round" fill="none" />
+
+      {/* Toddler left */}
+      <circle cx="76" cy="118" r="13" fill="#f5c5a3" />
+      {/* pigtails */}
+      <circle cx="66" cy="108" r="6" fill="#fbbf24" />
+      <circle cx="86" cy="108" r="6" fill="#fbbf24" />
+      <ellipse cx="76" cy="108" rx="13" ry="8" fill="#fbbf24" />
+      <path d="M70 124 Q76 128 82 124" stroke="#c084a0" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      {/* body */}
+      <path d="M62 132 Q76 128 90 132 L90 162 L62 162Z" fill="#a78bfa" />
+      <rect x="65" y="160" width="10" height="16" rx="5" fill="#7c3aed" />
+      <rect x="78" y="160" width="10" height="16" rx="5" fill="#7c3aed" />
+      {/* arm up toward educator */}
+      <path d="M88 136 Q92 128 96 124" stroke="#f5c5a3" strokeWidth="6" strokeLinecap="round" fill="none" />
+
+      {/* Toddler right */}
+      <circle cx="202" cy="118" r="13" fill="#f5c5a3" />
+      {/* curly hair */}
+      <ellipse cx="202" cy="108" rx="14" ry="9" fill="#1e3a5f" />
+      <circle cx="192" cy="110" r="5" fill="#1e3a5f" />
+      <circle cx="212" cy="110" r="5" fill="#1e3a5f" />
+      <circle cx="197" cy="106" r="4" fill="#1e3a5f" />
+      <circle cx="207" cy="106" r="4" fill="#1e3a5f" />
+      <path d="M196 124 Q202 128 208 124" stroke="#c084a0" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      {/* body */}
+      <path d="M188 132 Q202 128 216 132 L216 162 L188 162Z" fill="#34d399" />
+      <rect x="191" y="160" width="10" height="16" rx="5" fill="#059669" />
+      <rect x="204" y="160" width="10" height="16" rx="5" fill="#059669" />
+      {/* arm up */}
+      <path d="M188 136 Q185 128 184 124" stroke="#f5c5a3" strokeWidth="6" strokeLinecap="round" fill="none" />
+
+      {/* Book on mat */}
+      <rect x="120" y="162" width="40" height="28" rx="4" fill="#fbbf24" />
+      <rect x="122" y="164" width="18" height="24" rx="3" fill="#f97316" />
+      <rect x="142" y="164" width="16" height="24" rx="3" fill="#fb923c" />
+      <line x1="140" y1="164" x2="140" y2="188" stroke="#92400e" strokeWidth="1.5" />
+
+      {/* Stars */}
+      <path d="M54 84 L56 90 L62 90 L57 94 L59 100 L54 96 L49 100 L51 94 L46 90 L52 90Z" fill="#fbbf24" opacity="0.7" />
+      <circle cx="226" cy="78" r="4" fill="#ec4899" opacity="0.5" />
+      <circle cx="234" cy="90" r="2.5" fill="#a78bfa" opacity="0.6" />
+    </IllustrationWrap>
   );
 }
 
@@ -366,23 +525,19 @@ export default function Website({ onLogin }) {
           <div style={s.sectorsGrid}>
             {[
               {
-                visual: "photo",
-                photo: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=500&q=80",
-                alt: "Aged care worker with elderly resident",
+                illustration: <AgedCareIllustration />,
                 title: "Aged Care",
                 desc: "NDIS Worker Screening, police checks, aged care-specific qualifications, and award classification tracking for residential and community aged care providers.",
                 tags: ["NDIS Screening", "Police Check", "Aged Care Cert III/IV", "Award Classification"],
               },
               {
-                visual: "illustration",
+                illustration: <NDISIllustration />,
                 title: "NDIS",
                 desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, and worker registration support ahead of the July 2027 independent registration deadline.",
                 tags: ["Worker Screening", "Banning Order Check", "Participant Safety", "2027 Registration"],
               },
               {
-                visual: "photo",
-                photo: "https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=500&q=80",
-                alt: "Early childhood educator playing with toddlers",
+                illustration: <EarlyLearningIllustration />,
                 title: "Early Learning",
                 desc: "Working With Children Checks, early childhood education qualifications, first aid, and anaphylaxis certifications for childcare centres and family day care.",
                 tags: ["WWCC", "ECE Qualifications", "First Aid", "Anaphylaxis"],
@@ -390,10 +545,7 @@ export default function Website({ onLogin }) {
             ].map((sector, i) => (
               <div key={i} style={s.sectorCard}>
                 <div style={s.sectorPhotoWrap}>
-                  {sector.visual === "illustration"
-                    ? <NDISIllustration />
-                    : <img src={sector.photo} alt={sector.alt} style={s.sectorPhoto} />
-                  }
+                  {sector.illustration}
                 </div>
                 <div style={s.sectorBody}>
                   <h3 style={s.sectorTitle}>{sector.title}</h3>
