@@ -1,4 +1,5 @@
 // ─── Veriyo shared top navigation ────────────────────────────────────────────
+import { useState, useRef, useLayoutEffect } from "react";
 
 // Hexagon icon only (used standalone in tight spaces)
 export function VeriyoIcon({ size = 32 }) {
@@ -28,21 +29,51 @@ export function VeriyoIcon({ size = 32 }) {
  * height prop scales the whole lockup. Default 36 ≈ nav bar size.
  * darkText=false renders the wordmark white (for dark backgrounds).
  */
+/**
+ * VeriyoLogo — hexagon icon + "veriyo" wordmark + green dot touching the "o".
+ *
+ * Uses a DOM ref to measure where the "o" actually renders, then positions
+ * the dot precisely at its top-right corner. Falls back to an estimated
+ * position on first paint (before measurement).
+ */
 export function VeriyoLogo({ height = 36, darkText = false }) {
-  // ViewBox: 340 wide × 100 tall. Hexagon occupies left ~100px, text right of it.
   const textColor = darkText ? "#1a2e24" : "#ffffff";
-  // Hexagon points (same proportions as VeriyoIcon, scaled to 86×100 within the 340×100 box)
+  const oRef = useRef(null);
+  // dot position state: [cx, cy, r] in SVG user units
+  const [dot, setDot] = useState({ cx: 336, cy: 16, r: 9 });
+
+  useLayoutEffect(() => {
+    if (!oRef.current) return;
+    try {
+      // getExtentOfChar(0) gives the bounding box of the "o" character
+      const bb = oRef.current.getExtentOfChar(0);
+      // SVG element's own CTM to convert to viewBox coords
+      const svg = oRef.current.ownerSVGElement;
+      // dot sits at top-right of the "o": x = right edge, y = top edge + r
+      const r = bb.height * 0.19;
+      setDot({
+        cx: bb.x + bb.width + r * 0.1,
+        cy: bb.y + r,
+        r,
+      });
+    } catch (e) {
+      // getExtentOfChar not supported — keep fallback
+    }
+  }, [height]);
+
   const hx = 43, hy = 50, hr = 42;
   const hpts = Array.from({ length: 6 }, (_, i) => {
     const a = (Math.PI / 180) * (60 * i - 30);
     return `${hx + hr * Math.cos(a)},${hy + hr * Math.sin(a)}`;
   }).join(" ");
 
+  const FS = 72; // font-size in SVG user units
+
   return (
     <svg
-      viewBox="0 0 340 100"
+      viewBox="0 0 360 100"
       height={height}
-      width={(340 / 100) * height}
+      width={(360 / 100) * height}
       fill="none"
       style={{ display: "block" }}
     >
@@ -57,18 +88,22 @@ export function VeriyoLogo({ height = 36, darkText = false }) {
       <polygon points={hpts} fill="url(#vhg)" />
       <path d="M25 52 L38 66 L62 35" stroke="white" strokeWidth="9.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
 
-      {/* Wordmark "veriyo" — heavy weight, tight tracking */}
+      {/* "veriyo" — "veri" + "y" in one span so we can ref just the "o" */}
       <text
-        x="100" y="74"
-        fontFamily="'Segoe UI Black','Arial Black',system-ui,sans-serif"
+        x="100" y="78"
+        fontFamily="'Segoe UI Black','Arial Black','Helvetica Neue',sans-serif"
         fontWeight="900"
-        fontSize="68"
-        letterSpacing="-2"
+        fontSize={FS}
+        letterSpacing="-1"
         fill={textColor}
-      >veriyo</text>
+      >
+        veri
+        <tspan>y</tspan>
+        <tspan ref={oRef}>o</tspan>
+      </text>
 
-      {/* Green dot — sits top-right of the "o", touching it snugly */}
-      <circle cx="330" cy="14" r="13" fill="#34c274" />
+      {/* Green dot — measured to sit flush at the top-right of the "o" */}
+      <circle cx={dot.cx} cy={dot.cy} r={dot.r} fill="#34c274" />
     </svg>
   );
 }
