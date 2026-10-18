@@ -1,18 +1,8 @@
 import { useState } from "react";
+import { VeriyoIcon } from "./Nav";
 
 function VeriyoLogo({ size = 40 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="40" height="40" rx="10" fill="url(#vgl)"/>
-      <defs>
-        <linearGradient id="vgl" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#22a060"/>
-          <stop offset="100%" stopColor="#1a7a4a"/>
-        </linearGradient>
-      </defs>
-      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    </svg>
-  );
+  return <VeriyoIcon size={size} />;
 }
 
 const DEMO_USERS = [
@@ -51,7 +41,10 @@ export default function Login({ onLogin, onBack }) {
         {/* Logo */}
         <div style={styles.logoRow}>
           <VeriyoLogo size={40} />
-          <span style={styles.logoText}>Veriyo</span>
+          <div style={{ position: "relative", lineHeight: 1 }}>
+            <span style={styles.logoText}>veriyo</span>
+            <span style={{ position: "absolute", top: 0, right: -10, width: 9, height: 9, background: "#34c274", borderRadius: "50%" }} />
+          </div>
         </div>
 
         <h2 style={styles.heading}>Welcome back</h2>

@@ -1,20 +1,8 @@
 import { useState } from "react";
+import { VeriyoIcon } from "./Nav";
 
 function VeriyoLogo({ size = 32 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="40" height="40" rx="10" fill="url(#vg)"/>
-      <defs>
-        <linearGradient id="vg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#22a060"/>
-          <stop offset="100%" stopColor="#1a7a4a"/>
-        </linearGradient>
-      </defs>
-      {/* V checkmark shield shape */}
-      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-      <circle cx="28" cy="13" r="0" fill="white"/>
-    </svg>
-  );
+  return <VeriyoIcon size={size} />;
 }
 
 export default function Website({ onLogin }) {
@@ -34,7 +22,10 @@ export default function Website({ onLogin }) {
         <div style={styles.navInner}>
           <div style={styles.logoRow}>
             <VeriyoLogo size={32} />
-            <span style={styles.logoText}>Veriyo</span>
+            <div style={{ position: "relative", lineHeight: 1 }}>
+              <span style={styles.logoText}>veriyo</span>
+              <span style={{ position: "absolute", top: 0, right: -8, width: 8, height: 8, background: "#34c274", borderRadius: "50%" }} />
+            </div>
           </div>
           <div style={styles.navLinks}>
             <a href="#products" style={styles.navLink}>Products</a>
@@ -339,7 +330,10 @@ export default function Website({ onLogin }) {
           <div style={styles.footerLeft}>
             <div style={styles.logoRow}>
               <VeriyoLogo size={28} />
-              <span style={{ ...styles.logoText, fontSize: "18px", color: "#fff" }}>Veriyo</span>
+              <div style={{ position: "relative", lineHeight: 1 }}>
+                <span style={{ ...styles.logoText, fontSize: "18px", color: "#fff" }}>veriyo</span>
+                <span style={{ position: "absolute", top: 0, right: -8, width: 7, height: 7, background: "#34c274", borderRadius: "50%" }} />
+              </div>
             </div>
             <p style={styles.footerTagline}>
               Workforce compliance for Australian care sectors.<br />

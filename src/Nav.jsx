@@ -1,16 +1,53 @@
 // ─── Veriyo shared top navigation ────────────────────────────────────────────
-export function VeriyoLogo({ size = 28 }) {
+
+// Hexagon icon with white checkmark — matches the official Veriyo brand logo
+export function VeriyoIcon({ size = 32 }) {
+  // Regular hexagon: flat-top orientation, centred in viewBox 0 0 100 100
+  const cx = 50, cy = 50, r = 46;
+  const pts = Array.from({ length: 6 }, (_, i) => {
+    const a = (Math.PI / 180) * (60 * i - 30);
+    return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+  }).join(" ");
   return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <rect width="40" height="40" rx="10" fill="url(#vgnav)" />
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+      <polygon points={pts} fill="url(#hexgrad)" />
       <defs>
-        <linearGradient id="vgnav" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#22a060" />
+        <linearGradient id="hexgrad" x1="20" y1="10" x2="80" y2="90" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34c274" />
           <stop offset="100%" stopColor="#1a7a4a" />
         </linearGradient>
       </defs>
-      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* Bold white checkmark */}
+      <path d="M30 52 L43 65 L70 36" stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
+  );
+}
+
+// Full wordmark: hexagon icon + "veriyo" text + green dot on the "o"
+export function VeriyoLogo({ size = 28 }) {
+  return <VeriyoIcon size={size} />;
+}
+
+// Combined lockup for wider spaces (marketing site header etc.)
+export function VeriyoWordmark({ iconSize = 36, textSize = 24 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <VeriyoIcon size={iconSize} />
+      <div style={{ lineHeight: 1 }}>
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <span style={{
+            fontSize: textSize, fontWeight: 900, color: "#1a2e24",
+            fontFamily: "'Segoe UI', system-ui, sans-serif", letterSpacing: "-0.5px",
+          }}>veriyo</span>
+          {/* Green dot replacing the dot on the "o" — positioned top-right of the wordmark */}
+          <span style={{
+            position: "absolute", top: 0, right: -5,
+            width: textSize * 0.28, height: textSize * 0.28,
+            background: "#34c274", borderRadius: "50%", display: "block",
+          }} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -37,8 +74,14 @@ export default function Nav({ user, section, onSection, onLogout }) {
   return (
     <div style={s.bar}>
       <div style={s.left}>
-        <VeriyoLogo size={26} />
-        <span style={s.logoText}>Veriyo</span>
+        <VeriyoIcon size={28} />
+        <div style={{ lineHeight: 1, position: "relative" }}>
+          <span style={s.logoText}>veriyo</span>
+          <span style={{
+            position: "absolute", top: -1, right: -7,
+            width: 7, height: 7, background: "#34c274", borderRadius: "50%",
+          }} />
+        </div>
         <span style={s.divider} />
         <nav style={s.navLinks}>
           {navItems.map(item => (
