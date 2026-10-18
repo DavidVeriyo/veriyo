@@ -1,103 +1,15 @@
 import { useState, useRef } from "react";
-
-function VeriyoLogo({ size = 26 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="40" height="40" rx="10" fill="url(#vgd)"/>
-      <defs>
-        <linearGradient id="vgd" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#22a060"/>
-          <stop offset="100%" stopColor="#1a7a4a"/>
-        </linearGradient>
-      </defs>
-      <path d="M12 13 L20 27 L28 13" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    </svg>
-  );
-}
+import Nav from "./Nav";
 
 // ─── VERIYO COMPLIANCE DASHBOARD ─────────────────────────────────────────────
-// Full dashboard wrapped with a logout bar at the top
-
-export default function Dashboard({ user, onLogout }) {
+export default function Dashboard({ user, onSection, onLogout }) {
   return (
     <div>
-      {/* Top bar with logout */}
-      <div style={barStyles.bar}>
-        <div style={barStyles.left}>
-          <VeriyoLogo size={26} />
-          <span style={barStyles.logoText}>Veriyo</span>
-          <span style={barStyles.divider}>|</span>
-          <span style={barStyles.userName}>
-            {user?.name} · <span style={barStyles.userRole}>{user?.role}</span>
-          </span>
-        </div>
-        <button onClick={onLogout} style={barStyles.logoutBtn}>
-          Sign out
-        </button>
-      </div>
-      {/* The full compliance dashboard below */}
+      <Nav user={user} section="dashboard" onSection={onSection} onLogout={onLogout} />
       <VeriyoDashboard />
     </div>
   );
 }
-
-const barStyles = {
-  bar: {
-    height: "52px",
-    background: "#0f172a",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0 20px",
-    fontFamily: "'Segoe UI', system-ui, sans-serif",
-    position: "sticky",
-    top: 0,
-    zIndex: 999,
-  },
-  left: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  logo: {
-    width: "26px",
-    height: "26px",
-    borderRadius: "6px",
-    background: "linear-gradient(135deg, #1a7a4a, #166840)",
-    color: "#fff",
-    fontWeight: "800",
-    fontSize: "13px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: "16px",
-  },
-  divider: {
-    color: "#475569",
-    fontSize: "16px",
-  },
-  userName: {
-    color: "#94a3b8",
-    fontSize: "13px",
-  },
-  userRole: {
-    color: "#64748b",
-  },
-  logoutBtn: {
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.15)",
-    borderRadius: "6px",
-    color: "#94a3b8",
-    fontSize: "13px",
-    padding: "6px 14px",
-    cursor: "pointer",
-    fontFamily: "inherit",
-  },
-};
 
 
 // ─────────────────────────────────────────────────────────────────────────────
