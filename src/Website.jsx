@@ -199,8 +199,8 @@ export default function Website({ onLogin }) {
           <div style={s.productCard}>
             <div style={s.productPhoto}>
               <img
-                src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&q=80"
-                alt="Aged care worker with resident"
+                src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80"
+                alt="Aged care nurse with elderly patient"
                 style={s.productImg}
               />
               <div style={s.productImgOverlay}>
@@ -239,8 +239,8 @@ export default function Website({ onLogin }) {
           <div style={{ ...s.productCard, flexDirection: "row-reverse" }}>
             <div style={s.productPhoto}>
               <img
-                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80"
-                alt="Healthcare professional"
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
+                alt="HR professional at desk reviewing documents"
                 style={s.productImg}
               />
               <div style={{ ...s.productImgOverlay, background: "linear-gradient(135deg, rgba(26,122,74,0.7), rgba(22,104,64,0.5))" }}>
@@ -307,22 +307,22 @@ export default function Website({ onLogin }) {
           <div style={s.sectorsGrid}>
             {[
               {
-                photo: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-                alt: "Aged care worker supporting elderly resident",
+                photo: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&q=80",
+                alt: "Carer sitting with elderly person",
                 title: "Aged Care",
                 desc: "NDIS Worker Screening, police checks, aged care-specific qualifications, and award classification tracking for residential and community aged care providers.",
                 tags: ["NDIS Screening", "Police Check", "Aged Care Cert III/IV", "Award Classification"],
               },
               {
-                photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=500&q=80",
-                alt: "NDIS support worker with participant",
+                photo: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=500&q=80",
+                alt: "Support worker assisting person with disability",
                 title: "NDIS",
                 desc: "Full NDIS Worker Screening compliance, banning order checks against the NDIS Commission register, and worker registration support ahead of the July 2027 independent registration deadline.",
                 tags: ["Worker Screening", "Banning Order Check", "Participant Safety", "2027 Registration"],
               },
               {
-                photo: "https://images.unsplash.com/photo-1567966291006-bab53c61a2f0?w=500&q=80",
-                alt: "Early childhood educator with children",
+                photo: "https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=500&q=80",
+                alt: "Early childhood educator playing with toddlers",
                 title: "Early Learning",
                 desc: "Working With Children Checks, early childhood education qualifications, first aid, and anaphylaxis certifications for childcare centres and family day care.",
                 tags: ["WWCC", "ECE Qualifications", "First Aid", "Anaphylaxis"],
