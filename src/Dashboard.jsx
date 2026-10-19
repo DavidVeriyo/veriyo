@@ -773,7 +773,7 @@ function VeriyoDashboard({ user }) {
                   <option value="attention">Attention</option>
                   <option value="risk">Risk</option>
                 </select>
-                <select className="dash-select" value={filterSector} onChange={e => setFilterSector(e.target.value)}>
+                <select className="dash-select" value={filterSector} onChange={e => { setFilterSector(e.target.value); setFilterFacility("all"); }}>
                   <option value="all">All sectors</option>
                   <option value="agedCare">Aged Care</option>
                   <option value="earlyLearning">Early Learning</option>
@@ -781,7 +781,9 @@ function VeriyoDashboard({ user }) {
                 </select>
                 <select className="dash-select" value={filterFacility} onChange={e => setFilterFacility(e.target.value)}>
                   <option value="all">All facilities</option>
-                  {FACILITIES.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                  {FACILITIES
+                    .filter(f => filterSector === "all" || f.sector === filterSector || (filterSector === "ndis" && f.ndisRequired))
+                    .map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                 </select>
               </div>
 
