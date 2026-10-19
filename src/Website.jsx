@@ -694,7 +694,7 @@ export default function Website({ onLogin }) {
             <VeriyoLogoSVG height={30} darkText={false} />
             <p style={s.footerTagline}>
               Workforce compliance for Australian care sectors.<br />
-              Aged care · NDIS · Early learning.
+              Aged Care · NDIS · Early Learning.
             </p>
           </div>
           <div style={s.footerLinks}>
