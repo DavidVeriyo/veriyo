@@ -717,7 +717,7 @@ export default function Website({ onLogin }) {
           </div>
         </div>
         <div style={s.footerBottom}>
-          <p style={s.footerCopy}>© 2026 Veriyo Pty Ltd · Sydney, Australia · ABN pending</p>
+          <p style={s.footerCopy}>© 2026 Veriyo · Sydney, Australia</p>
         </div>
       </footer>
     </div>
