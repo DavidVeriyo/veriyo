@@ -716,7 +716,8 @@ function WorkerCard({ w, onClick }) {
 }
 
 // ─── WORKER DETAIL PANEL ─────────────────────────────────────────────────────
-function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUpload }) {
+function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUpload, alreadyGraduated, onGraduate }) {
+  const isCompliant = worker.status === "compliant";
   return (
     <>
       {/* backdrop */}
@@ -752,6 +753,26 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
               {worker.pct}% complete · {workerStatusMeta[worker.status]?.label}
             </div>
           </div>
+
+          {/* Graduate to Active Staff banner */}
+          {isCompliant && !alreadyGraduated && (
+            <div style={{ marginTop: 14, padding: "12px 14px", background: C.greenBg, border: `1.5px solid ${C.greenBorder}`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 800, color: C.green }}>🎉 Onboarding complete!</div>
+                <div style={{ fontSize: 11, color: C.textMid, marginTop: 1 }}>All checks passed — ready to join Active Staff.</div>
+              </div>
+              <button
+                onClick={() => onGraduate(worker)}
+                style={{ flexShrink: 0, padding: "8px 14px", borderRadius: 8, border: "none", background: C.green, color: "white", fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" }}
+              >Move to Active Staff →</button>
+            </div>
+          )}
+          {alreadyGraduated && (
+            <div style={{ marginTop: 14, padding: "10px 14px", background: "#f0f9ff", border: "1.5px solid #bae6fd", borderRadius: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#0369a1" }}>✓ Graduated to Active Staff</div>
+              <div style={{ fontSize: 11, color: C.textMuted, marginTop: 1 }}>This worker's compliance is now monitored in the Active Staff tab.</div>
+            </div>
+          )}
         </div>
 
         <div style={{ padding: "14px 20px" }}>
@@ -806,9 +827,11 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
 }
 
 // ─── ACTIVE STAFF TAB ─────────────────────────────────────────────────────────
-function ActiveStaffTab() {
+function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onRehire }) {
   const [selectedStaff,    setSelectedStaff]    = useState(null);
   const [filterStaffStatus, setFilterStaffStatus] = useState("all");
+  const [showAlumni,       setShowAlumni]       = useState(false);
+  const [resignModal,      setResignModal]      = useState(null); // staffId
   const [leaveRecords,     setLeaveRecords]     = useState({});   // { staffId: { returnDate, leaveType } }
   const [leaveModal,       setLeaveModal]       = useState(null); // staffId being edited
   const [leaveForm,        setLeaveForm]        = useState({ returnDate: "", leaveType: "Parental leave" });
@@ -845,7 +868,20 @@ function ActiveStaffTab() {
   const [filterExpiryWindow, setFilterExpiryWindow] = useState("all"); // "all" | "30" | "60" | "expired"
   const [staffSearch,        setStaffSearch]        = useState("");
 
-  const staffWithStatus = ACTIVE_STAFF.map(s => ({ ...s, overallStatus: effectiveStatus(s) }));
+  // Convert graduated candidates into Active Staff format (give them all-current checks)
+  const graduatedAsStaff = graduatedStaff.map(w => ({
+    id: w.id, name: w.name, role: w.role, sector: w.sector,
+    facility: w.facility, startDate: w.graduatedDate || w.startDate,
+    checks: [
+      { id: "police",   label: "National Police Check", expiryDate: daysFromNow(365 * 3 - 30), renewYears: 3, status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",  expiryDate: daysFromNow(365 * 3 - 60), renewYears: 3, status: "current" },
+      { id: "cpr",      label: "CPR Certificate",        expiryDate: daysFromNow(270),          renewYears: 1, status: "current" },
+    ],
+    isGraduated: true,
+  }));
+
+  const allActiveStaff = [...ACTIVE_STAFF, ...graduatedAsStaff.filter(g => !alumniStaff.some(a => a.id === g.id))];
+  const staffWithStatus = allActiveStaff.map(s => ({ ...s, overallStatus: effectiveStatus(s) }));
 
   const leaveTypes = ["Parental leave", "Maternity leave", "Paternity leave", "Long service leave", "Extended sick leave", "Carer's leave", "Other leave"];
 
@@ -1076,11 +1112,93 @@ function ActiveStaffTab() {
                     style={{ fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, border: `1.5px solid ${C.border}`, background: "white", color: C.textMid, cursor: "pointer" }}
                   >Set leave dates</button>
                 )}
+                <button
+                  onClick={e => { e.stopPropagation(); setResignModal(s.id); }}
+                  style={{ fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, border: `1.5px solid ${C.greyBorder}`, background: "white", color: C.textMuted, cursor: "pointer" }}
+                >Resign</button>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* ── ALUMNI SECTION ── */}
+      {(alumniStaff.length > 0) && (
+        <div style={{ marginTop: 8 }}>
+          <button
+            onClick={() => setShowAlumni(v => !v)}
+            style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: "10px 0", fontSize: 13, fontWeight: 700, color: C.textMid }}
+          >
+            <span style={{ fontSize: 16 }}>{showAlumni ? "▾" : "▸"}</span>
+            Alumni — {alumniStaff.length} former staff member{alumniStaff.length !== 1 ? "s" : ""}
+            <span style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, padding: "2px 8px", background: C.greyBg, borderRadius: 20, border: `1px solid ${C.greyBorder}` }}>
+              Records retained
+            </span>
+          </button>
+
+          {showAlumni && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14, marginTop: 8 }}>
+              {alumniStaff.map(a => (
+                <div key={a.id} style={{ background: "#f8fafc", border: `1.5px solid ${C.greyBorder}`, borderRadius: 14, padding: "16px 18px", opacity: 0.8 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
+                    <div style={{ width: 42, height: 42, borderRadius: "50%", background: C.greyBg, border: `1px solid ${C.greyBorder}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: C.grey }}>{a.name.split(" ").map(n=>n[0]).join("").slice(0,2)}</span>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: C.textMid }}>{a.name}</div>
+                      <div style={{ fontSize: 12, color: C.textMuted }}>{a.role}</div>
+                      <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.facility}</div>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, color: C.grey, background: C.greyBg, border: `1px solid ${C.greyBorder}`, flexShrink: 0 }}>Alumni</span>
+                  </div>
+
+                  <div style={{ fontSize: 11, color: C.textMuted, marginBottom: 12 }}>
+                    <span>Resigned: {a.resignedDate ? new Date(a.resignedDate).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }) : "—"}</span>
+                    {a.startDate && <span style={{ marginLeft: 10 }}>Started: {new Date(a.startDate).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}</span>}
+                  </div>
+
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      onClick={() => onRehire && onRehire(a)}
+                      style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "6px 0", borderRadius: 8, border: `1.5px solid ${C.greenBorder}`, background: C.greenBg, color: C.green, cursor: "pointer" }}
+                    >↩ Rehire</button>
+                    <div style={{ flex: 2, fontSize: 11, color: C.textMuted, padding: "6px 8px", background: "white", border: `1px solid ${C.borderLight}`, borderRadius: 8, textAlign: "center" }}>
+                      All check records retained
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Resign confirmation modal */}
+      {resignModal && (
+        <>
+          <div onClick={() => setResignModal(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 300 }} />
+          <div style={{ position: "fixed", zIndex: 310, top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "white", borderRadius: 16, padding: "28px 28px 24px", width: "min(400px, 90vw)", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+            {(() => {
+              const s = allActiveStaff.find(s => s.id === resignModal);
+              return s ? (
+                <>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginBottom: 6 }}>Mark as resigned?</div>
+                  <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 20 }}>
+                    <strong>{s.name}</strong> will move to Alumni. Their compliance records are retained and they can be rehired at any time.
+                  </div>
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <button onClick={() => setResignModal(null)} style={{ flex: 1, padding: "10px 0", borderRadius: 9, border: `1.5px solid ${C.border}`, background: "white", fontSize: 13, fontWeight: 700, color: C.textMid, cursor: "pointer" }}>Cancel</button>
+                    <button
+                      onClick={() => { onResign && onResign(s); setResignModal(null); setSelectedStaff(null); }}
+                      style={{ flex: 2, padding: "10px 0", borderRadius: 9, border: "none", background: C.grey, color: "white", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+                    >Yes, move to Alumni</button>
+                  </div>
+                </>
+              ) : null;
+            })()}
+          </div>
+        </>
+      )}
 
       {/* Leave modal */}
       {leaveModal && (
@@ -1214,6 +1332,8 @@ function VeriyoDashboard({ user }) {
   const [aiLoading,      setAiLoading]      = useState({});
   const [showAddWorker,  setShowAddWorker]  = useState(false);
   const [extraWorkers,   setExtraWorkers]   = useState([]);
+  const [graduatedStaff, setGraduatedStaff] = useState([]); // workers who completed onboarding → Active Staff
+  const [alumniStaff,    setAlumniStaff]    = useState([]); // active staff who resigned
 
   const allWorkers = [...WORKERS, ...extraWorkers];
   const filtered   = allWorkers.filter(w => {
@@ -1288,7 +1408,7 @@ function VeriyoDashboard({ user }) {
               </div>
               <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
                 {activeTab === "active staff"
-                  ? `${ACTIVE_STAFF.length} active staff · expiry monitoring on`
+                  ? `${ACTIVE_STAFF.length + graduatedStaff.length} active staff · expiry monitoring on`
                   : `${FACILITIES.length} facilities · ${allWorkers.length} candidates tracked`}
               </div>
             </div>
@@ -1336,6 +1456,12 @@ function VeriyoDashboard({ user }) {
             aiLoading={aiLoading}
             uploadedDocs={uploadedDocs}
             onUpload={handleUpload}
+            alreadyGraduated={graduatedStaff.some(g => g.id === selectedWorker.id)}
+            onGraduate={w => {
+              setGraduatedStaff(p => [...p, { ...w, graduatedDate: new Date().toISOString().slice(0,10) }]);
+              setSelectedWorker(null);
+              setActiveTab("active staff");
+            }}
           />
         )}
 
@@ -1456,7 +1582,20 @@ function VeriyoDashboard({ user }) {
           )}
 
           {/* ── ACTIVE STAFF TAB ── */}
-          {activeTab === "active staff" && <ActiveStaffTab />}
+          {activeTab === "active staff" && (
+            <ActiveStaffTab
+              graduatedStaff={graduatedStaff}
+              alumniStaff={alumniStaff}
+              onResign={(staffMember) => {
+                setAlumniStaff(p => [...p, { ...staffMember, resignedDate: new Date().toISOString().slice(0,10) }]);
+                setGraduatedStaff(p => p.filter(g => g.id !== staffMember.id));
+              }}
+              onRehire={(alumni) => {
+                setGraduatedStaff(p => [...p, { ...alumni, graduatedDate: new Date().toISOString().slice(0,10), resignedDate: undefined }]);
+                setAlumniStaff(p => p.filter(a => a.id !== alumni.id));
+              }}
+            />
+          )}
 
           {/* ── DOCUMENTS TAB ── */}
           {activeTab === "documents" && (
