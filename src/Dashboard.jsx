@@ -841,69 +841,77 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
         onClick={onClose}
         style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", zIndex: 190 }}
       />
-      {/* panel — slides from right on desktop, bottom sheet on mobile */}
+      {/* panel */}
       <div style={{
         position: "fixed", zIndex: 200,
-        top: 0, right: 0, bottom: 0, width: "min(480px, 100vw)",
+        top: 0, right: 0, bottom: 0, width: "min(420px, 100vw)",
         background: C.white, borderLeft: `1.5px solid ${C.border}`,
-        overflowY: "auto", boxShadow: "-6px 0 32px rgba(0,0,0,0.1)",
+        display: "flex", flexDirection: "column",
+        boxShadow: "-6px 0 32px rgba(0,0,0,0.1)",
       }}>
+        {/* sticky header — just name + close */}
         <div style={{
-          padding: "18px 20px", borderBottom: `1px solid ${C.border}`,
-          position: "sticky", top: 0, background: C.white, zIndex: 1,
+          padding: "14px 16px", borderBottom: `1px solid ${C.border}`,
+          background: C.white, flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
         }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{worker.name}</div>
+            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 1 }}>{worker.role} · {worker.facility}</div>
+          </div>
           <button
             onClick={onClose}
             style={{
-              position: "absolute", top: 16, right: 16,
+              flexShrink: 0,
               background: C.greyBg, border: "none", borderRadius: 8,
-              width: 34, height: 34, cursor: "pointer", fontSize: 20, color: C.textMid,
+              width: 32, height: 32, cursor: "pointer", fontSize: 18, color: C.textMid,
               display: "flex", alignItems: "center", justifyContent: "center",
             }}
           >×</button>
-          <div style={{ fontSize: 17, fontWeight: 800, color: C.text, paddingRight: 40 }}>{worker.name}</div>
-          <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>{worker.role} · {worker.facility}</div>
-          <div style={{ marginTop: 12 }}>
+        </div>
+
+        {/* scrollable body */}
+        <div style={{ flex: 1, overflowY: "auto" }}>
+          <div style={{ padding: "14px 16px", borderBottom: `1px solid ${C.border}` }}>
             <ProgressBar pct={worker.pct} status={worker.status} />
             <div style={{ fontSize: 12, color: workerStatusMeta[worker.status]?.color, fontWeight: 700, marginTop: 5 }}>
               {worker.pct}% complete · {workerStatusMeta[worker.status]?.label}
             </div>
-          </div>
 
-          {/* Portal link row */}
-          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-            <button
-              onClick={() => onOpenPortal && onOpenPortal(worker)}
-              style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.primaryBorder}`, background: C.primaryXLight, color: C.primary, cursor: "pointer" }}
-            >📋 Preview candidate portal</button>
-            <button
-              onClick={handleCopyPortalLink}
-              style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.border}`, background: portalCopied ? C.greenBg : "white", color: portalCopied ? C.green : C.textMid, cursor: "pointer", transition: "all 0.2s" }}
-            >{portalCopied ? "✓ Link copied!" : "🔗 Copy portal link"}</button>
-          </div>
-
-          {/* Graduate to Active Staff banner */}
-          {isCompliant && !alreadyGraduated && (
-            <div style={{ marginTop: 14, padding: "12px 14px", background: C.greenBg, border: `1.5px solid ${C.greenBorder}`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 800, color: C.green }}>🎉 Onboarding complete!</div>
-                <div style={{ fontSize: 11, color: C.textMid, marginTop: 1 }}>All checks passed — ready to join Active Staff.</div>
-              </div>
+            {/* Portal link row */}
+            <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
               <button
-                onClick={() => onGraduate(worker)}
-                style={{ flexShrink: 0, padding: "8px 14px", borderRadius: 8, border: "none", background: C.green, color: "white", fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" }}
-              >Move to Active Staff →</button>
+                onClick={() => onOpenPortal && onOpenPortal(worker)}
+                style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.primaryBorder}`, background: C.primaryXLight, color: C.primary, cursor: "pointer" }}
+              >📋 Preview candidate portal</button>
+              <button
+                onClick={handleCopyPortalLink}
+                style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.border}`, background: portalCopied ? C.greenBg : "white", color: portalCopied ? C.green : C.textMid, cursor: "pointer", transition: "all 0.2s" }}
+              >{portalCopied ? "✓ Link copied!" : "🔗 Copy portal link"}</button>
             </div>
-          )}
-          {alreadyGraduated && (
-            <div style={{ marginTop: 14, padding: "10px 14px", background: "#f0f9ff", border: "1.5px solid #bae6fd", borderRadius: 10 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#0369a1" }}>✓ Graduated to Active Staff</div>
-              <div style={{ fontSize: 11, color: C.textMuted, marginTop: 1 }}>This worker's compliance is now monitored in the Active Staff tab.</div>
-            </div>
-          )}
-        </div>
 
-        <div style={{ padding: "14px 20px" }}>
+            {/* Graduate to Active Staff banner */}
+            {isCompliant && !alreadyGraduated && (
+              <div style={{ marginTop: 12, padding: "12px 14px", background: C.greenBg, border: `1.5px solid ${C.greenBorder}`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: C.green }}>🎉 Onboarding complete!</div>
+                  <div style={{ fontSize: 11, color: C.textMid, marginTop: 1 }}>All checks passed — ready to join Active Staff.</div>
+                </div>
+                <button
+                  onClick={() => onGraduate(worker)}
+                  style={{ flexShrink: 0, padding: "8px 14px", borderRadius: 8, border: "none", background: C.green, color: "white", fontSize: 12, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap" }}
+                >Move to Active Staff →</button>
+              </div>
+            )}
+            {alreadyGraduated && (
+              <div style={{ marginTop: 12, padding: "10px 14px", background: "#f0f9ff", border: "1.5px solid #bae6fd", borderRadius: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#0369a1" }}>✓ Graduated to Active Staff</div>
+                <div style={{ fontSize: 11, color: C.textMuted, marginTop: 1 }}>This worker's compliance is now monitored in the Active Staff tab.</div>
+              </div>
+            )}
+          </div>
+
+        <div style={{ padding: "14px 16px" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 8 }}>
             Compliance Checklist
           </div>
@@ -1030,6 +1038,7 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
           )}
         </div>
 
+        </div>{/* end scrollable body */}
       </div>
     </>
   );
