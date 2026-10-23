@@ -614,15 +614,8 @@ export default function Website({ onLogin }) {
           <div style={s.quoteIcon}>"</div>
           <blockquote style={s.quoteText}>
             Care providers are triple-handling compliance documents across recruitment, compliance, and HR.
-            We built Veriyo to fix that — one platform, one source of truth, before Day 1.
+            Veriyo fixes that — one platform, one source of truth, before Day 1.
           </blockquote>
-          <div style={s.quoteAttrib}>
-            <div style={s.quoteAvatar}>D</div>
-            <div>
-              <div style={s.quoteName}>David Truong</div>
-              <div style={s.quoteRole}>Founder, Veriyo</div>
-            </div>
-          </div>
         </div>
       </section>
 
