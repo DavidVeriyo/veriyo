@@ -1518,6 +1518,405 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
 }
 
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
+// ─── TALENT POOL DATA ─────────────────────────────────────────────────────────
+const POOL_WORKERS = [
+  {
+    id: "tp1", name: "Emma Nguyen", role: "Support Worker", sector: "agedCare",
+    lastFacility: "Regis Aged Care — Kellyville", lastOrg: "Regis Healthcare",
+    resignedDate: "2024-08-15", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current", expiryDate: daysFromNow(480) },
+      { id: "ndis",     label: "NDIS Worker Screening",   status: "current", expiryDate: daysFromNow(1100) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "current", expiryDate: daysFromNow(320) },
+      { id: "cpr",      label: "CPR Certificate",         status: "current", expiryDate: daysFromNow(210) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current", expiryDate: daysFromNow(180) },
+    ],
+    yearsExp: 4, note: "Experienced in dementia care. Available immediately.",
+  },
+  {
+    id: "tp2", name: "Raj Patel", role: "Registered Nurse", sector: "agedCare",
+    lastFacility: "BaptistCare — Macquarie Park", lastOrg: "BaptistCare NSW",
+    resignedDate: "2024-09-01", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current",  expiryDate: daysFromNow(700) },
+      { id: "ndis",     label: "NDIS Worker Screening",   status: "current",  expiryDate: daysFromNow(900) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "expiring", expiryDate: daysFromNow(25) },
+      { id: "cpr",      label: "CPR Certificate",         status: "current",  expiryDate: daysFromNow(310) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current",  expiryDate: daysFromNow(155) },
+    ],
+    yearsExp: 8, note: "AHPRA registered. Specialises in palliative care. First Aid renewal due shortly.",
+  },
+  {
+    id: "tp3", name: "Yuki Tanaka", role: "Early Childhood Educator", sector: "earlyLearning",
+    lastFacility: "Explorers Early Learning — Norwest", lastOrg: "Explorers ELC",
+    resignedDate: "2024-07-20", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current", expiryDate: daysFromNow(610) },
+      { id: "wwcc",     label: "Working With Children",   status: "current", expiryDate: daysFromNow(1400) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "current", expiryDate: daysFromNow(500) },
+      { id: "anaphylaxis", label: "Anaphylaxis Mgmt",    status: "current", expiryDate: daysFromNow(400) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current", expiryDate: daysFromNow(200) },
+    ],
+    yearsExp: 5, note: "Cert III & Diploma qualified. Previously room leader. Available from Nov 2024.",
+  },
+  {
+    id: "tp4", name: "Marcus Williams", role: "Personal Carer", sector: "ndis",
+    lastFacility: "Arcare — Penrith", lastOrg: "Arcare",
+    resignedDate: "2024-10-05", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current", expiryDate: daysFromNow(820) },
+      { id: "ndis",     label: "NDIS Worker Screening",   status: "current", expiryDate: daysFromNow(1300) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "current", expiryDate: daysFromNow(290) },
+      { id: "cpr",      label: "CPR Certificate",         status: "current", expiryDate: daysFromNow(145) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current", expiryDate: daysFromNow(95) },
+    ],
+    yearsExp: 3, note: "NDIS specialist. Community access and SIL experience.",
+  },
+  {
+    id: "tp5", name: "Aisha Okonkwo", role: "Care Coordinator", sector: "agedCare",
+    lastFacility: "Estia Health — Campbelltown", lastOrg: "Estia Health",
+    resignedDate: "2024-06-30", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current", expiryDate: daysFromNow(560) },
+      { id: "ndis",     label: "NDIS Worker Screening",   status: "current", expiryDate: daysFromNow(980) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "current", expiryDate: daysFromNow(430) },
+      { id: "cpr",      label: "CPR Certificate",         status: "current", expiryDate: daysFromNow(260) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current", expiryDate: daysFromNow(120) },
+    ],
+    yearsExp: 7, note: "HCP care coordinator. Excellent family communication skills.",
+  },
+  {
+    id: "tp6", name: "Tom Brennan", role: "Allied Health", sector: "agedCare",
+    lastFacility: "Opal HealthCare — Wetherill Park", lastOrg: "Opal HealthCare",
+    resignedDate: "2024-09-15", availability: "available",
+    checks: [
+      { id: "police",   label: "National Police Check",   status: "current",  expiryDate: daysFromNow(400) },
+      { id: "ndis",     label: "NDIS Worker Screening",   status: "expiring", expiryDate: daysFromNow(38) },
+      { id: "firstaid", label: "First Aid Certificate",   status: "current",  expiryDate: daysFromNow(510) },
+      { id: "cpr",      label: "CPR Certificate",         status: "current",  expiryDate: daysFromNow(185) },
+      { id: "flu",      label: "Influenza Vaccination",   status: "current",  expiryDate: daysFromNow(70) },
+    ],
+    yearsExp: 6, note: "Physiotherapist. NDIS renewal in progress — clear in 2 weeks.",
+  },
+];
+
+function isPassportHolder(worker) {
+  const checks = worker.checks || [];
+  return checks.length >= 4 && checks.every(c => c.status === "current");
+}
+
+function TalentPoolTab({ alumniStaff = [] }) {
+  const [filterSector,   setFilterSector]   = useState("all");
+  const [filterRole,     setFilterRole]     = useState("all");
+  const [filterPassport, setFilterPassport] = useState(false);
+  const [search,         setSearch]         = useState("");
+  const [expressed,      setExpressed]      = useState({});
+  const [expandedId,     setExpandedId]     = useState(null);
+
+  // Convert alumni to pool format
+  const alumniAsPool = alumniStaff.map(a => ({
+    ...a,
+    id: a.id,
+    lastFacility: a.facility,
+    lastOrg: "Your Organisation",
+    availability: "available",
+    checks: (a.checks || []).map(c => ({ ...c, status: c.status === "expired" ? "expired" : c.status === "expiring" ? "expiring" : "current" })),
+    yearsExp: Math.max(1, Math.round((new Date() - new Date(a.startDate)) / (365.25 * 86400000))),
+    note: `Former staff — resigned ${a.resignedDate ? new Date(a.resignedDate).toLocaleDateString("en-AU", { month: "long", year: "numeric" }) : "recently"}. Eligible for rehire.`,
+    fromAlumni: true,
+  }));
+
+  const allPool = [...alumniAsPool, ...POOL_WORKERS];
+
+  const allRoles = [...new Set(allPool.map(w => w.role))].sort();
+
+  const filtered = allPool.filter(w => {
+    if (filterSector !== "all" && w.sector !== filterSector) return false;
+    if (filterRole   !== "all" && w.role   !== filterRole)   return false;
+    if (filterPassport && !isPassportHolder(w))              return false;
+    if (search && !w.name.toLowerCase().includes(search.toLowerCase()) && !w.role.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const passportCount = allPool.filter(isPassportHolder).length;
+
+  return (
+    <div>
+      {/* Hero banner */}
+      <div style={{
+        background: "linear-gradient(135deg, #1a7a4a 0%, #22a060 60%, #16623d 100%)",
+        borderRadius: 18, padding: "28px 32px", marginBottom: 24,
+        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap",
+      }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+            <div style={{ fontSize: 28 }}>🛂</div>
+            <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px" }}>Veriyo Talent Pool</div>
+          </div>
+          <div style={{ fontSize: 14, color: "rgba(255,255,255,0.85)", maxWidth: 520, lineHeight: 1.5 }}>
+            Pre-verified workers ready to hire. Every worker in this pool has been compliance-screened through Veriyo — no repeat paperwork, no delays.
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 16, flexShrink: 0, flexWrap: "wrap" }}>
+          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+            <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>{allPool.length}</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>In Pool</div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+            <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>{passportCount}</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Passport Holders</div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+            <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>0</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Days to Hire</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Passport explainer */}
+      <div style={{
+        background: "linear-gradient(135deg, #fef9e7 0%, #fef3c7 100%)",
+        border: "1.5px solid #fcd34d", borderRadius: 14, padding: "16px 20px", marginBottom: 20,
+        display: "flex", alignItems: "flex-start", gap: 14,
+      }}>
+        <div style={{ fontSize: 26, flexShrink: 0 }}>🏅</div>
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#92400e", marginBottom: 4 }}>What is a Veriyo Passport?</div>
+          <div style={{ fontSize: 13, color: "#78350f", lineHeight: 1.6 }}>
+            Workers who have had all mandatory compliance checks verified and none expired earn a <strong>Veriyo Passport</strong> — a portable, cross-organisation compliance record.
+            Hiring a Passport holder means <strong>zero compliance delays</strong>. Their checks are already done and verified.
+          </div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
+        <input
+          style={{ flex: "1 1 180px", padding: "9px 14px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 13, fontFamily: "inherit", color: C.text, background: C.white, outline: "none" }}
+          placeholder="🔍  Search workers…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <select className="dash-select" value={filterSector} onChange={e => setFilterSector(e.target.value)}>
+          <option value="all">All sectors</option>
+          <option value="agedCare">Aged Care</option>
+          <option value="earlyLearning">Early Learning</option>
+          <option value="ndis">NDIS</option>
+        </select>
+        <select className="dash-select" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
+          <option value="all">All roles</option>
+          {allRoles.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
+        <button
+          onClick={() => setFilterPassport(p => !p)}
+          style={{
+            padding: "8px 14px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer",
+            border: `1.5px solid ${filterPassport ? "#d97706" : C.border}`,
+            background: filterPassport ? "#fef3c7" : C.white,
+            color: filterPassport ? "#92400e" : C.textMid,
+            display: "flex", alignItems: "center", gap: 6,
+            transition: "all 0.15s",
+          }}
+        >
+          🏅 Passport holders only {filterPassport ? "✕" : ""}
+        </button>
+        <div style={{ fontSize: 13, color: C.textMuted, marginLeft: "auto" }}>
+          {filtered.length} worker{filtered.length !== 1 ? "s" : ""} found
+        </div>
+      </div>
+
+      {/* Worker cards */}
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "60px 24px", color: C.textMuted }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>No workers match those filters</div>
+          <div style={{ fontSize: 13 }}>Try removing a filter, or the pool will grow as more workers complete their journey.</div>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {filtered.map(worker => {
+            const passport = isPassportHolder(worker);
+            const isExpanded = expandedId === worker.id;
+            const hasExpressed = expressed[worker.id];
+            const anyExpiring = worker.checks.some(c => c.status === "expiring");
+            const anyExpired  = worker.checks.some(c => c.status === "expired");
+
+            return (
+              <div
+                key={worker.id}
+                style={{
+                  background: C.white, borderRadius: 14,
+                  border: `1.5px solid ${passport ? "#fcd34d" : C.border}`,
+                  boxShadow: passport ? "0 2px 16px rgba(251,191,36,0.15)" : "0 1px 4px rgba(0,0,0,0.05)",
+                  overflow: "hidden",
+                  transition: "box-shadow 0.15s",
+                }}
+              >
+                {/* Card header */}
+                <div style={{ padding: "18px 20px" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                    {/* Avatar */}
+                    <div style={{
+                      width: 46, height: 46, borderRadius: 23, flexShrink: 0,
+                      background: passport ? "linear-gradient(135deg, #1a7a4a, #22a060)" : "#e8f5ee",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 18, fontWeight: 800, color: passport ? "#fff" : C.primary,
+                      position: "relative",
+                    }}>
+                      {worker.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                      {passport && (
+                        <div style={{
+                          position: "absolute", bottom: -3, right: -3,
+                          width: 18, height: 18, borderRadius: 9, background: "#d97706",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 10, border: "2px solid white",
+                        }}>🏅</div>
+                      )}
+                    </div>
+
+                    {/* Main info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 2 }}>
+                        <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>{worker.name}</div>
+                        {passport && (
+                          <span style={{
+                            fontSize: 11, fontWeight: 800, padding: "2px 8px", borderRadius: 20,
+                            background: "#fef3c7", color: "#92400e", border: "1px solid #fcd34d",
+                            letterSpacing: "0.3px",
+                          }}>🏅 VERIYO PASSPORT</span>
+                        )}
+                        {worker.fromAlumni && (
+                          <span style={{
+                            fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20,
+                            background: C.primaryXLight, color: C.primary, border: `1px solid ${C.primaryBorder}`,
+                          }}>↩ Former Staff</span>
+                        )}
+                        {anyExpired && !passport && (
+                          <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: C.redBg, color: C.red, border: `1px solid ${C.redBorder}` }}>Check expired</span>
+                        )}
+                        {anyExpiring && !anyExpired && !passport && (
+                          <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBorder}` }}>Renewal due</span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: 13, color: C.textMid, marginBottom: 4 }}>
+                        {worker.role} · <span style={{ color: C.textMuted }}>{SECTOR_LABELS[worker.sector] || worker.sector}</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: C.textMuted }}>
+                        Previously at <strong style={{ color: C.textMid }}>{worker.lastFacility}</strong>
+                        {worker.lastOrg !== "Your Organisation" ? ` (${worker.lastOrg})` : ""} · {worker.yearsExp} yr{worker.yearsExp !== 1 ? "s" : ""} experience
+                      </div>
+                    </div>
+
+                    {/* Right col — action */}
+                    <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
+                      <button
+                        onClick={() => {
+                          if (!hasExpressed) setExpressed(p => ({ ...p, [worker.id]: true }));
+                        }}
+                        style={{
+                          padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700,
+                          border: "none", cursor: hasExpressed ? "default" : "pointer",
+                          background: hasExpressed ? C.greenBg : C.primary,
+                          color: hasExpressed ? C.primary : "#fff",
+                          transition: "all 0.15s",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {hasExpressed ? "✓ Interest sent" : "Express interest"}
+                      </button>
+                      <button
+                        onClick={() => setExpandedId(isExpanded ? null : worker.id)}
+                        style={{
+                          fontSize: 12, fontWeight: 600, color: C.textMuted, background: "transparent",
+                          border: "none", cursor: "pointer", padding: "2px 0",
+                        }}
+                      >
+                        {isExpanded ? "Hide checks ▴" : "View checks ▾"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Note */}
+                  {worker.note && (
+                    <div style={{
+                      marginTop: 10, fontSize: 12, color: C.textMid, lineHeight: 1.5,
+                      padding: "8px 12px", background: C.bg, borderRadius: 8,
+                      borderLeft: `3px solid ${passport ? "#d97706" : C.primaryBorder}`,
+                    }}>
+                      {worker.note}
+                    </div>
+                  )}
+                </div>
+
+                {/* Check details (expandable) */}
+                {isExpanded && (
+                  <div style={{ borderTop: `1px solid ${C.border}`, padding: "16px 20px", background: C.bg }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 12 }}>
+                      Compliance Checks
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+                      {worker.checks.map(c => {
+                        const days = c.expiryDate ? Math.round((new Date(c.expiryDate) - new Date()) / 86400000) : null;
+                        const col = c.status === "current" ? C.green : c.status === "expiring" ? C.amber : C.red;
+                        const bg  = c.status === "current" ? C.greenBg : c.status === "expiring" ? C.amberBg : C.redBg;
+                        const bdr = c.status === "current" ? C.greenBorder : c.status === "expiring" ? C.amberBorder : C.redBorder;
+                        return (
+                          <div key={c.id} style={{
+                            background: bg, border: `1px solid ${bdr}`, borderRadius: 8,
+                            padding: "8px 12px", display: "flex", flexDirection: "column", gap: 2,
+                          }}>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: col }}>
+                              {c.status === "current" ? "✓" : c.status === "expiring" ? "⏰" : "!"} {c.label}
+                            </div>
+                            {days !== null && (
+                              <div style={{ fontSize: 11, color: col }}>
+                                {c.status === "current"
+                                  ? `Expires in ${days} days`
+                                  : c.status === "expiring"
+                                  ? `⚠️ Renew in ${days} days`
+                                  : "Renewal required"}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {passport && (
+                      <div style={{
+                        marginTop: 14, padding: "10px 14px", background: "#fef9e7",
+                        border: "1px solid #fcd34d", borderRadius: 8, fontSize: 12, color: "#78350f",
+                        display: "flex", gap: 8, alignItems: "center",
+                      }}>
+                        <span style={{ fontSize: 16 }}>🏅</span>
+                        <span>All checks current. This worker holds a <strong>Veriyo Passport</strong> — ready to start with zero compliance processing.</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Footer teaser */}
+      <div style={{
+        marginTop: 28, background: C.white, border: `1.5px solid ${C.border}`,
+        borderRadius: 14, padding: "20px 24px", textAlign: "center",
+      }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 6 }}>
+          The pool grows as your network grows
+        </div>
+        <div style={{ fontSize: 13, color: C.textMuted, maxWidth: 520, margin: "0 auto", lineHeight: 1.6 }}>
+          Every worker who moves through Veriyo from any participating organisation joins the pool with their verified record intact.
+          As more providers join, you gain access to a larger, pre-screened talent base — workers whose compliance is already done and portable.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function VeriyoDashboard({ user, onOpenPortal }) {
   const [activeTab,      setActiveTab]      = useState("overview");
   const [selectedWorker, setSelectedWorker] = useState(null);
@@ -1613,7 +2012,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
             {/* tabs + add */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div className="dash-tabs">
-                {["overview","candidates","active staff","documents"].map(t => (
+                {["overview","candidates","active staff","talent pool","documents"].map(t => (
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
@@ -1794,6 +2193,11 @@ function VeriyoDashboard({ user, onOpenPortal }) {
                 setAlumniStaff(p => p.filter(a => a.id !== alumni.id));
               }}
             />
+          )}
+
+          {/* ── TALENT POOL TAB ── */}
+          {activeTab === "talent pool" && (
+            <TalentPoolTab alumniStaff={alumniStaff} />
           )}
 
           {/* ── DOCUMENTS TAB ── */}
