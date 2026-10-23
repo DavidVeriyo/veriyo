@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 import Nav from "./Nav";
 
-export default function Dashboard({ user, onSection, onLogout }) {
+export default function Dashboard({ user, onSection, onLogout, onOpenPortal }) {
   return (
     <div>
       <Nav user={user} section="dashboard" onSection={onSection} onLogout={onLogout} />
-      <VeriyoDashboard user={user} />
+      <VeriyoDashboard user={user} onOpenPortal={onOpenPortal} />
     </div>
   );
 }
@@ -674,8 +674,25 @@ const cardTitle = {
 };
 
 // ─── WORKER CARD (mobile-friendly alternative to table rows) ──────────────────
-function WorkerCard({ w, onClick }) {
+function WorkerCard({ w, onClick, onOpenPortal }) {
   const sm = workerStatusMeta[w.status];
+  const [copied, setCopied] = useState(false);
+
+  function handleSendPortal(e) {
+    e.stopPropagation();
+    if (onOpenPortal) {
+      onOpenPortal(w);
+    }
+  }
+
+  function handleCopyLink(e) {
+    e.stopPropagation();
+    const link = `${window.location.origin}/?candidate=${w.id}`;
+    navigator.clipboard.writeText(link).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <div
       onClick={onClick}
@@ -707,17 +724,36 @@ function WorkerCard({ w, onClick }) {
       <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {SECTOR_LABELS[w.sector]} · {w.facility}
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <div style={{ flex: 1 }}><ProgressBar pct={w.pct} status={w.status} /></div>
         <span style={{ fontSize: 12, fontWeight: 800, color: sm.color, flexShrink: 0 }}>{w.pct}%</span>
+      </div>
+      {/* Portal actions */}
+      <div style={{ display: "flex", gap: 6 }} onClick={e => e.stopPropagation()}>
+        <button
+          onClick={handleSendPortal}
+          style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "6px 0", borderRadius: 7, border: `1.5px solid ${C.primaryBorder}`, background: C.primaryXLight, color: C.primary, cursor: "pointer" }}
+        >📋 Preview portal</button>
+        <button
+          onClick={handleCopyLink}
+          style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "6px 0", borderRadius: 7, border: `1.5px solid ${C.border}`, background: copied ? C.greenBg : "white", color: copied ? C.green : C.textMid, cursor: "pointer", transition: "all 0.2s" }}
+        >{copied ? "✓ Link copied!" : "🔗 Copy link"}</button>
       </div>
     </div>
   );
 }
 
 // ─── WORKER DETAIL PANEL ─────────────────────────────────────────────────────
-function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUpload, alreadyGraduated, onGraduate }) {
+function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUpload, alreadyGraduated, onGraduate, onOpenPortal }) {
   const isCompliant = worker.status === "compliant";
+  const [portalCopied, setPortalCopied] = useState(false);
+  function handleCopyPortalLink(e) {
+    e.stopPropagation();
+    const link = `${window.location.origin}/?candidate=${worker.id}`;
+    navigator.clipboard.writeText(link).catch(() => {});
+    setPortalCopied(true);
+    setTimeout(() => setPortalCopied(false), 2000);
+  }
   return (
     <>
       {/* backdrop */}
@@ -752,6 +788,18 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
             <div style={{ fontSize: 12, color: workerStatusMeta[worker.status]?.color, fontWeight: 700, marginTop: 5 }}>
               {worker.pct}% complete · {workerStatusMeta[worker.status]?.label}
             </div>
+          </div>
+
+          {/* Portal link row */}
+          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+            <button
+              onClick={() => onOpenPortal && onOpenPortal(worker)}
+              style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.primaryBorder}`, background: C.primaryXLight, color: C.primary, cursor: "pointer" }}
+            >📋 Preview candidate portal</button>
+            <button
+              onClick={handleCopyPortalLink}
+              style={{ flex: 1, fontSize: 11, fontWeight: 700, padding: "7px 0", borderRadius: 8, border: `1.5px solid ${C.border}`, background: portalCopied ? C.greenBg : "white", color: portalCopied ? C.green : C.textMid, cursor: "pointer", transition: "all 0.2s" }}
+            >{portalCopied ? "✓ Link copied!" : "🔗 Copy portal link"}</button>
           </div>
 
           {/* Graduate to Active Staff banner */}
@@ -1320,7 +1368,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
 }
 
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
-function VeriyoDashboard({ user }) {
+function VeriyoDashboard({ user, onOpenPortal }) {
   const [activeTab,      setActiveTab]      = useState("overview");
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [filterStatus,   setFilterStatus]   = useState("all");
@@ -1462,6 +1510,7 @@ function VeriyoDashboard({ user }) {
               setSelectedWorker(null);
               setActiveTab("active staff");
             }}
+            onOpenPortal={onOpenPortal}
           />
         )}
 
@@ -1525,7 +1574,7 @@ function VeriyoDashboard({ user }) {
               {/* mobile: cards */}
               <div className="dash-workers-grid">
                 {filtered.map(w => (
-                  <WorkerCard key={w.id} w={w} onClick={() => setSelectedWorker(w)} />
+                  <WorkerCard key={w.id} w={w} onClick={() => setSelectedWorker(w)} onOpenPortal={onOpenPortal} />
                 ))}
               </div>
 
