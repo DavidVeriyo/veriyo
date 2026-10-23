@@ -111,6 +111,106 @@ function makeWorkers() {
 
 const WORKERS = makeWorkers();
 
+// ─── ACTIVE STAFF DATA ────────────────────────────────────────────────────────
+function daysFromNow(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+const ACTIVE_STAFF = [
+  {
+    id: "s1", name: "Sarah Chen", role: "Support Worker", sector: "agedCare",
+    facility: "Uniting Aged Care — Parramatta", startDate: "2022-03-14",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(312),  renewYears: 3,  status: "current" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(841),  renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(28),   renewYears: 3,  status: "expiring" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(28),   renewYears: 1,  status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(204),  renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s2", name: "James O'Brien", role: "Registered Nurse", sector: "agedCare",
+    facility: "Uniting Aged Care — Liverpool", startDate: "2021-07-01",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(14),   renewYears: 3,  status: "expiring" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(620),  renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(190),  renewYears: 3,  status: "current" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(-5),   renewYears: 1,  status: "expired" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(88),   renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s3", name: "Amara Diallo", role: "Personal Carer", sector: "ndis",
+    facility: "Uniting Aged Care — Blacktown", startDate: "2023-01-09",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(540),  renewYears: 3,  status: "current" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(42),   renewYears: 5,  status: "expiring" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(380),  renewYears: 3,  status: "current" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(42),   renewYears: 1,  status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(130),  renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s4", name: "Michael Tran", role: "Team Leader", sector: "agedCare",
+    facility: "HACC Senior Gym — Sydney", startDate: "2020-11-23",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(-12),  renewYears: 3,  status: "expired" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(700),  renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(55),   renewYears: 3,  status: "expiring" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(-30),  renewYears: 1,  status: "expired" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(160),  renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s5", name: "Priya Sharma", role: "Care Coordinator", sector: "agedCare",
+    facility: "Uniting Aged Care — Parramatta", startDate: "2022-08-15",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(480),  renewYears: 3,  status: "current" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(910),  renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(290),  renewYears: 3,  status: "current" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(60),   renewYears: 1,  status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(310),  renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s6", name: "Lindiwe Dube", role: "Early Childhood Educator", sector: "earlyLearning",
+    facility: "All About Children — Bella Vista", startDate: "2023-04-03",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(730),  renewYears: 3,  status: "current" },
+      { id: "wwcc",     label: "Working With Children",    expiryDate: daysFromNow(1100), renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(420),  renewYears: 3,  status: "current" },
+      { id: "anaphylaxis", label: "Anaphylaxis Management", expiryDate: daysFromNow(55), renewYears: 3,  status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(250),  renewYears: 1,  status: "current" },
+    ],
+  },
+  {
+    id: "s7", name: "Kevin Park", role: "Support Worker", sector: "ndis",
+    facility: "NSW CSE — Singleton", startDate: "2023-09-18",
+    checks: [
+      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(600),  renewYears: 3,  status: "current" },
+      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(1200), renewYears: 5,  status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(500),  renewYears: 3,  status: "current" },
+      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(180),  renewYears: 1,  status: "current" },
+      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(340),  renewYears: 1,  status: "current" },
+    ],
+  },
+];
+
+function staffOverallStatus(staff) {
+  const statuses = staff.checks.map(c => c.status);
+  if (statuses.includes("expired")) return "expired";
+  if (statuses.includes("expiring")) return "expiring";
+  return "current";
+}
+
+const staffStatusMeta = {
+  current:  { label: "All Current",  color: C.green, bg: C.greenBg,  border: C.greenBorder },
+  expiring: { label: "Expiring Soon", color: C.amber, bg: C.amberBg,  border: C.amberBorder },
+  expired:  { label: "Action Needed", color: C.red,   bg: C.redBg,    border: C.redBorder   },
+};
+
 const statusMeta = {
   verified:     { label: "Verified",    color: C.green, bg: C.greenBg, border: C.greenBorder, dot: "✓" },
   pending:      { label: "Pending",     color: C.amber, bg: C.amberBg, border: C.amberBorder, dot: "◷" },
@@ -594,6 +694,200 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
   );
 }
 
+// ─── ACTIVE STAFF TAB ─────────────────────────────────────────────────────────
+function ActiveStaffTab() {
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [filterStaffStatus, setFilterStaffStatus] = useState("all");
+
+  const staffWithStatus = ACTIVE_STAFF.map(s => ({ ...s, overallStatus: staffOverallStatus(s) }));
+  const filtered = filterStaffStatus === "all" ? staffWithStatus : staffWithStatus.filter(s => s.overallStatus === filterStaffStatus);
+
+  const expiredCount  = staffWithStatus.filter(s => s.overallStatus === "expired").length;
+  const expiringCount = staffWithStatus.filter(s => s.overallStatus === "expiring").length;
+  const currentCount  = staffWithStatus.filter(s => s.overallStatus === "current").length;
+
+  // Flatten all upcoming expiries across all staff, sorted by days
+  const allExpiries = staffWithStatus.flatMap(s =>
+    s.checks
+      .filter(c => c.status === "expiring" || c.status === "expired")
+      .map(c => {
+        const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+        return { staffName: s.name, staffId: s.id, check: c.label, days, status: c.status, expiryDate: c.expiryDate };
+      })
+  ).sort((a, b) => a.days - b.days);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* stat cards */}
+      <div className="dash-stats">
+        <StatCard num={staffWithStatus.length} label="Active Staff"    color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStaffStatus("all")}      active={filterStaffStatus === "all"} />
+        <StatCard num={currentCount}           label="All Checks Current" color={C.green}  bg={C.greenBg}     onClick={() => setFilterStaffStatus(s => s === "current"  ? "all" : "current")}  active={filterStaffStatus === "current"} />
+        <StatCard num={expiringCount}          label="Expiring Soon"   color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStaffStatus(s => s === "expiring" ? "all" : "expiring")} active={filterStaffStatus === "expiring"} />
+        <StatCard num={expiredCount}           label="Action Needed"   color={C.red}     bg={C.redBg}         onClick={() => setFilterStaffStatus(s => s === "expired"  ? "all" : "expired")}  active={filterStaffStatus === "expired"} />
+      </div>
+
+      {/* alerts banner */}
+      {allExpiries.length > 0 && (
+        <div style={{ background: "#fff9ec", border: `1.5px solid ${C.amberBorder}`, borderRadius: 14, padding: "14px 18px" }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: C.amber, marginBottom: 10 }}>
+            ⏰ {allExpiries.length} compliance item{allExpiries.length !== 1 ? "s" : ""} need attention
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {allExpiries.slice(0, 4).map((e, i) => {
+              const isExpired = e.status === "expired";
+              const col = isExpired ? C.red : C.amber;
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: col, flexShrink: 0, display: "inline-block" }} />
+                  <span style={{ fontWeight: 700, color: C.text }}>{e.staffName}</span>
+                  <span style={{ color: C.textMid }}>—</span>
+                  <span style={{ color: C.textMid, flex: 1 }}>{e.check}</span>
+                  <span style={{ fontWeight: 700, color: col, flexShrink: 0 }}>
+                    {isExpired ? `Expired ${Math.abs(e.days)}d ago` : `${e.days}d left`}
+                  </span>
+                </div>
+              );
+            })}
+            {allExpiries.length > 4 && (
+              <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>+{allExpiries.length - 4} more — click a staff member to see full details</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* staff list */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
+        {filtered.map(s => {
+          const sm = staffStatusMeta[s.overallStatus];
+          const expiringChecks = s.checks.filter(c => c.status === "expiring" || c.status === "expired");
+          return (
+            <div
+              key={s.id}
+              onClick={() => setSelectedStaff(selectedStaff?.id === s.id ? null : s)}
+              style={{
+                background: C.white, border: `1.5px solid ${selectedStaff?.id === s.id ? sm.color : C.border}`,
+                borderRadius: 14, padding: "16px 18px", cursor: "pointer", transition: "all 0.15s",
+                boxShadow: selectedStaff?.id === s.id ? `0 0 0 3px ${sm.color}22` : "none",
+              }}
+              onMouseEnter={e => { if (selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; }}
+              onMouseLeave={e => { if (selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "none"; }}
+            >
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
+                <div style={{ width: 42, height: 42, borderRadius: "50%", background: sm.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: sm.color }}>{s.name.split(" ").map(n=>n[0]).join("").slice(0,2)}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{s.name}</div>
+                  <div style={{ fontSize: 12, color: C.textMuted }}>{s.role}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.facility}</div>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, color: sm.color, background: sm.bg, flexShrink: 0 }}>{sm.label}</span>
+              </div>
+
+              {/* check status row */}
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {s.checks.map(c => {
+                  const col = c.status === "current" ? C.green : c.status === "expiring" ? C.amber : C.red;
+                  const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                  return (
+                    <div key={c.id} title={`${c.label}: ${c.status === "expired" ? "Expired" : `${days}d left`}`}
+                      style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: col, background: col + "18", border: `1px solid ${col}44`, borderRadius: 20, padding: "2px 8px", fontWeight: 700 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: col, display: "inline-block" }} />
+                      {c.id === "firstaid" ? "FA" : c.id === "anaphylaxis" ? "Ana" : c.id.charAt(0).toUpperCase() + c.id.slice(1, 3)}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* show expiring details inline */}
+              {expiringChecks.length > 0 && (
+                <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.borderLight}` }}>
+                  {expiringChecks.map(c => {
+                    const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                    const isExpired = c.status === "expired";
+                    return (
+                      <div key={c.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.textMid, marginBottom: 4 }}>
+                        <span>{c.label}</span>
+                        <span style={{ fontWeight: 700, color: isExpired ? C.red : C.amber }}>
+                          {isExpired ? `Expired ${Math.abs(days)}d ago` : `${days}d left`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* detail panel for selected staff */}
+      {selectedStaff && (
+        <>
+          <div onClick={() => setSelectedStaff(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", zIndex: 190 }} />
+          <div style={{ position: "fixed", zIndex: 200, top: 0, right: 0, bottom: 0, width: "min(480px, 100vw)", background: C.white, borderLeft: `1.5px solid ${C.border}`, overflowY: "auto", boxShadow: "-6px 0 32px rgba(0,0,0,0.1)" }}>
+            <div style={{ padding: "18px 20px", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, background: C.white, zIndex: 1 }}>
+              <button onClick={() => setSelectedStaff(null)} style={{ position: "absolute", top: 16, right: 16, background: C.greyBg, border: "none", borderRadius: 8, width: 34, height: 34, cursor: "pointer", fontSize: 20, color: C.textMid, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+              <div style={{ fontSize: 17, fontWeight: 800, color: C.text, paddingRight: 40 }}>{selectedStaff.name}</div>
+              <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>{selectedStaff.role} · {selectedStaff.facility}</div>
+              <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Started {new Date(selectedStaff.startDate).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}</div>
+            </div>
+
+            <div style={{ padding: "16px 20px" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 12 }}>Ongoing Compliance — Expiry Tracking</div>
+
+              {selectedStaff.checks.map(c => {
+                const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                const isExpired = c.status === "expired";
+                const isExpiring = c.status === "expiring";
+                const col = isExpired ? C.red : isExpiring ? C.amber : C.green;
+                const renewDate = new Date(c.expiryDate);
+                renewDate.setFullYear(renewDate.getFullYear() + (c.renewYears || 1));
+                const pct = isExpired ? 0 : Math.min(100, Math.round((days / (c.renewYears * 365)) * 100));
+
+                return (
+                  <div key={c.id} style={{ padding: "14px 0", borderBottom: `1px solid ${C.borderLight}` }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{c.label}</div>
+                        <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>
+                          Renews every {c.renewYears} year{c.renewYears !== 1 ? "s" : ""}
+                        </div>
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, color: col, background: col + "18", border: `1px solid ${col}44`, flexShrink: 0, marginLeft: 8 }}>
+                        {isExpired ? `Expired ${Math.abs(days)}d ago` : isExpiring ? `${days}d left` : `${days}d left`}
+                      </span>
+                    </div>
+                    <div style={{ height: 6, background: "#e8ede9", borderRadius: 4, overflow: "hidden", marginBottom: 5 }}>
+                      <div style={{ width: `${pct}%`, height: "100%", background: col, borderRadius: 4 }} />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.textMuted }}>
+                      <span>Expiry: {new Date(c.expiryDate).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}</span>
+                      {c.renewYears && <span>Next renewal due: {renewDate.toLocaleDateString("en-AU", { month: "short", year: "numeric" })}</span>}
+                    </div>
+                    {(isExpired || isExpiring) && (
+                      <div style={{ marginTop: 8, padding: "6px 10px", borderRadius: 7, background: col + "12", border: `1px solid ${col}44`, fontSize: 11, color: col, fontWeight: 600 }}>
+                        {isExpired ? "⚠️ This check has lapsed — worker may not be compliant for rostering" : "🔔 Reminder sent to worker — renewal required soon"}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              <div style={{ marginTop: 20, padding: "14px 16px", background: C.primaryXLight, borderRadius: 10, border: `1px solid ${C.primaryBorder}` }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.primary, marginBottom: 4 }}>🔔 Auto-reminders active</div>
+                <div style={{ fontSize: 12, color: C.textMid }}>Veriyo sends renewal reminders to {selectedStaff.name.split(" ")[0]} at 60, 30, 14 and 7 days before expiry — and alerts you if they don't act.</div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+    </div>
+  );
+}
+
 // ─── MAIN DASHBOARD ───────────────────────────────────────────────────────────
 function VeriyoDashboard({ user }) {
   const [activeTab,      setActiveTab]      = useState("overview");
@@ -680,13 +974,15 @@ function VeriyoDashboard({ user }) {
                 {greeting}, {firstName} 👋
               </div>
               <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
-                {FACILITIES.length} facilities · {allWorkers.length} candidates tracked
+                {activeTab === "active staff"
+                  ? `${ACTIVE_STAFF.length} active staff · expiry monitoring on`
+                  : `${FACILITIES.length} facilities · ${allWorkers.length} candidates tracked`}
               </div>
             </div>
             {/* tabs + add */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div className="dash-tabs">
-                {["overview","candidates","documents"].map(t => (
+                {["overview","candidates","active staff","documents"].map(t => (
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
@@ -845,6 +1141,9 @@ function VeriyoDashboard({ user }) {
               </div>
             </>
           )}
+
+          {/* ── ACTIVE STAFF TAB ── */}
+          {activeTab === "active staff" && <ActiveStaffTab />}
 
           {/* ── DOCUMENTS TAB ── */}
           {activeTab === "documents" && (
