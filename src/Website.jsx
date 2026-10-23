@@ -608,19 +608,19 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
-      {/* ─── TESTIMONIAL ─── */}
+      {/* ─── PROBLEM STATEMENT ─── */}
       <section style={s.testimonialSection}>
         <div style={s.testimonialInner}>
           <div style={s.quoteIcon}>"</div>
           <blockquote style={s.quoteText}>
-            We had three people manually checking the same documents — recruitment, compliance, then HR again.
-            A platform like Veriyo would save us weeks every year and eliminate the risk of something slipping through before Day 1.
+            Care providers are triple-handling compliance documents across recruitment, compliance, and HR.
+            We built Veriyo to fix that — one platform, one source of truth, before Day 1.
           </blockquote>
           <div style={s.quoteAttrib}>
-            <div style={s.quoteAvatar}>A</div>
+            <div style={s.quoteAvatar}>D</div>
             <div>
-              <div style={s.quoteName}>Aged Care HR Manager</div>
-              <div style={s.quoteRole}>Residential aged care provider, Sydney NSW</div>
+              <div style={s.quoteName}>David Truong</div>
+              <div style={s.quoteRole}>Founder, Veriyo</div>
             </div>
           </div>
         </div>
