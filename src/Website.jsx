@@ -407,10 +407,10 @@ export default function Website({ onLogin }) {
           </p>
           <div style={s.problemGrid}>
             {[
-              { icon: "📋", stat: "3-layer", label: "manual checking process", desc: "Recruitment → Compliance → HR — the same documents reviewed three times by different people with no single source of truth." },
-              { icon: "⚠️", stat: "140+", label: "documented failures", desc: "Real compliance failures logged at a single aged care provider in just 3 months — missing workflows, wrong classifications, duplicate records." },
-              { icon: "⏱️", stat: "8 days", label: "average NDIS screening time", desc: "Critical roles left unfilled while compliance documentation sits waiting for manual review and approval." },
-              { icon: "🎯", stat: "0%", label: "recruiter accountability", desc: "Recruiters focused on placement targets, not compliance accuracy — and there's no system to catch what they miss." },
+              { icon: "📋", stat: "1 in 5", label: "aged care homes failing quality standards", desc: "Nearly 20% of Australian aged care homes failed to meet the Aged Care Quality Standards — with HR and workforce the most commonly failed area. Source: ACQSC Q3 2024–25." },
+              { icon: "⚠️", stat: "$1.5M+", label: "maximum fine under the new Aged Care Act", desc: "The Aged Care Act 2024 introduced civil penalties exceeding $1.5 million for the most serious breaches — including workforce and staffing failures." },
+              { icon: "⏱️", stat: "3,500+", label: "fake qualifications cancelled in 12 months", desc: "ASQA cancelled over 3,500 aged care and disability worker credentials issued by rogue training providers in 2024–25. Providers who didn't independently verify were left exposed overnight." },
+              { icon: "🎯", stat: "Standard 7", label: "most failed aged care standard — HR & Workforce", desc: "Recruitment, training, and workforce monitoring are now the top compliance failure areas across Australian aged care. This is exactly what Veriyo is built to fix." },
             ].map((item, i) => (
               <div key={i} style={s.problemCard}>
                 <div style={s.problemIcon}>{item.icon}</div>
@@ -419,6 +419,74 @@ export default function Website({ onLogin }) {
                 <p style={s.problemDesc}>{item.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CASE STUDIES ─── */}
+      <section style={s.caseSection}>
+        <div style={s.container}>
+          <div style={s.eyebrow}>Real Consequences</div>
+          <h2 style={s.sectionH2}>The cost of getting it wrong</h2>
+          <p style={s.sectionSub}>
+            These aren't hypothetical risks. These are real Australian providers who faced real consequences — and in every case, workforce compliance was at the centre of it.
+          </p>
+          <div style={s.caseGrid}>
+
+            {/* Case 1 */}
+            <div style={s.caseCard}>
+              <div style={s.caseBadge}>⚠️ Accreditation Failure</div>
+              <h3 style={s.caseTitle}>Bupa Aged Care — Traralgon, VIC</h3>
+              <p style={s.caseDesc}>
+                Failed a government accreditation audit on human resource management, medication management, and living environment. The consequence was immediate and severe.
+              </p>
+              <div style={s.caseConsequences}>
+                <div style={s.caseConsequenceItem}>🚫 Banned from admitting new residents</div>
+                <div style={s.caseConsequenceItem}>💸 Government funding suspended</div>
+                <div style={s.caseConsequenceItem}>👤 External administrator appointed — at Bupa's expense</div>
+              </div>
+              <div style={s.caseLesson}>
+                <strong>The lesson:</strong> No provider is too large to lose accreditation. HR compliance failures trigger the audit. The audit triggers the sanctions.
+              </div>
+            </div>
+
+            {/* Case 2 */}
+            <div style={s.caseCard}>
+              <div style={{ ...s.caseBadge, background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a" }}>⏱️ Systemic Non-Compliance</div>
+              <h3 style={s.caseTitle}>TriCare — 9 Queensland Facilities</h3>
+              <p style={s.caseDesc}>
+                Received nine enforceable undertakings — more than any other aged care provider in Australia — for persistent failure to meet mandatory care minutes targets across nine homes.
+              </p>
+              <div style={s.caseConsequences}>
+                <div style={s.caseConsequenceItem}>📋 Placed under active Commission supervision</div>
+                <div style={s.caseConsequenceItem}>📅 Forced to report data monthly instead of quarterly</div>
+                <div style={s.caseConsequenceItem}>⚖️ One missed deadline = court action and funding restrictions</div>
+              </div>
+              <div style={s.caseLesson}>
+                <strong>The lesson:</strong> Workforce tracking failures don't stay isolated. They compound across sites until the regulator steps in.
+              </div>
+            </div>
+
+            {/* Case 3 */}
+            <div style={s.caseCard}>
+              <div style={{ ...s.caseBadge, background: "#fee2e2", color: "#991b1b", border: "1px solid #fecaca" }}>🎓 Credential Fraud</div>
+              <h3 style={s.caseTitle}>3,500+ Qualifications Cancelled — Nationwide</h3>
+              <p style={s.caseDesc}>
+                ASQA cancelled over 3,500 aged care, disability, and childcare worker credentials issued by rogue training providers between 2024–2025. Providers who hired those workers without independent verification were left exposed overnight.
+              </p>
+              <div style={s.caseConsequences}>
+                <div style={s.caseConsequenceItem}>❌ Workers lost their right to practise</div>
+                <div style={s.caseConsequenceItem}>🏥 Providers faced immediate staffing gaps</div>
+                <div style={s.caseConsequenceItem}>📁 No independent verification = no defence</div>
+              </div>
+              <div style={s.caseLesson}>
+                <strong>The lesson:</strong> A qualification on paper means nothing if it hasn't been independently verified. Veriyo catches this before Day 1.
+              </div>
+            </div>
+
+          </div>
+          <div style={s.caseSource}>
+            Sources: Aged Care Quality and Safety Commission · ASQA · ABC News · The Weekly Source
           </div>
         </div>
       </section>
@@ -1451,6 +1519,79 @@ const s = {
     padding: "4px 10px",
     borderRadius: 20,
     border: "1px solid #b8deca",
+  },
+
+  // CASE STUDIES
+  caseSection: {
+    padding: "100px 0",
+    background: "#0f172a",
+  },
+  caseGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: 24,
+    marginTop: 48,
+  },
+  caseCard: {
+    background: "#1e293b",
+    borderRadius: 20,
+    padding: "32px 28px",
+    border: "1px solid #334155",
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  caseBadge: {
+    display: "inline-flex",
+    alignSelf: "flex-start",
+    background: "rgba(34,160,96,0.15)",
+    color: "#6ecf9a",
+    border: "1px solid rgba(34,160,96,0.3)",
+    borderRadius: 20,
+    padding: "4px 12px",
+    fontSize: 12,
+    fontWeight: 700,
+  },
+  caseTitle: {
+    fontSize: 18,
+    fontWeight: 800,
+    color: "#f1f5f9",
+    margin: 0,
+    lineHeight: 1.3,
+  },
+  caseDesc: {
+    fontSize: 14,
+    color: "#94a3b8",
+    lineHeight: 1.7,
+    margin: 0,
+  },
+  caseConsequences: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    background: "rgba(0,0,0,0.2)",
+    borderRadius: 12,
+    padding: "16px 18px",
+  },
+  caseConsequenceItem: {
+    fontSize: 13,
+    color: "#cbd5e1",
+    lineHeight: 1.5,
+  },
+  caseLesson: {
+    fontSize: 13,
+    color: "#64748b",
+    lineHeight: 1.6,
+    borderTop: "1px solid #334155",
+    paddingTop: 16,
+    marginTop: "auto",
+  },
+  caseSource: {
+    textAlign: "center",
+    fontSize: 12,
+    color: "#475569",
+    marginTop: 40,
+    fontStyle: "italic",
   },
 
   // TESTIMONIAL
