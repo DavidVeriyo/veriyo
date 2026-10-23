@@ -844,7 +844,7 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
       {/* panel */}
       <div style={{
         position: "fixed", zIndex: 200,
-        top: 0, right: 0, bottom: 0, width: "min(420px, 100vw)",
+        top: 52, right: 0, bottom: 0, width: "min(420px, 100vw)",
         background: C.white, borderLeft: `1.5px solid ${C.border}`,
         display: "flex", flexDirection: "column",
         boxShadow: "-6px 0 32px rgba(0,0,0,0.1)",
@@ -1476,7 +1476,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
       {selectedStaff && (
         <>
           <div onClick={() => setSelectedStaff(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", zIndex: 190 }} />
-          <div style={{ position: "fixed", zIndex: 200, top: 0, right: 0, bottom: 0, width: "min(480px, 100vw)", background: C.white, borderLeft: `1.5px solid ${C.border}`, overflowY: "auto", boxShadow: "-6px 0 32px rgba(0,0,0,0.1)" }}>
+          <div style={{ position: "fixed", zIndex: 200, top: 52, right: 0, bottom: 0, width: "min(480px, 100vw)", background: C.white, borderLeft: `1.5px solid ${C.border}`, overflowY: "auto", boxShadow: "-6px 0 32px rgba(0,0,0,0.1)" }}>
             <div style={{ padding: "18px 20px", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, background: C.white, zIndex: 1 }}>
               <button onClick={() => setSelectedStaff(null)} style={{ position: "absolute", top: 16, right: 16, background: C.greyBg, border: "none", borderRadius: 8, width: 34, height: 34, cursor: "pointer", fontSize: 20, color: C.textMid, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
               <div style={{ fontSize: 17, fontWeight: 800, color: C.text, paddingRight: 40 }}>{selectedStaff.name}</div>
