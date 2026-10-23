@@ -206,9 +206,11 @@ function staffOverallStatus(staff) {
 }
 
 const staffStatusMeta = {
-  current:  { label: "All Current",  color: C.green, bg: C.greenBg,  border: C.greenBorder },
-  expiring: { label: "Expiring Soon", color: C.amber, bg: C.amberBg,  border: C.amberBorder },
-  expired:  { label: "Action Needed", color: C.red,   bg: C.redBg,    border: C.redBorder   },
+  current:      { label: "All Current",    color: C.green,   bg: C.greenBg,  border: C.greenBorder },
+  expiring:     { label: "Expiring Soon",  color: C.amber,   bg: C.amberBg,  border: C.amberBorder },
+  expired:      { label: "Action Needed",  color: C.red,     bg: C.redBg,    border: C.redBorder   },
+  onLeave:      { label: "On Leave",       color: "#7c3aed", bg: "#f5f3ff",  border: "#c4b5fd"     },
+  returningSoon:{ label: "⚠️ Renewal Due", color: "#7c3aed", bg: "#faf5ff",  border: "#c4b5fd"     },
 };
 
 const statusMeta = {
@@ -696,35 +698,76 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
 
 // ─── ACTIVE STAFF TAB ─────────────────────────────────────────────────────────
 function ActiveStaffTab() {
-  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [selectedStaff,    setSelectedStaff]    = useState(null);
   const [filterStaffStatus, setFilterStaffStatus] = useState("all");
+  const [leaveRecords,     setLeaveRecords]     = useState({});   // { staffId: { returnDate, leaveType } }
+  const [leaveModal,       setLeaveModal]       = useState(null); // staffId being edited
+  const [leaveForm,        setLeaveForm]        = useState({ returnDate: "", leaveType: "Parental leave" });
 
-  const staffWithStatus = ACTIVE_STAFF.map(s => ({ ...s, overallStatus: staffOverallStatus(s) }));
-  const filtered = filterStaffStatus === "all" ? staffWithStatus : staffWithStatus.filter(s => s.overallStatus === filterStaffStatus);
+  function isOnLeave(staffId) {
+    const rec = leaveRecords[staffId];
+    if (!rec) return false;
+    return new Date(rec.returnDate) > new Date();
+  }
 
-  const expiredCount  = staffWithStatus.filter(s => s.overallStatus === "expired").length;
-  const expiringCount = staffWithStatus.filter(s => s.overallStatus === "expiring").length;
-  const currentCount  = staffWithStatus.filter(s => s.overallStatus === "current").length;
+  function daysUntilReturn(staffId) {
+    const rec = leaveRecords[staffId];
+    if (!rec) return null;
+    return Math.round((new Date(rec.returnDate) - new Date()) / 86400000);
+  }
 
-  // Flatten all upcoming expiries across all staff, sorted by days
-  const allExpiries = staffWithStatus.flatMap(s =>
-    s.checks
-      .filter(c => c.status === "expiring" || c.status === "expired")
-      .map(c => {
-        const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
-        return { staffName: s.name, staffId: s.id, check: c.label, days, status: c.status, expiryDate: c.expiryDate };
-      })
-  ).sort((a, b) => a.days - b.days);
+  // When on leave, suppress expiry alerts unless something expires during leave AND return is within 60 days
+  function effectiveStatus(s) {
+    if (isOnLeave(s.id)) {
+      const rec = leaveRecords[s.id];
+      const daysLeft = daysUntilReturn(s.id);
+      // Check if anything expires during leave period and return is soon (within 60 days)
+      const expiresInLeave = s.checks.some(c => {
+        const expDays = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+        return expDays > 0 && expDays < (daysLeft || 0);
+      });
+      if (expiresInLeave && daysLeft <= 60) return "returningSoon";
+      return "onLeave";
+    }
+    return staffOverallStatus(s);
+  }
+
+  const staffWithStatus = ACTIVE_STAFF.map(s => ({ ...s, overallStatus: effectiveStatus(s) }));
+
+  const leaveTypes = ["Parental leave", "Maternity leave", "Paternity leave", "Long service leave", "Extended sick leave", "Carer's leave", "Other leave"];
+
+  const onLeaveCount    = staffWithStatus.filter(s => s.overallStatus === "onLeave" || s.overallStatus === "returningSoon").length;
+  const expiredCount    = staffWithStatus.filter(s => s.overallStatus === "expired").length;
+  const expiringCount   = staffWithStatus.filter(s => s.overallStatus === "expiring").length;
+  const currentCount    = staffWithStatus.filter(s => s.overallStatus === "current").length;
+
+  const filterOptions = filterStaffStatus === "all" ? staffWithStatus
+    : filterStaffStatus === "onLeave" ? staffWithStatus.filter(s => s.overallStatus === "onLeave" || s.overallStatus === "returningSoon")
+    : staffWithStatus.filter(s => s.overallStatus === filterStaffStatus);
+  const filtered = filterOptions;
+
+  // Flatten all upcoming expiries — skip staff fully on leave (alerts paused)
+  const allExpiries = staffWithStatus
+    .filter(s => s.overallStatus !== "onLeave")
+    .flatMap(s =>
+      s.checks
+        .filter(c => c.status === "expiring" || c.status === "expired")
+        .map(c => {
+          const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+          return { staffName: s.name, staffId: s.id, check: c.label, days, status: c.status, expiryDate: c.expiryDate, returningSoon: s.overallStatus === "returningSoon" };
+        })
+    ).sort((a, b) => a.days - b.days);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
       {/* stat cards */}
       <div className="dash-stats">
-        <StatCard num={staffWithStatus.length} label="Active Staff"    color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStaffStatus("all")}      active={filterStaffStatus === "all"} />
-        <StatCard num={currentCount}           label="All Checks Current" color={C.green}  bg={C.greenBg}     onClick={() => setFilterStaffStatus(s => s === "current"  ? "all" : "current")}  active={filterStaffStatus === "current"} />
-        <StatCard num={expiringCount}          label="Expiring Soon"   color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStaffStatus(s => s === "expiring" ? "all" : "expiring")} active={filterStaffStatus === "expiring"} />
-        <StatCard num={expiredCount}           label="Action Needed"   color={C.red}     bg={C.redBg}         onClick={() => setFilterStaffStatus(s => s === "expired"  ? "all" : "expired")}  active={filterStaffStatus === "expired"} />
+        <StatCard num={staffWithStatus.length} label="Active Staff"       color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStaffStatus("all")}         active={filterStaffStatus === "all"} />
+        <StatCard num={currentCount}           label="All Checks Current" color={C.green}   bg={C.greenBg}       onClick={() => setFilterStaffStatus(s => s === "current"  ? "all" : "current")}  active={filterStaffStatus === "current"} />
+        <StatCard num={expiringCount}          label="Expiring Soon"      color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStaffStatus(s => s === "expiring" ? "all" : "expiring")} active={filterStaffStatus === "expiring"} />
+        <StatCard num={expiredCount}           label="Action Needed"      color={C.red}     bg={C.redBg}         onClick={() => setFilterStaffStatus(s => s === "expired"  ? "all" : "expired")}  active={filterStaffStatus === "expired"} />
+        {onLeaveCount > 0 && <StatCard num={onLeaveCount} label="On Leave" color="#7c3aed" bg="#f5f3ff" onClick={() => setFilterStaffStatus(s => s === "onLeave" ? "all" : "onLeave")} active={filterStaffStatus === "onLeave"} />}
       </div>
 
       {/* alerts banner */}
@@ -760,18 +803,28 @@ function ActiveStaffTab() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
         {filtered.map(s => {
           const sm = staffStatusMeta[s.overallStatus];
+          const onLeave = s.overallStatus === "onLeave" || s.overallStatus === "returningSoon";
+          const leaveRec = leaveRecords[s.id];
           const expiringChecks = s.checks.filter(c => c.status === "expiring" || c.status === "expired");
+          const returnDays = daysUntilReturn(s.id);
+          // Checks expiring before return date
+          const expiringDuringLeave = onLeave && leaveRec ? s.checks.filter(c => {
+            const expDays = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+            return expDays > 0 && expDays < returnDays;
+          }) : [];
           return (
             <div
               key={s.id}
-              onClick={() => setSelectedStaff(selectedStaff?.id === s.id ? null : s)}
+              onClick={() => !onLeave && setSelectedStaff(selectedStaff?.id === s.id ? null : s)}
               style={{
-                background: C.white, border: `1.5px solid ${selectedStaff?.id === s.id ? sm.color : C.border}`,
-                borderRadius: 14, padding: "16px 18px", cursor: "pointer", transition: "all 0.15s",
+                background: onLeave ? "#faf9ff" : C.white,
+                border: `1.5px solid ${selectedStaff?.id === s.id ? sm.color : onLeave ? "#c4b5fd" : C.border}`,
+                borderRadius: 14, padding: "16px 18px", cursor: onLeave ? "default" : "pointer", transition: "all 0.15s",
                 boxShadow: selectedStaff?.id === s.id ? `0 0 0 3px ${sm.color}22` : "none",
+                opacity: onLeave ? 0.88 : 1,
               }}
-              onMouseEnter={e => { if (selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; }}
-              onMouseLeave={e => { if (selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "none"; }}
+              onMouseEnter={e => { if (!onLeave && selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; }}
+              onMouseLeave={e => { if (!onLeave && selectedStaff?.id !== s.id) e.currentTarget.style.boxShadow = "none"; }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
                 <div style={{ width: 42, height: 42, borderRadius: "50%", background: sm.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -785,23 +838,47 @@ function ActiveStaffTab() {
                 <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, color: sm.color, background: sm.bg, flexShrink: 0 }}>{sm.label}</span>
               </div>
 
-              {/* check status row */}
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                {s.checks.map(c => {
-                  const col = c.status === "current" ? C.green : c.status === "expiring" ? C.amber : C.red;
-                  const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
-                  return (
-                    <div key={c.id} title={`${c.label}: ${c.status === "expired" ? "Expired" : `${days}d left`}`}
-                      style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: col, background: col + "18", border: `1px solid ${col}44`, borderRadius: 20, padding: "2px 8px", fontWeight: 700 }}>
-                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: col, display: "inline-block" }} />
-                      {c.id === "firstaid" ? "FA" : c.id === "anaphylaxis" ? "Ana" : c.id.charAt(0).toUpperCase() + c.id.slice(1, 3)}
-                    </div>
-                  );
-                })}
-              </div>
+              {/* On leave info */}
+              {onLeave && leaveRec && (
+                <div style={{ marginBottom: 10, padding: "8px 12px", background: "#ede9fe", borderRadius: 8, border: "1px solid #c4b5fd" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#6d28d9" }}>🏖️ {leaveRec.leaveType}</div>
+                  <div style={{ fontSize: 11, color: "#7c3aed", marginTop: 2 }}>
+                    Returns {new Date(leaveRec.returnDate).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
+                    {returnDays !== null && ` · ${returnDays}d away`}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#7c3aed", marginTop: 1 }}>Alerts paused until 60 days before return</div>
+                </div>
+              )}
 
-              {/* show expiring details inline */}
-              {expiringChecks.length > 0 && (
+              {/* Checks expiring during leave — warn manager */}
+              {expiringDuringLeave.length > 0 && (
+                <div style={{ marginBottom: 10, padding: "7px 12px", background: "#fff7ed", borderRadius: 8, border: "1px solid #fed7aa" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#c2410c" }}>⚠️ Renewal needed before return</div>
+                  {expiringDuringLeave.map(c => (
+                    <div key={c.id} style={{ fontSize: 11, color: "#c2410c", marginTop: 2 }}>{c.label} expires before {s.name.split(" ")[0]} returns</div>
+                  ))}
+                </div>
+              )}
+
+              {/* check status row — only when not on leave */}
+              {!onLeave && (
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {s.checks.map(c => {
+                    const col = c.status === "current" ? C.green : c.status === "expiring" ? C.amber : C.red;
+                    const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                    return (
+                      <div key={c.id} title={`${c.label}: ${c.status === "expired" ? "Expired" : `${days}d left`}`}
+                        style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: col, background: col + "18", border: `1px solid ${col}44`, borderRadius: 20, padding: "2px 8px", fontWeight: 700 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: col, display: "inline-block" }} />
+                        {c.id === "firstaid" ? "FA" : c.id === "anaphylaxis" ? "Ana" : c.id.charAt(0).toUpperCase() + c.id.slice(1, 3)}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* show expiring details inline — only when not on leave */}
+              {!onLeave && expiringChecks.length > 0 && (
                 <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.borderLight}` }}>
                   {expiringChecks.map(c => {
                     const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
@@ -817,10 +894,78 @@ function ActiveStaffTab() {
                   })}
                 </div>
               )}
+
+              {/* Leave action buttons */}
+              <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${C.borderLight}`, display: "flex", justifyContent: "flex-end" }}>
+                {onLeave ? (
+                  <button
+                    onClick={e => { e.stopPropagation(); setLeaveRecords(p => { const n = {...p}; delete n[s.id]; return n; }); }}
+                    style={{ fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, border: "1.5px solid #c4b5fd", background: "white", color: "#7c3aed", cursor: "pointer" }}
+                  >✓ Mark as returned</button>
+                ) : (
+                  <button
+                    onClick={e => { e.stopPropagation(); setLeaveModal(s.id); setLeaveForm({ returnDate: "", leaveType: "Parental leave" }); }}
+                    style={{ fontSize: 11, fontWeight: 700, padding: "5px 12px", borderRadius: 8, border: `1.5px solid ${C.border}`, background: "white", color: C.textMid, cursor: "pointer" }}
+                  >Set leave dates</button>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
+
+      {/* Leave modal */}
+      {leaveModal && (
+        <>
+          <div onClick={() => setLeaveModal(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 300 }} />
+          <div style={{ position: "fixed", zIndex: 310, top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "white", borderRadius: 16, padding: "28px 28px 24px", width: "min(400px, 90vw)", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginBottom: 4 }}>
+              Mark staff member on leave
+            </div>
+            <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 20 }}>
+              {ACTIVE_STAFF.find(s => s.id === leaveModal)?.name} — alerts will pause during leave and resume 60 days before their return.
+            </div>
+
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: C.text, display: "block", marginBottom: 5 }}>Leave type</label>
+              <select
+                value={leaveForm.leaveType}
+                onChange={e => setLeaveForm(f => ({ ...f, leaveType: e.target.value }))}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 8, border: `1.5px solid ${C.border}`, fontSize: 13, color: C.text, background: "white", outline: "none" }}
+              >
+                {leaveTypes.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            <div style={{ marginBottom: 22 }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: C.text, display: "block", marginBottom: 5 }}>Expected return date</label>
+              <input
+                type="date"
+                value={leaveForm.returnDate}
+                min={new Date(Date.now() + 86400000).toISOString().slice(0, 10)}
+                onChange={e => setLeaveForm(f => ({ ...f, returnDate: e.target.value }))}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 8, border: `1.5px solid ${C.border}`, fontSize: 13, color: C.text, boxSizing: "border-box", outline: "none" }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                onClick={() => setLeaveModal(null)}
+                style={{ flex: 1, padding: "10px 0", borderRadius: 9, border: `1.5px solid ${C.border}`, background: "white", fontSize: 13, fontWeight: 700, color: C.textMid, cursor: "pointer" }}
+              >Cancel</button>
+              <button
+                disabled={!leaveForm.returnDate}
+                onClick={() => {
+                  if (!leaveForm.returnDate) return;
+                  setLeaveRecords(p => ({ ...p, [leaveModal]: { returnDate: leaveForm.returnDate, leaveType: leaveForm.leaveType } }));
+                  setLeaveModal(null);
+                }}
+                style={{ flex: 2, padding: "10px 0", borderRadius: 9, border: "none", background: leaveForm.returnDate ? "#7c3aed" : "#c4b5fd", fontSize: 13, fontWeight: 700, color: "white", cursor: leaveForm.returnDate ? "pointer" : "not-allowed" }}
+              >Save & pause alerts</button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* detail panel for selected staff */}
       {selectedStaff && (
