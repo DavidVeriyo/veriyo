@@ -223,6 +223,7 @@ export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
   const [demoName, setDemoName] = useState("");
   const [demoOrg, setDemoOrg] = useState("");
+  const [demoPhone, setDemoPhone] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
   async function handleDemoRequest(e) {
@@ -231,7 +232,7 @@ export default function Website({ onLogin }) {
       const res = await fetch("https://formspree.io/f/xljjryvp", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({ name: demoName, organisation: demoOrg, email: demoEmail }),
+        body: JSON.stringify({ name: demoName, organisation: demoOrg, email: demoEmail, phone: demoPhone || "Not provided" }),
       });
       if (res.ok) {
         setDemoSubmitted(true);
@@ -681,6 +682,13 @@ export default function Website({ onLogin }) {
                   onChange={(e) => setDemoEmail(e.target.value)}
                   placeholder="Work email"
                   required
+                  style={s.demoInput}
+                />
+                <input
+                  type="tel"
+                  value={demoPhone}
+                  onChange={(e) => setDemoPhone(e.target.value)}
+                  placeholder="Phone number (optional)"
                   style={s.demoInput}
                 />
               </div>
