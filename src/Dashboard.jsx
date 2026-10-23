@@ -744,9 +744,78 @@ function WorkerCard({ w, onClick, onOpenPortal }) {
 }
 
 // ─── WORKER DETAIL PANEL ─────────────────────────────────────────────────────
+// Generate a realistic-looking portal activity trail for a candidate
+function generatePortalActivity(worker) {
+  const now = new Date();
+  const hoursAgo = h => new Date(now - h * 3600000);
+  const fmtTime = d => d.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
+  const fmtDate = d => {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const dd = new Date(d); dd.setHours(0,0,0,0);
+    const diff = Math.round((today - dd) / 86400000);
+    if (diff === 0) return `Today ${fmtTime(d)}`;
+    if (diff === 1) return `Yesterday ${fmtTime(d)}`;
+    return d.toLocaleDateString("en-AU", { day: "numeric", month: "short" }) + ` ${fmtTime(d)}`;
+  };
+
+  // Different scenarios based on worker status
+  if (worker.status === "compliant") {
+    return {
+      lastSeen: fmtDate(hoursAgo(3)),
+      completionPct: 100,
+      stuckOn: null,
+      nudgeSent: false,
+      events: [
+        { time: fmtDate(hoursAgo(3)),   type: "submitted",  icon: "🎉", color: "#1a7a4a", label: "Submitted all documents",         detail: "All 8 checks uploaded and AI-verified" },
+        { time: fmtDate(hoursAgo(3.1)), type: "approved",   icon: "✓",  color: "#1a7a4a", label: "Qualifications verified",          detail: "Certificate III in Individual Support · Confidence 92%" },
+        { time: fmtDate(hoursAgo(3.2)), type: "approved",   icon: "✓",  color: "#1a7a4a", label: "Right to Work verified",           detail: "Australian Passport detected · Expiry 2029" },
+        { time: fmtDate(hoursAgo(3.5)), type: "approved",   icon: "✓",  color: "#1a7a4a", label: "COVID-19 vaccination confirmed",   detail: "3 doses recorded · Meets NSW Health requirements" },
+        { time: fmtDate(hoursAgo(3.7)), type: "approved",   icon: "✓",  color: "#1a7a4a", label: "First Aid Certificate verified",   detail: "HLTAID011 · Expires August 2026" },
+        { time: fmtDate(hoursAgo(4)),   type: "opened",     icon: "👁",  color: "#2563eb", label: "Opened portal",                   detail: "Accessed from mobile device · Sydney, NSW" },
+        { time: fmtDate(hoursAgo(28)),  type: "link_sent",  icon: "📨",  color: "#7c3aed", label: "Portal link sent",                detail: `Sent by ${worker.facility}` },
+      ],
+    };
+  }
+
+  if (worker.status === "pending") {
+    return {
+      lastSeen: fmtDate(hoursAgo(18)),
+      completionPct: 38,
+      stuckOn: "NDIS Worker Screening",
+      nudgeSent: true,
+      events: [
+        { time: fmtDate(hoursAgo(18)),  type: "stalled",    icon: "⏸",  color: "#d97706", label: "Session ended — incomplete",       detail: "Left portal at NDIS Worker Screening step" },
+        { time: fmtDate(hoursAgo(18.2)),type: "failed",     icon: "⚠️",  color: "#d97706", label: "Upload flagged — NDIS Screening",  detail: "Document appears expired · Candidate notified" },
+        { time: fmtDate(hoursAgo(18.5)),type: "upload",     icon: "📄",  color: "#2563eb", label: "Uploaded NDIS Screening",          detail: "File: NDIS_check.pdf · 312 KB" },
+        { time: fmtDate(hoursAgo(18.8)),type: "approved",   icon: "✓",  color: "#1a7a4a", label: "National Police Check verified",   detail: "No disclosable outcomes · Expires March 2027 · Confidence 98%" },
+        { time: fmtDate(hoursAgo(19)),  type: "upload",     icon: "📄",  color: "#2563eb", label: "Uploaded National Police Check",   detail: "File: police_check_2024.pdf · 1.2 MB" },
+        { time: fmtDate(hoursAgo(19.5)),type: "opened",     icon: "👁",  color: "#2563eb", label: "Opened portal",                   detail: "Accessed from iPhone · Sydney, NSW" },
+        { time: fmtDate(hoursAgo(20)),  type: "nudge",      icon: "📲",  color: "#7c3aed", label: "Nudge sent by you",               detail: "\"Hi, just checking in — let me know if you need help with the portal\"" },
+        { time: fmtDate(hoursAgo(46)),  type: "link_sent",  icon: "📨",  color: "#7c3aed", label: "Portal link sent",                detail: `Sent by ${worker.facility}` },
+      ],
+    };
+  }
+
+  // expired / missing — never opened
+  return {
+    lastSeen: null,
+    completionPct: 0,
+    stuckOn: null,
+    nudgeSent: false,
+    events: [
+      { time: fmtDate(hoursAgo(72)),  type: "link_sent",  icon: "📨",  color: "#7c3aed", label: "Portal link sent",   detail: `Sent by ${worker.facility}` },
+      { time: fmtDate(hoursAgo(71.9)),type: "email_open", icon: "📬",  color: "#2563eb", label: "Invite email opened", detail: "Opened on mobile device" },
+    ],
+  };
+}
+
 function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUpload, alreadyGraduated, onGraduate, onOpenPortal }) {
   const isCompliant = worker.status === "compliant";
   const [portalCopied, setPortalCopied] = useState(false);
+  const [nudgeSent,    setNudgeSent]    = useState(false);
+  const [showActivity, setShowActivity] = useState(true);
+  const portalActivity = generatePortalActivity(worker);
+
   function handleCopyPortalLink(e) {
     e.stopPropagation();
     const link = `${window.location.origin}/?candidate=${worker.id}`;
@@ -869,6 +938,87 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
             );
           })}
         </div>
+
+        {/* ── PORTAL ACTIVITY ── */}
+        <div style={{ padding: "0 20px 24px" }}>
+          <button
+            onClick={() => setShowActivity(v => !v)}
+            style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: "14px 0 10px", fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", width: "100%" }}
+          >
+            <span style={{ fontSize: 13 }}>{showActivity ? "▾" : "▸"}</span>
+            Portal Activity
+            {portalActivity.lastSeen
+              ? <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, color: C.textMuted, padding: "2px 8px", background: C.greyBg, border: `1px solid ${C.greyBorder}`, borderRadius: 20 }}>Last seen {portalActivity.lastSeen}</span>
+              : <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, color: C.amber, padding: "2px 8px", background: C.amberBg, border: `1px solid ${C.amberBorder}`, borderRadius: 20 }}>Not yet opened</span>
+            }
+          </button>
+
+          {showActivity && (
+            <>
+              {/* Progress + stuck banner */}
+              <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
+                <div style={{ flex: 1, background: C.greyBg, border: `1px solid ${C.greyBorder}`, borderRadius: 10, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 6 }}>Portal progress</div>
+                  <div style={{ height: 6, background: C.border, borderRadius: 3, overflow: "hidden", marginBottom: 4 }}>
+                    <div style={{ width: `${portalActivity.completionPct}%`, height: "100%", background: portalActivity.completionPct === 100 ? C.green : portalActivity.completionPct > 0 ? C.amber : C.greyBorder, borderRadius: 3, transition: "width 0.4s" }} />
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: portalActivity.completionPct === 100 ? C.green : C.textMid }}>{portalActivity.completionPct}% complete</div>
+                </div>
+                {portalActivity.stuckOn && (
+                  <div style={{ flex: 1, background: C.amberBg, border: `1px solid ${C.amberBorder}`, borderRadius: 10, padding: "10px 12px" }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.amber, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>⚠️ Stuck on</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>{portalActivity.stuckOn}</div>
+                    <div style={{ fontSize: 11, color: "#92400e", marginTop: 2 }}>Document flagged by AI</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Nudge button */}
+              {worker.status !== "compliant" && (
+                <button
+                  onClick={() => setNudgeSent(true)}
+                  disabled={nudgeSent || portalActivity.nudgeSent}
+                  style={{
+                    width: "100%", padding: "9px 0", borderRadius: 9, fontSize: 12, fontWeight: 700, marginBottom: 14,
+                    border: `1.5px solid ${nudgeSent || portalActivity.nudgeSent ? C.greenBorder : "#c4b5fd"}`,
+                    background: nudgeSent || portalActivity.nudgeSent ? C.greenBg : "#f5f3ff",
+                    color: nudgeSent || portalActivity.nudgeSent ? C.green : "#7c3aed",
+                    cursor: nudgeSent || portalActivity.nudgeSent ? "default" : "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {nudgeSent ? "✓ Nudge sent!" : portalActivity.nudgeSent ? "✓ Nudge already sent" : `📲 Send nudge to ${worker.name.split(" ")[0]}`}
+                </button>
+              )}
+
+              {/* Timeline */}
+              <div style={{ position: "relative" }}>
+                {/* vertical line */}
+                <div style={{ position: "absolute", left: 14, top: 8, bottom: 8, width: 2, background: C.border, borderRadius: 1 }} />
+                {portalActivity.events.map((ev, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12, marginBottom: 12, position: "relative" }}>
+                    {/* dot */}
+                    <div style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, background: "white", border: `2px solid ${ev.color}`, zIndex: 1 }}>
+                      {ev.icon}
+                    </div>
+                    <div style={{ flex: 1, paddingTop: 4 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: C.text }}>{ev.label}</div>
+                      <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>{ev.detail}</div>
+                      <div style={{ fontSize: 10, color: C.textMuted, marginTop: 2, opacity: 0.7 }}>{ev.time}</div>
+                    </div>
+                  </div>
+                ))}
+
+                {portalActivity.events.length === 0 && (
+                  <div style={{ padding: "16px 0", textAlign: "center", fontSize: 12, color: C.textMuted }}>
+                    No portal activity yet — link not yet sent.
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
       </div>
     </>
   );
