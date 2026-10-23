@@ -463,6 +463,41 @@ function OverviewTab({ stats, workers }) {
     { label: "Infection Control",   verified: 15, pending: 2, expired: 1, missing: 1 },
   ];
 
+  // Live active staff stats derived from ACTIVE_STAFF
+  const staffTotal    = ACTIVE_STAFF.length;
+  const staffAllChecks = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "current").length;
+  const staffExpired  = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expired").length;
+  const staffExpiring = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expiring").length;
+  const staffCompliantPct = Math.round((staffAllChecks / staffTotal) * 100);
+
+  // Check-type breakdown across all active staff
+  const checkTypes = [
+    { id: "police",      label: "Police Check" },
+    { id: "ndis",        label: "NDIS Screening" },
+    { id: "firstaid",    label: "First Aid" },
+    { id: "cpr",         label: "CPR" },
+    { id: "flu",         label: "Flu Vaccination" },
+    { id: "anaphylaxis", label: "Anaphylaxis Mgmt" },
+    { id: "child",       label: "Child Protection" },
+    { id: "wwcc",        label: "WWCC" },
+  ];
+  const staffCheckBreakdown = checkTypes.map(ct => {
+    const relevant = ACTIVE_STAFF.filter(s => s.checks.some(c => c.id === ct.id));
+    if (relevant.length === 0) return null;
+    const current  = relevant.filter(s => s.checks.find(c => c.id === ct.id)?.status === "current").length;
+    const expiring = relevant.filter(s => s.checks.find(c => c.id === ct.id)?.status === "expiring").length;
+    const expired  = relevant.filter(s => s.checks.find(c => c.id === ct.id)?.status === "expired").length;
+    return { ...ct, total: relevant.length, current, expiring, expired };
+  }).filter(Boolean);
+
+  // Staff expiring within 30 days
+  const expiringWithin30 = ACTIVE_STAFF.filter(s =>
+    s.checks.some(c => {
+      const d = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+      return d >= 0 && d <= 30;
+    })
+  ).length;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       {/* charts row */}
@@ -549,6 +584,80 @@ function OverviewTab({ stats, workers }) {
                 <div style={{ width: 8, height: 8, borderRadius: 2, background: col }} />{lbl}
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── ACTIVE STAFF COMPLIANCE REPORT ────────────────────────────── */}
+      <div style={{ paddingTop: 4 }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: C.text, marginBottom: 14, display: "flex", alignItems: "center", gap: 10 }}>
+          <span>Active Staff — Compliance Summary</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, padding: "2px 10px", background: C.greyBg, borderRadius: 20 }}>Veriyo Monitor</span>
+        </div>
+
+        {/* 4 key numbers */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
+          {[
+            { num: staffTotal,           label: "Total Active Staff",     color: C.primary,  bg: C.primaryXLight },
+            { num: `${staffCompliantPct}%`, label: "Fully Compliant",    color: C.green,    bg: C.greenBg },
+            { num: expiringWithin30,     label: "Expiring ≤ 30 days",    color: C.amber,    bg: C.amberBg },
+            { num: staffExpired,         label: "Overdue — Action Now",  color: C.red,      bg: C.redBg },
+          ].map(item => (
+            <div key={item.label} style={{ background: item.bg, borderRadius: 12, padding: "14px 16px" }}>
+              <div style={{ fontSize: 26, fontWeight: 900, color: item.color, lineHeight: 1 }}>{item.num}</div>
+              <div style={{ fontSize: 11, color: item.color, fontWeight: 700, marginTop: 4, opacity: 0.8 }}>{item.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Check-type breakdown table */}
+        <div style={card}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 14 }}>Compliance by Check Type — Active Staff</div>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <thead>
+                <tr>
+                  {["Check Type", "Staff Holding", "Current", "Expiring ≤ 60d", "Overdue", "Rate"].map(h => (
+                    <th key={h} style={{ padding: "7px 12px", textAlign: "left", fontSize: 11, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.4px", borderBottom: `1.5px solid ${C.border}`, whiteSpace: "nowrap" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {staffCheckBreakdown.map((cb, i) => {
+                  const pct = Math.round((cb.current / cb.total) * 100);
+                  return (
+                    <tr key={cb.id} style={{ background: i % 2 === 0 ? "white" : "#f9fbfa" }}>
+                      <td style={{ padding: "9px 12px", fontWeight: 600, color: C.text, borderBottom: `1px solid ${C.borderLight}` }}>{cb.label}</td>
+                      <td style={{ padding: "9px 12px", color: C.textMid, borderBottom: `1px solid ${C.borderLight}` }}>{cb.total}</td>
+                      <td style={{ padding: "9px 12px", borderBottom: `1px solid ${C.borderLight}` }}>
+                        <span style={{ color: C.green, fontWeight: 700 }}>{cb.current}</span>
+                      </td>
+                      <td style={{ padding: "9px 12px", borderBottom: `1px solid ${C.borderLight}` }}>
+                        {cb.expiring > 0
+                          ? <span style={{ color: C.amber, fontWeight: 700 }}>{cb.expiring}</span>
+                          : <span style={{ color: C.textMuted }}>—</span>}
+                      </td>
+                      <td style={{ padding: "9px 12px", borderBottom: `1px solid ${C.borderLight}` }}>
+                        {cb.expired > 0
+                          ? <span style={{ color: C.red, fontWeight: 700 }}>{cb.expired}</span>
+                          : <span style={{ color: C.textMuted }}>—</span>}
+                      </td>
+                      <td style={{ padding: "9px 12px", borderBottom: `1px solid ${C.borderLight}` }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ flex: 1, height: 6, background: "#e8ede9", borderRadius: 4, overflow: "hidden", minWidth: 60 }}>
+                            <div style={{ width: `${pct}%`, height: "100%", background: pct === 100 ? C.green : pct >= 80 ? C.amber : C.red, borderRadius: 4 }} />
+                          </div>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: pct === 100 ? C.green : pct >= 80 ? C.amber : C.red, flexShrink: 0 }}>{pct}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ marginTop: 14, fontSize: 11, color: C.textMuted }}>
+            Updated in real time from Active Staff tab · Includes all sectors
           </div>
         </div>
       </div>
@@ -732,6 +841,10 @@ function ActiveStaffTab() {
     return staffOverallStatus(s);
   }
 
+  const [filterStaffSector,  setFilterStaffSector]  = useState("all");
+  const [filterExpiryWindow, setFilterExpiryWindow] = useState("all"); // "all" | "30" | "60" | "expired"
+  const [staffSearch,        setStaffSearch]        = useState("");
+
   const staffWithStatus = ACTIVE_STAFF.map(s => ({ ...s, overallStatus: effectiveStatus(s) }));
 
   const leaveTypes = ["Parental leave", "Maternity leave", "Paternity leave", "Long service leave", "Extended sick leave", "Carer's leave", "Other leave"];
@@ -741,10 +854,32 @@ function ActiveStaffTab() {
   const expiringCount   = staffWithStatus.filter(s => s.overallStatus === "expiring").length;
   const currentCount    = staffWithStatus.filter(s => s.overallStatus === "current").length;
 
-  const filterOptions = filterStaffStatus === "all" ? staffWithStatus
-    : filterStaffStatus === "onLeave" ? staffWithStatus.filter(s => s.overallStatus === "onLeave" || s.overallStatus === "returningSoon")
-    : staffWithStatus.filter(s => s.overallStatus === filterStaffStatus);
-  const filtered = filterOptions;
+  // Apply all filters
+  const filtered = staffWithStatus.filter(s => {
+    // Status filter (from stat cards)
+    if (filterStaffStatus === "onLeave") {
+      if (s.overallStatus !== "onLeave" && s.overallStatus !== "returningSoon") return false;
+    } else if (filterStaffStatus !== "all" && s.overallStatus !== filterStaffStatus) {
+      return false;
+    }
+    // Sector filter
+    if (filterStaffSector !== "all" && s.sector !== filterStaffSector) return false;
+    // Search
+    if (staffSearch && !s.name.toLowerCase().includes(staffSearch.toLowerCase()) && !s.role.toLowerCase().includes(staffSearch.toLowerCase())) return false;
+    // Expiry window filter
+    if (filterExpiryWindow !== "all") {
+      if (filterExpiryWindow === "expired") {
+        if (!s.checks.some(c => c.status === "expired")) return false;
+      } else {
+        const days = parseInt(filterExpiryWindow);
+        if (!s.checks.some(c => {
+          const d = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+          return d >= 0 && d <= days;
+        })) return false;
+      }
+    }
+    return true;
+  });
 
   // Flatten all upcoming expiries — skip staff fully on leave (alerts paused)
   const allExpiries = staffWithStatus
@@ -769,6 +904,39 @@ function ActiveStaffTab() {
         <StatCard num={expiredCount}           label="Action Needed"      color={C.red}     bg={C.redBg}         onClick={() => setFilterStaffStatus(s => s === "expired"  ? "all" : "expired")}  active={filterStaffStatus === "expired"} />
         {onLeaveCount > 0 && <StatCard num={onLeaveCount} label="On Leave" color="#7c3aed" bg="#f5f3ff" onClick={() => setFilterStaffStatus(s => s === "onLeave" ? "all" : "onLeave")} active={filterStaffStatus === "onLeave"} />}
       </div>
+
+      {/* filter bar */}
+      <div className="dash-filters">
+        <input
+          style={{ flex: "1 1 180px", padding: "9px 14px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 14, fontFamily: "inherit", color: C.text, background: C.white, outline: "none" }}
+          placeholder="🔍  Search staff…"
+          value={staffSearch}
+          onChange={e => setStaffSearch(e.target.value)}
+        />
+        <select className="dash-select" value={filterStaffSector} onChange={e => setFilterStaffSector(e.target.value)}>
+          <option value="all">All sectors</option>
+          <option value="agedCare">Aged Care</option>
+          <option value="earlyLearning">Early Learning</option>
+          <option value="ndis">NDIS</option>
+        </select>
+        <select className="dash-select" value={filterExpiryWindow} onChange={e => setFilterExpiryWindow(e.target.value)}>
+          <option value="all">All expiry dates</option>
+          <option value="expired">Overdue now</option>
+          <option value="30">Expiring within 30 days</option>
+          <option value="60">Expiring within 60 days</option>
+        </select>
+        {(filterStaffSector !== "all" || filterExpiryWindow !== "all" || staffSearch || filterStaffStatus !== "all") && (
+          <button
+            onClick={() => { setFilterStaffSector("all"); setFilterExpiryWindow("all"); setStaffSearch(""); setFilterStaffStatus("all"); }}
+            style={{ padding: "9px 14px", border: `1.5px solid ${C.border}`, borderRadius: 8, background: "white", fontSize: 13, color: C.textMid, cursor: "pointer", fontWeight: 600, whiteSpace: "nowrap" }}
+          >✕ Clear filters</button>
+        )}
+      </div>
+
+      {/* filter result count */}
+      {filtered.length !== staffWithStatus.length && (
+        <div style={{ fontSize: 12, color: C.textMuted }}>Showing {filtered.length} of {staffWithStatus.length} staff</div>
+      )}
 
       {/* alerts banner */}
       {allExpiries.length > 0 && (
