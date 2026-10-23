@@ -26,14 +26,14 @@ const C = {
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const FACILITIES = [
-  { id: "f1", name: "Uniting Aged Care — Parramatta", sector: "agedCare", ndisRequired: true },
-  { id: "f2", name: "Uniting Aged Care — Liverpool", sector: "agedCare", ndisRequired: true },
-  { id: "f3", name: "Uniting Aged Care — Blacktown", sector: "agedCare", ndisRequired: false },
-  { id: "f4", name: "HACC Senior Gym — Sydney", sector: "agedCare", ndisRequired: false },
-  { id: "f5", name: "All About Children — Bella Vista", sector: "earlyLearning", ndisRequired: false },
-  { id: "f6", name: "All About Children — Castle Hill", sector: "earlyLearning", ndisRequired: false },
-  { id: "f7", name: "Explorers Early Learning — Norwest", sector: "earlyLearning", ndisRequired: false },
-  { id: "f8", name: "NSW CSE — Singleton", sector: "agedCare", ndisRequired: true },
+  { id: "f1", name: "Uniting Aged Care — Parramatta",    sector: "agedCare",        ndisRequired: true  },
+  { id: "f2", name: "Uniting Aged Care — Liverpool",     sector: "agedCare",        ndisRequired: true  },
+  { id: "f3", name: "Uniting Aged Care — Blacktown",     sector: "agedCare",        ndisRequired: false },
+  { id: "f4", name: "HACC Senior Gym — Sydney",          sector: "homeCare",        ndisRequired: false },
+  { id: "f5", name: "All About Children — Bella Vista",  sector: "earlyLearning",   ndisRequired: false },
+  { id: "f6", name: "All About Children — Castle Hill",  sector: "earlyLearning",   ndisRequired: false },
+  { id: "f7", name: "Explorers Early Learning — Norwest",sector: "earlyLearning",   ndisRequired: false },
+  { id: "f8", name: "NSW CSE — Singleton",               sector: "disability",      ndisRequired: true  },
 ];
 
 const ALL_CHECKS = [
@@ -72,13 +72,14 @@ function makeWorkers() {
   const firstNames = ["Sarah","James","Amara","Michael","Priya","Tom","Nguyen","Lisa","David","Julie","Fatima","Marcus","Anna","Leon","Rachel","Kevin","Zoe","Daniel","Mei","Oscar"];
   const lastNames  = ["Chen","O'Brien","Diallo","Tran","Sharma","Nguyen","Park","Osei","Williams","Garcia","Smith","Johnson","Brown","Davis","Wilson","Martinez","Anderson","Taylor","Thomas","Jackson"];
   const roles      = ["Support Worker","Registered Nurse","Personal Carer","Team Leader","Allied Health","Admin Officer","Care Coordinator","Kitchen Hand","Enrolled Nurse","Early Childhood Educator"];
-  const sectors    = ["agedCare","agedCare","agedCare","earlyLearning","ndis","agedCare"];
+  const sectors    = ["agedCare","agedCare","homeCare","earlyLearning","disability","agedCare"];
 
   return Array.from({ length: 22 }, (_, i) => {
     const sector   = sectors[i % sectors.length];
     const facility = FACILITIES.filter(f =>
       sector === "earlyLearning" ? f.sector === "earlyLearning" :
-      sector === "ndis"          ? f.ndisRequired :
+      sector === "homeCare"      ? f.sector === "homeCare" :
+      sector === "disability"    ? f.ndisRequired :
       f.sector === "agedCare"
     )[i % 5] || FACILITIES[0];
 
@@ -86,8 +87,8 @@ function makeWorkers() {
     ALL_CHECKS.forEach(c => {
       const applicable =
         c.sector === "all" ||
-        (c.sector === "ndis" && (sector === "ndis" || facility.ndisRequired)) ||
-        (c.sector === "agedCare" && sector === "agedCare") ||
+        (c.sector === "ndis" && (sector === "disability" || facility.ndisRequired)) ||
+        (c.sector === "agedCare" && (sector === "agedCare" || sector === "homeCare")) ||
         (c.sector === "earlyLearning" && sector === "earlyLearning");
       checks[c.id] = applicable ? randomStatus(c.mandatory) : "not_required";
     });
@@ -103,6 +104,7 @@ function makeWorkers() {
       name: `${firstNames[i % firstNames.length]} ${lastNames[i % lastNames.length]}`,
       role: roles[i % roles.length],
       sector, facility: facility.name, facilityId: facility.id,
+      ndisScreening: sector === "disability" || facility.ndisRequired,
       startDate: `2024-0${(i % 9) + 1}-${String((i * 3 % 28) + 1).padStart(2, "0")}`,
       pct, status, checks,
     };
@@ -142,7 +144,7 @@ const ACTIVE_STAFF = [
     ],
   },
   {
-    id: "s3", name: "Amara Diallo", role: "Personal Carer", sector: "ndis",
+    id: "s3", name: "Amara Diallo", role: "Personal Carer", sector: "disability",
     facility: "Uniting Aged Care — Blacktown", startDate: "2023-01-09",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(540),  renewYears: 3,  status: "current" },
@@ -186,7 +188,7 @@ const ACTIVE_STAFF = [
     ],
   },
   {
-    id: "s7", name: "Kevin Park", role: "Support Worker", sector: "ndis",
+    id: "s7", name: "Kevin Park", role: "Support Worker", sector: "disability",
     facility: "NSW CSE — Singleton", startDate: "2023-09-18",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(600),  renewYears: 3,  status: "current" },
@@ -228,7 +230,7 @@ const workerStatusMeta = {
   risk:       { label: "Risk",        color: C.red,   bg: C.redBg   },
 };
 
-const SECTOR_LABELS = { agedCare: "Aged Care", earlyLearning: "Early Learning", ndis: "NDIS" };
+const SECTOR_LABELS = { agedCare: "Aged Care", homeCare: "Home Care", earlyLearning: "Early Learning", disability: "Disability Support" };
 
 // ─── SMALL COMPONENTS ─────────────────────────────────────────────────────────
 function Pill({ status }) {
@@ -425,8 +427,9 @@ function AddWorkerModal({ onClose, onAdd }) {
                 <label style={lbl}>Sector *</label>
                 <select style={inp} required value={form.sector} onChange={e => set("sector", e.target.value)}>
                   <option value="agedCare">Aged Care</option>
+                  <option value="homeCare">Home Care</option>
                   <option value="earlyLearning">Early Learning</option>
-                  <option value="ndis">NDIS</option>
+                  <option value="disability">Disability Support</option>
                 </select>
               </div>
             </div>
@@ -516,9 +519,10 @@ function OverviewTab({ stats, workers }) {
             <div style={{ fontSize: 11, color: C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10 }}>By Sector</div>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               {[
-                { label: "Aged Care",      count: workers.filter(w => w.sector === "agedCare").length,      color: C.green },
-                { label: "NDIS",           count: workers.filter(w => w.sector === "ndis").length,           color: "#7c3aed" },
-                { label: "Early Learning", count: workers.filter(w => w.sector === "earlyLearning").length,  color: C.blue },
+                { label: "Aged Care",         count: workers.filter(w => w.sector === "agedCare").length,      color: C.green },
+                { label: "Home Care",         count: workers.filter(w => w.sector === "homeCare").length,      color: "#0891b2" },
+                { label: "Early Learning",    count: workers.filter(w => w.sector === "earlyLearning").length, color: C.blue },
+                { label: "Disability Support",count: workers.filter(w => w.sector === "disability").length,    color: "#7c3aed" },
               ].map(s => (
                 <div key={s.label} style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
                   <span style={{ fontSize: 18, fontWeight: 800, color: s.color }}>{s.count}</span>
@@ -721,9 +725,16 @@ function WorkerCard({ w, onClick, onOpenPortal }) {
           color: sm.color, background: sm.bg, flexShrink: 0,
         }}>{sm.label}</span>
       </div>
-      <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {SECTOR_LABELS[w.sector]} · {w.facility}
       </div>
+      {w.ndisScreening && (
+        <div style={{ marginBottom: 6 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 20, background: "#f0fdf4", color: "#166534", border: "1px solid #86efac", letterSpacing: "0.3px" }}>
+            🛡️ NDIS Screening required
+          </span>
+        </div>
+      )}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <div style={{ flex: 1 }}><ProgressBar pct={w.pct} status={w.status} /></div>
         <span style={{ fontSize: 12, fontWeight: 800, color: sm.color, flexShrink: 0 }}>{w.pct}%</span>
@@ -1150,8 +1161,9 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
         <select className="dash-select" value={filterStaffSector} onChange={e => setFilterStaffSector(e.target.value)}>
           <option value="all">All sectors</option>
           <option value="agedCare">Aged Care</option>
+          <option value="homeCare">Home Care</option>
           <option value="earlyLearning">Early Learning</option>
-          <option value="ndis">NDIS</option>
+          <option value="disability">Disability Support</option>
         </select>
         <select className="dash-select" value={filterExpiryWindow} onChange={e => setFilterExpiryWindow(e.target.value)}>
           <option value="all">All expiry dates</option>
@@ -1560,7 +1572,7 @@ const POOL_WORKERS = [
     yearsExp: 5, note: "Cert III & Diploma qualified. Previously room leader. Available from Nov 2024.",
   },
   {
-    id: "tp4", name: "Marcus Williams", role: "Personal Carer", sector: "ndis",
+    id: "tp4", name: "Marcus Williams", role: "Personal Carer", sector: "disability",
     lastFacility: "Arcare — Penrith", lastOrg: "Arcare",
     resignedDate: "2024-10-05", availability: "available",
     checks: [
@@ -1700,8 +1712,9 @@ function TalentPoolTab({ alumniStaff = [] }) {
         <select className="dash-select" value={filterSector} onChange={e => setFilterSector(e.target.value)}>
           <option value="all">All sectors</option>
           <option value="agedCare">Aged Care</option>
+          <option value="homeCare">Home Care</option>
           <option value="earlyLearning">Early Learning</option>
-          <option value="ndis">NDIS</option>
+          <option value="disability">Disability Support</option>
         </select>
         <select className="dash-select" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
           <option value="all">All roles</option>
@@ -2109,13 +2122,14 @@ function VeriyoDashboard({ user, onOpenPortal }) {
                 <select className="dash-select" value={filterSector} onChange={e => { setFilterSector(e.target.value); setFilterFacility("all"); }}>
                   <option value="all">All sectors</option>
                   <option value="agedCare">Aged Care</option>
+                  <option value="homeCare">Home Care</option>
                   <option value="earlyLearning">Early Learning</option>
-                  <option value="ndis">NDIS</option>
+                  <option value="disability">Disability Support</option>
                 </select>
                 <select className="dash-select" value={filterFacility} onChange={e => setFilterFacility(e.target.value)}>
                   <option value="all">All facilities</option>
                   {FACILITIES
-                    .filter(f => filterSector === "all" || f.sector === filterSector || (filterSector === "ndis" && f.ndisRequired))
+                    .filter(f => filterSector === "all" || f.sector === filterSector || (filterSector === "disability" && f.ndisRequired))
                     .map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                 </select>
               </div>

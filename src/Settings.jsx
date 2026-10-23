@@ -329,12 +329,14 @@ function FacilitiesPanel() {
 // ─── Compliance Check Types ───────────────────────────────────────────────────
 function ChecksPanel() {
   const rows = [
-    { name: "Police Check",                validity: "3 years", applies: "All roles",       reminder: "60 / 30 / 7 days", type: "Mandatory" },
-    { name: "NDIS Worker Screening",       validity: "5 years", applies: "NDIS roles",      reminder: "90 / 30 days",     type: "Mandatory" },
-    { name: "Working With Children Check", validity: "5 years", applies: "All care roles",  reminder: "60 / 30 days",     type: "Mandatory" },
-    { name: "AHPRA Registration",          validity: "1 year",  applies: "Nurses, Physios", reminder: "30 / 14 days",     type: "Mandatory" },
-    { name: "First Aid Certificate",       validity: "3 years", applies: "Senior roles",    reminder: "30 days",          type: "Recommended" },
-    { name: "Driver's Licence",            validity: "Varies",  applies: "Mobile workers",  reminder: "30 days",          type: "Role-dependent" },
+    { name: "Police Check",                validity: "3 years", applies: "All roles",              reminder: "60 / 30 / 7 days", type: "Mandatory" },
+    { name: "NDIS Worker Screening",       validity: "5 years", applies: "Disability Support + NDIS-funded roles", reminder: "90 / 30 days", type: "Mandatory" },
+    { name: "Working With Children Check", validity: "5 years", applies: "Early Learning",         reminder: "60 / 30 days",     type: "Mandatory" },
+    { name: "AHPRA Registration",          validity: "1 year",  applies: "Nurses, Physiotherapists",reminder: "30 / 14 days",    type: "Mandatory" },
+    { name: "First Aid Certificate",       validity: "3 years", applies: "All roles",              reminder: "30 days",          type: "Mandatory" },
+    { name: "CPR Certificate",             validity: "1 year",  applies: "All roles",              reminder: "30 / 14 days",     type: "Mandatory" },
+    { name: "Influenza Vaccination",       validity: "1 year",  applies: "Aged Care, Home Care",   reminder: "30 days",          type: "Mandatory" },
+    { name: "Driver's Licence",            validity: "Varies",  applies: "Mobile / Home Care",     reminder: "30 days",          type: "Role-dependent" },
   ];
 
   const badgeFor = (t) => t === "Mandatory"
@@ -373,6 +375,196 @@ function ChecksPanel() {
           </table>
         </div>
       </Card>
+    </>
+  );
+}
+
+// ─── Compliance Tags ──────────────────────────────────────────────────────────
+const DEFAULT_TAGS = [
+  { id: "ndis",    icon: "🛡️", label: "NDIS Worker Screening", desc: "Required for any worker supporting NDIS participants, regardless of sector", sector: "Disability Support + NDIS-funded roles", enabled: true,  system: true  },
+  { id: "wwcc",    icon: "👶", label: "Working With Children Check", desc: "Required for anyone working with children in an early learning or childcare setting", sector: "Early Learning", enabled: true,  system: true  },
+  { id: "ahpra",   icon: "🏥", label: "AHPRA Registration",    desc: "Required for all registered nurses, enrolled nurses and allied health professionals", sector: "All sectors",    enabled: true,  system: true  },
+  { id: "covid",   icon: "💉", label: "COVID-19 Vaccination",  desc: "Mandatory for all workers in residential aged care facilities under federal regulations", sector: "Aged Care",      enabled: true,  system: false },
+  { id: "flu",     icon: "🩺", label: "Influenza Vaccination", desc: "Annual flu vaccination required in residential aged care and home care settings", sector: "Aged Care, Home Care", enabled: true, system: false },
+  { id: "manual",  icon: "🔧", label: "Manual Handling",       desc: "Required for roles involving physical care tasks or equipment operation", sector: "All sectors",    enabled: true,  system: false },
+  { id: "driver",  icon: "🚗", label: "Driver's Licence Check","desc": "Required for community / home care workers who transport clients", sector: "Home Care",       enabled: false, system: false },
+  { id: "dement",  icon: "🧠", label: "Dementia Care Training","desc": "Recommended for all residential aged care workers, mandatory for some facilities", sector: "Aged Care",      enabled: false, system: false },
+];
+
+function TagsPanel() {
+  const [tags, setTags] = useState(DEFAULT_TAGS);
+  const [addOpen, setAddOpen] = useState(false);
+  const [newTag, setNewTag] = useState({ label: "", desc: "", sector: "All sectors" });
+  const [saved, setSaved] = useState({});
+
+  function toggle(id) {
+    setTags(prev => prev.map(t => t.id === id ? { ...t, enabled: !t.enabled } : t));
+  }
+
+  function saveTag() {
+    if (!newTag.label.trim()) return;
+    setTags(prev => [...prev, { id: `custom_${Date.now()}`, icon: "🏷️", label: newTag.label, desc: newTag.desc, sector: newTag.sector, enabled: true, system: false, custom: true }]);
+    setNewTag({ label: "", desc: "", sector: "All sectors" });
+    setAddOpen(false);
+  }
+
+  function deleteTag(id) {
+    setTags(prev => prev.filter(t => t.id !== id));
+  }
+
+  function markSaved(id) {
+    setSaved(p => ({ ...p, [id]: true }));
+    setTimeout(() => setSaved(p => ({ ...p, [id]: false })), 1800);
+  }
+
+  const enabledTags = tags.filter(t => t.enabled);
+  const disabledTags = tags.filter(t => !t.enabled);
+
+  return (
+    <>
+      <SectionHeader title="Compliance Tags" sub="Tags are overlays applied to workers based on their role or facility — not sectors. Turn them on or off as your organisation's requirements change." />
+
+      {/* What are tags */}
+      <div style={{ background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 12, padding: "14px 18px", marginBottom: 22, display: "flex", gap: 12, alignItems: "flex-start" }}>
+        <span style={{ fontSize: 20, flexShrink: 0 }}>💡</span>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#166534", marginBottom: 4 }}>Tags are flexible — not fixed to a sector</div>
+          <div style={{ fontSize: 12, color: "#15803d", lineHeight: 1.6 }}>
+            A tag like <strong>NDIS Worker Screening</strong> can apply to a Registered Nurse in Aged Care, a Support Worker in Disability, and an Admin Officer in Home Care — all at once.
+            When your organisation wins a new NDIS contract or enters a new sector, just enable the relevant tag and Veriyo flags every affected worker automatically.
+          </div>
+        </div>
+      </div>
+
+      {/* Active tags */}
+      <Card>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div>
+            <CardTitle>Active compliance tags ({enabledTags.length})</CardTitle>
+            <CardSub>These tags are currently applied to your workers</CardSub>
+          </div>
+          <PrimaryBtn onClick={() => setAddOpen(v => !v)}>+ Add custom tag</PrimaryBtn>
+        </div>
+
+        {/* Add custom tag form */}
+        {addOpen && (
+          <div style={{ background: "#f8fafc", border: "1.5px dashed #cbd5e1", borderRadius: 10, padding: "16px 18px", marginBottom: 18 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 12 }}>New custom tag</div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
+              <FieldInput
+                placeholder="Tag name (e.g. Site Induction — Parramatta)"
+                value={newTag.label}
+                onChange={e => setNewTag(p => ({ ...p, label: e.target.value }))}
+                style={{ flex: "2 1 200px" }}
+              />
+              <select
+                value={newTag.sector}
+                onChange={e => setNewTag(p => ({ ...p, sector: e.target.value }))}
+                style={{ flex: "1 1 140px", background: C.white, border: `1.5px solid ${C.border}`, borderRadius: 8, padding: "7px 12px", fontFamily: "inherit", fontSize: 13, color: C.text, outline: "none" }}
+              >
+                <option>All sectors</option>
+                <option>Aged Care</option>
+                <option>Home Care</option>
+                <option>Early Learning</option>
+                <option>Disability Support</option>
+                <option>NDIS-funded roles</option>
+              </select>
+            </div>
+            <FieldInput
+              placeholder="Description (optional)"
+              value={newTag.desc}
+              onChange={e => setNewTag(p => ({ ...p, desc: e.target.value }))}
+              style={{ width: "100%", marginBottom: 12, boxSizing: "border-box" }}
+            />
+            <div style={{ display: "flex", gap: 8 }}>
+              <PrimaryBtn onClick={saveTag} style={{ padding: "7px 16px" }}>Add tag</PrimaryBtn>
+              <GhostBtn onClick={() => setAddOpen(false)}>Cancel</GhostBtn>
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {enabledTags.map(tag => (
+            <div key={tag.id} style={{
+              display: "flex", alignItems: "flex-start", gap: 14, padding: "14px 16px",
+              background: C.bg, borderRadius: 10, border: `1.5px solid ${C.border}`,
+            }}>
+              <span style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>{tag.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 3 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{tag.label}</span>
+                  {tag.system && <Badge bg="#e0f2fe" color="#0369a1">System</Badge>}
+                  {tag.custom && <Badge bg="#fef3c7" color="#92400e">Custom</Badge>}
+                </div>
+                <div style={{ fontSize: 12, color: C.textMuted, marginBottom: 4, lineHeight: 1.5 }}>{tag.desc}</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: C.primary }}>Applies to: {tag.sector}</div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                {tag.custom && (
+                  <button onClick={() => deleteTag(tag.id)} style={{ fontSize: 11, color: C.red, background: "none", border: "none", cursor: "pointer", padding: "2px 4px" }}>Remove</button>
+                )}
+                <button
+                  onClick={() => { toggle(tag.id); markSaved(tag.id); }}
+                  style={{
+                    width: 44, height: 24, borderRadius: 12, border: "none", cursor: "pointer",
+                    background: C.green, position: "relative", transition: "background 0.2s", flexShrink: 0,
+                  }}
+                >
+                  <div style={{ position: "absolute", top: 3, right: 3, width: 18, height: 18, borderRadius: 9, background: "#fff", transition: "right 0.2s" }} />
+                </button>
+                <span style={{ fontSize: 11, fontWeight: 700, color: saved[tag.id] ? C.green : C.textMuted, minWidth: 30 }}>
+                  {saved[tag.id] ? "Saved" : "On"}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Inactive tags */}
+      {disabledTags.length > 0 && (
+        <Card>
+          <CardTitle>Available tags ({disabledTags.length})</CardTitle>
+          <CardSub>Enable these if your organisation's requirements change</CardSub>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {disabledTags.map(tag => (
+              <div key={tag.id} style={{
+                display: "flex", alignItems: "flex-start", gap: 14, padding: "12px 16px",
+                background: C.white, borderRadius: 10, border: `1.5px solid ${C.border}`, opacity: 0.7,
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{tag.icon}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: C.textMid, marginBottom: 2 }}>{tag.label}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted }}>{tag.sector}</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <button
+                    onClick={() => toggle(tag.id)}
+                    style={{
+                      width: 44, height: 24, borderRadius: 12, border: "none", cursor: "pointer",
+                      background: "#d1d5db", position: "relative", transition: "background 0.2s", flexShrink: 0,
+                    }}
+                  >
+                    <div style={{ position: "absolute", top: 3, left: 3, width: 18, height: 18, borderRadius: 9, background: "#fff", transition: "left 0.2s" }} />
+                  </button>
+                  <span style={{ fontSize: 11, color: C.textMuted, minWidth: 24 }}>Off</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Future teaser */}
+      <div style={{ background: C.white, border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "16px 20px", display: "flex", gap: 12, alignItems: "center" }}>
+        <span style={{ fontSize: 20 }}>🔮</span>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 2 }}>Coming: role-based tag rules</div>
+          <div style={{ fontSize: 12, color: C.textMuted, lineHeight: 1.5 }}>
+            Auto-apply tags based on job title, facility, or contract type — so when you hire a new Support Worker for an NDIS contract, the right tags apply on day one without any manual steps.
+          </div>
+        </div>
+      </div>
     </>
   );
 }
@@ -514,6 +706,7 @@ const NAV = [
   { id: "roles",         label: "Role Permissions",   icon: "🛡️" },
   { id: "facilities",    label: "Facilities",         icon: "🏠" },
   { id: "checks",        label: "Compliance Checks",  icon: "📋" },
+  { id: "tags",          label: "Compliance Tags",    icon: "🏷️" },
   { id: "org",           label: "Organisation Profile", icon: "🏢" },
   { id: "integrations",  label: "Integrations",       icon: "🔗" },
   { id: "notifications", label: "Notifications",      icon: "🔔" },
@@ -533,7 +726,7 @@ export default function Settings({ user, onSection, onLogout }) {
           <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, padding: "4px 10px", marginBottom: 6 }}>
             Organisation
           </div>
-          {NAV.slice(0, 4).map(n => (
+          {NAV.slice(0, 5).map(n => (
             <button key={n.id} onClick={() => setActive(n.id)} style={{
               display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", borderRadius: 8, border: "none", textAlign: "left",
               background: active === n.id ? C.primaryXLight : "transparent", color: active === n.id ? C.primary : C.textMid,
@@ -545,7 +738,7 @@ export default function Settings({ user, onSection, onLogout }) {
           <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: C.textMuted, padding: "14px 10px 6px", marginBottom: 6 }}>
             Account
           </div>
-          {NAV.slice(4).map(n => (
+          {NAV.slice(5).map(n => (
             <button key={n.id} onClick={() => setActive(n.id)} style={{
               display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 10px", borderRadius: 8, border: "none", textAlign: "left",
               background: active === n.id ? C.primaryXLight : "transparent", color: active === n.id ? C.primary : C.textMid,
@@ -562,6 +755,7 @@ export default function Settings({ user, onSection, onLogout }) {
           {active === "roles"         && <RolesPanel />}
           {active === "facilities"    && <FacilitiesPanel />}
           {active === "checks"        && <ChecksPanel />}
+          {active === "tags"          && <TagsPanel />}
           {active === "org"           && <OrgPanel />}
           {active === "integrations"  && <IntegrationsPanel />}
           {active === "notifications" && <NotificationsPanel />}
