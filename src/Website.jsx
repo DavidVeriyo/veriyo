@@ -371,7 +371,7 @@ export default function Website({ onLogin }) {
 
       {/* ─── LOGO TRUST STRIP ─── */}
       <div style={s.trustStrip}>
-        <span style={s.trustLabel}>Trusted by providers across NSW</span>
+        <span style={s.trustLabel}>Built for Australian care providers</span>
         <div style={s.trustLogos}>
           {["Aged Care", "NDIS Providers", "Early Learning Centres", "Disability Services", "Community Care"].map((name, i) => (
             <span key={i} style={s.trustPill}>{name}</span>
@@ -383,13 +383,12 @@ export default function Website({ onLogin }) {
       <section style={s.impactBand}>
         <div style={s.impactInner}>
           {[
-            { num: "140+", label: "Compliance failures caught", sub: "in a single provider's first 3 months" },
-            { num: "8 days", label: "Avg NDIS screening time", sub: "reduced from weeks with manual process" },
-            { num: "3×", label: "Faster onboarding", sub: "from offer accepted to Day 1 cleared" },
-            { num: "100%", label: "Audit-ready records", sub: "always up to date, never scrambled for" },
+            { label: "Three teams. One document. Checked three times.", sub: "Recruitment, Compliance, and HR all re-verifying the same paperwork — with no single source of truth." },
+            { label: "A single missed check can cost a provider their accreditation.", sub: "Manual processes create gaps. Gaps create risk. Risk creates liability." },
+            { label: "NDIS screening backlogs leave critical roles unfilled for weeks.", sub: "Every day a role sits vacant is a day a participant goes without support." },
+            { label: "Audit-ready records, every worker, every time.", sub: "Veriyo keeps compliance current so you're never scrambling when it matters most." },
           ].map((st, i) => (
             <div key={i} style={s.impactStat}>
-              <div style={s.impactNum}>{st.num}</div>
               <div style={s.impactLabel}>{st.label}</div>
               <div style={s.impactSub}>{st.sub}</div>
             </div>
@@ -565,7 +564,7 @@ export default function Website({ onLogin }) {
               { num: "01", title: "Candidate Invited", desc: "HR sends a Veriyo link. The candidate receives a personalised checklist of every document and clearance required for their specific role." },
               { num: "02", title: "Documents Uploaded", desc: "The candidate uploads directly. Veriyo's AI reads and validates each one — certificates, clearances, qualifications, IDs — instantly." },
               { num: "03", title: "Compliance Verified", desc: "HR sees a live dashboard. Missing items trigger automatic reminders. Nothing gets missed. Nothing gets manually chased." },
-              { num: "04", title: "Day 1 Ready", desc: "When the pipeline is complete, the worker is cleared to start. Their Veriyo Passport is live and shareable with any connected employer." },
+              { num: "04", title: "Day 1 Ready", desc: "When the pipeline is complete, the worker is cleared to start. HR gets confirmation, the worker gets clarity, and you get peace of mind." },
             ].map((step, i) => (
               <div key={i} style={s.stepCard}>
                 <div style={s.stepNum}>{step.num}</div>
