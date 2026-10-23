@@ -225,9 +225,22 @@ export default function Website({ onLogin }) {
   const [demoOrg, setDemoOrg] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
-  function handleDemoRequest(e) {
+  async function handleDemoRequest(e) {
     e.preventDefault();
-    setDemoSubmitted(true);
+    try {
+      const res = await fetch("https://formspree.io/f/xljjryvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ name: demoName, organisation: demoOrg, email: demoEmail }),
+      });
+      if (res.ok) {
+        setDemoSubmitted(true);
+      } else {
+        alert("Something went wrong — please email david@veriyo.com.au directly.");
+      }
+    } catch {
+      alert("Something went wrong — please email david@veriyo.com.au directly.");
+    }
   }
 
   return (
