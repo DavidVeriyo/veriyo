@@ -3,7 +3,7 @@ import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 const DEMO_USERS = [
   { email: "david@veriyo.com.au", password: "veriyo2024", name: "David Truong", role: "Admin" },
-  { email: "demo@hammondcare.com.au", password: "demo123", name: "HammondCare Demo", role: "HR Manager" },
+  { email: "demo@harbourhealth.com.au", password: "demo123", name: "Harbour Health Demo", role: "HR Manager" },
   { email: "demo@veriyo.com.au", password: "demo123", name: "Demo User", role: "Compliance Officer" },
 ];
 

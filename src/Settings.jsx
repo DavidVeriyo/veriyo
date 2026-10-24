@@ -98,11 +98,11 @@ function UsersPanel() {
 
   const [users, setUsers] = useState([
     { id: 1, initials: "DT", name: "David Truong",     email: "david@veriyo.com.au",           role: "Super Admin",        active: true,  lastLogin: "Today",       isSelf: true },
-    { id: 2, initials: "SC", name: "Sarah Chen",       email: "sarah.chen@hammondcare.com.au", role: "HR Manager",         active: true,  lastLogin: "Today" },
-    { id: 3, initials: "LP", name: "Luke Patterson",   email: "luke.p@hammondcare.com.au",     role: "Recruiter",          active: true,  lastLogin: "Yesterday" },
-    { id: 4, initials: "RK", name: "Dr. Rachel Kim",   email: "r.kim@hammondcare.com.au",      role: "Hiring Manager",     active: true,  lastLogin: "3 days ago" },
-    { id: 5, initials: "MN", name: "Mohammed Nasser",  email: "m.nasser@hammondcare.com.au",   role: "Compliance Officer", active: true,  lastLogin: "1 week ago" },
-    { id: 6, initials: "JB", name: "Jane Bell",        email: "j.bell@hammondcare.com.au",     role: "Recruiter",          active: false, lastLogin: "Invite pending" },
+    { id: 2, initials: "SC", name: "Sarah Chen",       email: "sarah.chen@harbourhealth.com.au", role: "HR Manager",         active: true,  lastLogin: "Today" },
+    { id: 3, initials: "LP", name: "Luke Patterson",   email: "luke.p@harbourhealth.com.au",     role: "Recruiter",          active: true,  lastLogin: "Yesterday" },
+    { id: 4, initials: "RK", name: "Dr. Rachel Kim",   email: "r.kim@harbourhealth.com.au",      role: "Hiring Manager",     active: true,  lastLogin: "3 days ago" },
+    { id: 5, initials: "MN", name: "Mohammed Nasser",  email: "m.nasser@harbourhealth.com.au",   role: "Compliance Officer", active: true,  lastLogin: "1 week ago" },
+    { id: 6, initials: "JB", name: "Jane Bell",        email: "j.bell@harbourhealth.com.au",     role: "Recruiter",          active: false, lastLogin: "Invite pending" },
   ]);
 
   const AVATAR_COLOURS = [
@@ -573,13 +573,13 @@ function TagsPanel() {
 function OrgPanel() {
   return (
     <>
-      <SectionHeader title="Organisation Profile" sub="HammondCare · ABN 42 052 712 085" />
+      <SectionHeader title="Organisation Profile" sub="Harbour Health Group · ABN 61 843 290 174" />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <Card>
           <CardTitle>Organisation details</CardTitle>
           <CardSub>Used on reports and communications</CardSub>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {[["Organisation name", "HammondCare"], ["ABN", "42 052 712 085"]].map(([lbl, val]) => (
+            {[["Organisation name", "Harbour Health Group"], ["ABN", "61 843 290 174"]].map(([lbl, val]) => (
               <div key={lbl} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".07em", color: C.textMuted }}>{lbl}</span>
                 <input defaultValue={val} style={{ background: C.bg, border: `1.5px solid ${C.border}`, borderRadius: 8, padding: "7px 12px", fontFamily: "inherit", fontSize: 13, color: C.text, outline: "none" }} />

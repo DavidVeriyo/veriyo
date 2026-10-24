@@ -26,14 +26,14 @@ const C = {
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const FACILITIES = [
-  { id: "f1", name: "Uniting Aged Care — Parramatta",    sector: "agedCare",        ndisRequired: true  },
-  { id: "f2", name: "Uniting Aged Care — Liverpool",     sector: "agedCare",        ndisRequired: true  },
-  { id: "f3", name: "Uniting Aged Care — Blacktown",     sector: "agedCare",        ndisRequired: false },
-  { id: "f4", name: "HACC Senior Gym — Sydney",          sector: "homeCare",        ndisRequired: false },
-  { id: "f5", name: "All About Children — Bella Vista",  sector: "earlyLearning",   ndisRequired: false },
-  { id: "f6", name: "All About Children — Castle Hill",  sector: "earlyLearning",   ndisRequired: false },
-  { id: "f7", name: "Explorers Early Learning — Norwest",sector: "earlyLearning",   ndisRequired: false },
-  { id: "f8", name: "NSW CSE — Singleton",               sector: "disability",      ndisRequired: true  },
+  { id: "f1", name: "Harbour Health — Parramatta",       sector: "agedCare",        ndisRequired: true  },
+  { id: "f2", name: "Harbour Health — Liverpool",        sector: "agedCare",        ndisRequired: true  },
+  { id: "f3", name: "Harbour Health — Blacktown",        sector: "agedCare",        ndisRequired: false },
+  { id: "f4", name: "Harbour Health — Home Care",        sector: "homeCare",        ndisRequired: false },
+  { id: "f5", name: "Sunrise Early Learning — Bella Vista", sector: "earlyLearning", ndisRequired: false },
+  { id: "f6", name: "Sunrise Early Learning — Castle Hill", sector: "earlyLearning", ndisRequired: false },
+  { id: "f7", name: "Sunrise Early Learning — Norwest",  sector: "earlyLearning",   ndisRequired: false },
+  { id: "f8", name: "Harbour Health — Disability Support", sector: "disability",    ndisRequired: true  },
 ];
 
 const ALL_CHECKS = [
@@ -123,7 +123,7 @@ function daysFromNow(days) {
 const ACTIVE_STAFF = [
   {
     id: "s1", name: "Sarah Chen", role: "Support Worker", sector: "agedCare",
-    facility: "Uniting Aged Care — Parramatta", startDate: "2022-03-14",
+    facility: "Harbour Health — Parramatta", startDate: "2022-03-14",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(312),  renewYears: 3,  status: "current" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(841),  renewYears: 5,  status: "current" },
@@ -134,7 +134,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s2", name: "James O'Brien", role: "Registered Nurse", sector: "agedCare",
-    facility: "Uniting Aged Care — Liverpool", startDate: "2021-07-01",
+    facility: "Harbour Health — Liverpool", startDate: "2021-07-01",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(14),   renewYears: 3,  status: "expiring" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(620),  renewYears: 5,  status: "current" },
@@ -145,7 +145,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s3", name: "Amara Diallo", role: "Personal Carer", sector: "disability",
-    facility: "Uniting Aged Care — Blacktown", startDate: "2023-01-09",
+    facility: "Harbour Health — Blacktown", startDate: "2023-01-09",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(540),  renewYears: 3,  status: "current" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(42),   renewYears: 5,  status: "expiring" },
@@ -156,7 +156,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s4", name: "Michael Tran", role: "Team Leader", sector: "agedCare",
-    facility: "HACC Senior Gym — Sydney", startDate: "2020-11-23",
+    facility: "Harbour Health — Home Care", startDate: "2020-11-23",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(-12),  renewYears: 3,  status: "expired" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(700),  renewYears: 5,  status: "current" },
@@ -167,7 +167,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s5", name: "Priya Sharma", role: "Care Coordinator", sector: "agedCare",
-    facility: "Uniting Aged Care — Parramatta", startDate: "2022-08-15",
+    facility: "Harbour Health — Parramatta", startDate: "2022-08-15",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(480),  renewYears: 3,  status: "current" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(910),  renewYears: 5,  status: "current" },
@@ -178,7 +178,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s6", name: "Lindiwe Dube", role: "Early Childhood Educator", sector: "earlyLearning",
-    facility: "All About Children — Bella Vista", startDate: "2023-04-03",
+    facility: "Sunrise Early Learning — Bella Vista", startDate: "2023-04-03",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(730),  renewYears: 3,  status: "current" },
       { id: "wwcc",     label: "Working With Children",    expiryDate: daysFromNow(1100), renewYears: 5,  status: "current" },
@@ -189,7 +189,7 @@ const ACTIVE_STAFF = [
   },
   {
     id: "s7", name: "Kevin Park", role: "Support Worker", sector: "disability",
-    facility: "NSW CSE — Singleton", startDate: "2023-09-18",
+    facility: "Harbour Health — Disability Support", startDate: "2023-09-18",
     checks: [
       { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(600),  renewYears: 3,  status: "current" },
       { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(1200), renewYears: 5,  status: "current" },
@@ -1568,7 +1568,7 @@ const POOL_WORKERS = [
   },
   {
     id: "tp3", name: "Yuki Tanaka", role: "Early Childhood Educator", sector: "earlyLearning",
-    lastFacility: "Explorers Early Learning — Norwest", lastOrg: "Explorers ELC",
+    lastFacility: "Sunrise Early Learning — Norwest", lastOrg: "Sunrise Early Learning",
     resignedDate: "2024-07-20", availability: "available",
     checks: [
       { id: "police",   label: "National Police Check",   status: "current", expiryDate: daysFromNow(610) },
