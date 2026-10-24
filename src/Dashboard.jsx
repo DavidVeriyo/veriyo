@@ -1663,10 +1663,9 @@ function TalentPoolTab({ alumniStaff = [] }) {
   return (
     <div>
       {/* Hero banner */}
-      <div style={{
+      <div className="talent-hero" style={{
         background: "linear-gradient(135deg, #1a7a4a 0%, #22a060 60%, #16623d 100%)",
         borderRadius: 18, padding: "28px 32px", marginBottom: 24,
-        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap",
       }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
@@ -1677,16 +1676,16 @@ function TalentPoolTab({ alumniStaff = [] }) {
             Pre-verified workers ready to hire. Every worker in this pool has been compliance-screened through Veriyo — no repeat paperwork, no delays.
           </div>
         </div>
-        <div style={{ display: "flex", gap: 16, flexShrink: 0, flexWrap: "wrap" }}>
-          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+        <div className="talent-stats">
+          <div className="talent-stat">
             <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>{allPool.length}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>In Pool</div>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+          <div className="talent-stat">
             <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>{passportCount}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Passport Holders</div>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 14, padding: "14px 22px", textAlign: "center", minWidth: 80 }}>
+          <div className="talent-stat">
             <div style={{ fontSize: 28, fontWeight: 900, color: "#fff" }}>0</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Days to Hire</div>
           </div>
@@ -2016,6 +2015,14 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           .dash-tabs { overflow-x: auto; flex-wrap: nowrap; }
         }
         .dash-select { padding: 8px 10px; border: 1.5px solid ${C.border}; border-radius: 8px; font-size: 13px; font-family: inherit; color: ${C.textMid}; background: ${C.white}; cursor: pointer; outline: none; }
+        .talent-hero { display: flex; align-items: center; justify-content: space-between; gap: 20; flex-wrap: wrap; }
+        .talent-stats { display: flex; gap: 16px; flex-shrink: 0; flex-wrap: wrap; }
+        .talent-stat { background: rgba(255,255,255,0.15); border-radius: 14px; padding: 14px 22px; text-align: center; min-width: 80px; }
+        @media (max-width: 480px) {
+          .talent-hero { flex-direction: column; align-items: stretch; }
+          .talent-stats { flex-shrink: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+          .talent-stat { padding: 12px 8px; min-width: 0; }
+        }
       `}</style>
 
       <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Segoe UI',system-ui,sans-serif", color: C.text }}>
