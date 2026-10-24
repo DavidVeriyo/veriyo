@@ -2006,10 +2006,14 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           .dash-workers-grid { display: none; }
           .dash-table-wrap { display: block; }
         }
-        .dash-tabs { display: flex; gap: 2; background: #edf2ef; border-radius: 10px; padding: 3px; }
+        .dash-tabs { display: flex; gap: 2; background: #edf2ef; border-radius: 10px; padding: 3px; flex-wrap: wrap; }
         .dash-header-inner { max-width: 1300px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; flex-wrap: wrap; }
+        .dash-tabs-row { display: flex; align-items: center; gap: 10px; }
         @media (max-width: 480px) {
           .dash-header-inner { padding: 10px 14px; flex-direction: column; align-items: flex-start; gap: 10px; }
+          .dash-tabs-row { flex-direction: column; align-items: stretch; width: 100%; gap: 8px; }
+          .dash-tabs-row .dash-add-btn { width: 100%; text-align: center; }
+          .dash-tabs { overflow-x: auto; flex-wrap: nowrap; }
         }
         .dash-select { padding: 8px 10px; border: 1.5px solid ${C.border}; border-radius: 8px; font-size: 13px; font-family: inherit; color: ${C.textMid}; background: ${C.white}; cursor: pointer; outline: none; }
       `}</style>
@@ -2031,7 +2035,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
               </div>
             </div>
             {/* tabs + add */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div className="dash-tabs-row">
               <div className="dash-tabs">
                 {["overview","candidates","active staff","talent pool","documents"].map(t => (
                   <button
@@ -2043,7 +2047,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
                       background: activeTab === t ? C.white : "transparent",
                       color: activeTab === t ? C.primary : C.textMuted,
                       boxShadow: activeTab === t ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
-                      transition: "all 0.15s",
+                      transition: "all 0.15s", whiteSpace: "nowrap",
                     }}
                   >
                     {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -2051,6 +2055,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
                 ))}
               </div>
               <button
+                className="dash-add-btn"
                 onClick={() => setShowAddWorker(true)}
                 style={{
                   padding: "8px 16px", borderRadius: 8, border: "none",
