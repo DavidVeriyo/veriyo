@@ -729,9 +729,9 @@ function WorkerCard({ w, onClick, onOpenPortal }) {
         {SECTOR_LABELS[w.sector]} · {w.facility}
       </div>
       {w.ndisScreening && (
-        <div style={{ marginBottom: 6 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 20, background: "#f0fdf4", color: "#166534", border: "1px solid #86efac", letterSpacing: "0.3px" }}>
-            🛡️ NDIS Screening required
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: "#f0fdf4", color: "#166534", border: "1px solid #86efac", letterSpacing: "0.2px" }}>
+            🛡️ NDIS Worker Screening
           </span>
         </div>
       )}
@@ -865,6 +865,13 @@ function WorkerPanel({ worker, onClose, aiResults, aiLoading, uploadedDocs, onUp
           >×</button>
           <div style={{ fontSize: 17, fontWeight: 800, color: C.text, paddingRight: 44 }}>{worker.name}</div>
           <div style={{ fontSize: 13, color: C.textMuted, marginTop: 2 }}>{worker.role} · {worker.facility}</div>
+          {worker.ndisScreening && (
+            <div style={{ marginTop: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "#f0fdf4", color: "#166534", border: "1px solid #86efac" }}>
+                🛡️ NDIS Worker Screening required
+              </span>
+            </div>
+          )}
           <div style={{ marginTop: 12 }}>
             <ProgressBar pct={worker.pct} status={worker.status} />
             <div style={{ fontSize: 12, color: workerStatusMeta[worker.status]?.color, fontWeight: 700, marginTop: 5 }}>
