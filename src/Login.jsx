@@ -25,7 +25,7 @@ export default function Login({ onLogin, onBack }) {
       if (user) {
         onLogin(user);
       } else {
-        setError("Incorrect email or password. Try demo@veriyo.com.au / demo123");
+        setError("Incorrect email or password. Please try again.");
         setLoading(false);
       }
     }, 800);
