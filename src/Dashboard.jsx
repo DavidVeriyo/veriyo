@@ -59,6 +59,198 @@ const ALL_CHECKS = [
   { id: "uniform",     label: "Uniform Size Recorded",            sector: "all",           mandatory: false, renewYears: null },
 ];
 
+// ─── POLICY DOCUMENTS DATA ────────────────────────────────────────────────────
+const POLICY_DOCS = [
+  { id: "pd1",  category: "HR Policy",        title: "Code of Conduct",                          version: "v3.2", updated: "12 Aug 2025", acknowledged: 20, total: 22, mandatory: true },
+  { id: "pd2",  category: "HR Policy",        title: "Workplace Health & Safety Policy",         version: "v2.1", updated: "5 Mar 2025",  acknowledged: 19, total: 22, mandatory: true },
+  { id: "pd3",  category: "HR Policy",        title: "Privacy & Confidentiality Policy",         version: "v4.0", updated: "1 Jul 2025",  acknowledged: 22, total: 22, mandatory: true },
+  { id: "pd4",  category: "HR Policy",        title: "Social Media Policy",                      version: "v1.5", updated: "10 Jan 2025", acknowledged: 17, total: 22, mandatory: false },
+  { id: "pd5",  category: "Compliance",       title: "Aged Care Code of Conduct (ACQSC)",        version: "v2.0", updated: "1 Jul 2024",  acknowledged: 21, total: 22, mandatory: true },
+  { id: "pd6",  category: "Compliance",       title: "NDIS Worker Orientation Module — Record", version: "v1.0", updated: "15 Apr 2025", acknowledged: 14, total: 22, mandatory: true },
+  { id: "pd7",  category: "Compliance",       title: "Mandatory Reporting Obligations",          version: "v2.3", updated: "20 Feb 2025", acknowledged: 18, total: 22, mandatory: true },
+  { id: "pd8",  category: "Compliance",       title: "Infection Control & Hand Hygiene",         version: "v3.1", updated: "8 Jun 2025",  acknowledged: 22, total: 22, mandatory: true },
+  { id: "pd9",  category: "Operations",       title: "Manual Handling & Safe Lifting Guide",     version: "v2.0", updated: "3 Sep 2024",  acknowledged: 20, total: 22, mandatory: false },
+  { id: "pd10", category: "Operations",       title: "Incident Reporting Procedure",             version: "v1.8", updated: "22 Nov 2024", acknowledged: 19, total: 22, mandatory: true },
+  { id: "pd11", category: "Operations",       title: "Medication Management Policy",             version: "v2.5", updated: "15 May 2025", acknowledged: 16, total: 22, mandatory: false },
+  { id: "pd12", category: "Early Learning",   title: "Child Safe Standards — Staff Guide",       version: "v1.2", updated: "30 Jan 2025", acknowledged: 6,  total: 6,  mandatory: true },
+  { id: "pd13", category: "Early Learning",   title: "Anaphylaxis Management Plan",              version: "v3.0", updated: "1 Mar 2025",  acknowledged: 6,  total: 6,  mandatory: true },
+  { id: "pd14", category: "Onboarding",       title: "New Starter Induction Checklist",          version: "v2.0", updated: "10 Oct 2024", acknowledged: 22, total: 22, mandatory: true },
+  { id: "pd15", category: "Onboarding",       title: "Emergency Contacts & Evacuation Procedures", version: "v1.1", updated: "5 Aug 2025", acknowledged: 21, total: 22, mandatory: true },
+];
+
+const DOC_CATEGORIES = ["All", "HR Policy", "Compliance", "Operations", "Early Learning", "Onboarding"];
+
+function DocumentsTab({ workers }) {
+  const [docCategory, setDocCategory] = useState("All");
+  const [sentNudge, setSentNudge] = useState({});
+  const [uploadedDocs, setUploadedDocs] = useState([]);
+  const [docSearch, setDocSearch] = useState("");
+  const fileRef = useRef(null);
+
+  const filtered = POLICY_DOCS.filter(d =>
+    (docCategory === "All" || d.category === docCategory) &&
+    (!docSearch || d.title.toLowerCase().includes(docSearch.toLowerCase()))
+  );
+
+  const totalDocs = POLICY_DOCS.length;
+  const fullyAcknowledged = POLICY_DOCS.filter(d => d.acknowledged === d.total).length;
+  const needingAction = POLICY_DOCS.filter(d => d.mandatory && d.acknowledged < d.total).length;
+  const avgAck = Math.round(POLICY_DOCS.reduce((s, d) => s + d.acknowledged / d.total, 0) / POLICY_DOCS.length * 100);
+
+  function sendNudge(docId) {
+    setSentNudge(p => ({ ...p, [docId]: true }));
+  }
+
+  return (
+    <div>
+      {/* ── Hero stats ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+        {[
+          { num: totalDocs,          label: "Policy Documents",   color: C.primary, bg: C.primaryXLight },
+          { num: `${avgAck}%`,       label: "Avg Acknowledgement", color: C.green,   bg: C.greenBg },
+          { num: fullyAcknowledged,  label: "Fully Acknowledged",  color: C.blue,    bg: C.blueBg },
+          { num: needingAction,      label: "Needs Follow-up",     color: needingAction > 0 ? C.amber : C.green, bg: needingAction > 0 ? C.amberBg : C.greenBg },
+        ].map(({ num, label, color, bg }) => (
+          <div key={label} style={{ background: bg, borderRadius: 14, padding: "16px 14px", textAlign: "center" }}>
+            <div style={{ fontSize: 28, fontWeight: 900, color, lineHeight: 1, letterSpacing: "-1px" }}>{num}</div>
+            <div style={{ fontSize: 10, color: C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", marginTop: 4 }}>{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Section header ── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>Policy & Compliance Library</div>
+        <button
+          onClick={() => fileRef.current && fileRef.current.click()}
+          style={{ padding: "8px 14px", background: C.primary, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+        >
+          + Upload Document
+        </button>
+        <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" hidden onChange={e => {
+          const f = e.target.files[0];
+          if (f) setUploadedDocs(p => [...p, { id: `up${Date.now()}`, title: f.name.replace(/\.[^.]+$/, ""), category: "Uploaded", version: "v1.0", updated: new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }), acknowledged: 0, total: workers.length, mandatory: false }]);
+          e.target.value = "";
+        }} />
+      </div>
+
+      {/* ── Search + category filter ── */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+        <input
+          value={docSearch}
+          onChange={e => setDocSearch(e.target.value)}
+          placeholder="🔍  Search documents…"
+          style={{ flex: "1 1 180px", padding: "9px 12px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.text, fontFamily: "inherit", outline: "none" }}
+        />
+      </div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
+        {DOC_CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setDocCategory(cat)}
+            style={{
+              padding: "6px 12px", borderRadius: 20, border: `1.5px solid ${docCategory === cat ? C.primary : C.border}`,
+              background: docCategory === cat ? C.primary : "#fff", color: docCategory === cat ? "#fff" : C.textMid,
+              fontSize: 12, fontWeight: 600, cursor: "pointer",
+            }}
+          >{cat}</button>
+        ))}
+      </div>
+
+      {/* ── Document list ── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
+        {[...filtered, ...uploadedDocs.filter(d => docCategory === "All" || d.category === docCategory)].map(doc => {
+          const pct = Math.round(doc.acknowledged / doc.total * 100);
+          const allDone = doc.acknowledged === doc.total;
+          const nudged = sentNudge[doc.id];
+          return (
+            <div key={doc.id} style={{ background: "#fff", border: `1.5px solid ${allDone ? C.greenBorder : doc.mandatory && !allDone ? C.amberBorder : C.border}`, borderRadius: 12, padding: "14px 16px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{doc.title}</span>
+                    {doc.mandatory && <span style={{ fontSize: 10, background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>MANDATORY</span>}
+                    {allDone && <span style={{ fontSize: 10, background: C.greenBg, color: C.green, border: `1px solid ${C.greenBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>✓ ALL ACKNOWLEDGED</span>}
+                  </div>
+                  <div style={{ fontSize: 12, color: C.textMuted, marginTop: 3 }}>
+                    {doc.category} · {doc.version} · Updated {doc.updated}
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                  {!allDone && doc.mandatory && (
+                    <button
+                      onClick={() => sendNudge(doc.id)}
+                      style={{ padding: "6px 11px", border: `1.5px solid ${C.amber}`, borderRadius: 7, background: nudged ? C.amberBg : "#fff", color: C.amber, fontSize: 11, fontWeight: 700, cursor: nudged ? "default" : "pointer" }}
+                    >{nudged ? "✓ Nudge sent" : "📧 Nudge unread"}</button>
+                  )}
+                  <button style={{ padding: "6px 11px", border: `1.5px solid ${C.border}`, borderRadius: 7, background: C.greyBg, color: C.textMid, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
+                    View PDF
+                  </button>
+                </div>
+              </div>
+              {/* Acknowledgement bar */}
+              <div style={{ marginTop: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Acknowledgement</span>
+                  <span style={{ fontSize: 11, color: allDone ? C.green : C.textMid, fontWeight: 700 }}>{doc.acknowledged}/{doc.total} staff ({pct}%)</span>
+                </div>
+                <div style={{ height: 6, background: "#e8f0eb", borderRadius: 4, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: allDone ? C.green : pct >= 80 ? C.blue : C.amber, borderRadius: 4, transition: "width 0.4s" }} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && uploadedDocs.length === 0 && (
+          <div style={{ textAlign: "center", padding: "32px 16px", color: C.textMuted, fontSize: 14 }}>No documents match your search.</div>
+        )}
+      </div>
+
+      {/* ── Worker credentials section ── */}
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginBottom: 14 }}>Worker Credential Files</div>
+      <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 14 }}>Individual compliance documents uploaded by or on behalf of workers — certificates, clearances, and identity docs.</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {workers.slice(0, 8).map(w => {
+          const credFiles = [
+            w.checks?.police === "verified"   && { label: "National Police Check", icon: "🔵", exp: "Nov 2026" },
+            w.checks?.wwcc   === "verified"   && { label: "Working With Children Check", icon: "🟢", exp: "Mar 2027" },
+            w.checks?.firstAid === "verified" && { label: "First Aid Certificate (HLTAID011)", icon: "🟢", exp: "Jun 2026" },
+            w.checks?.ndis   === "verified"   && { label: "NDIS Worker Screening", icon: "🔵", exp: "Jul 2027" },
+          ].filter(Boolean);
+          return (
+            <div key={w.id} style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "12px 16px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: "50%", background: C.primaryXLight, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, color: C.primary }}>
+                    {w.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{w.name}</div>
+                    <div style={{ fontSize: 12, color: C.textMuted }}>{w.role} · {w.facility}</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {credFiles.length > 0
+                    ? credFiles.map(f => (
+                        <span key={f.label} title={`Expires ${f.exp}`} style={{ fontSize: 11, background: C.greenBg, color: C.green, border: `1px solid ${C.greenBorder}`, borderRadius: 6, padding: "3px 8px", fontWeight: 600 }}>
+                          {f.icon} {f.label.split(" ").slice(0, 2).join(" ")}
+                        </span>
+                      ))
+                    : <span style={{ fontSize: 11, color: C.textMuted }}>No verified credentials yet</span>
+                  }
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <div style={{ textAlign: "center", padding: "12px", fontSize: 13, color: C.textMuted }}>
+          Showing 8 of {workers.length} workers · <span style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>View all →</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function randomStatus(mandatory) {
   if (!mandatory) return Math.random() > 0.4 ? "verified" : "not_required";
   const r = Math.random();
@@ -2246,15 +2438,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           )}
 
           {/* ── DOCUMENTS TAB ── */}
-          {activeTab === "documents" && (
-            <div style={{ ...card, textAlign: "center", padding: "60px 24px" }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>📂</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: C.text, marginBottom: 8 }}>Document vault coming soon</div>
-              <div style={{ fontSize: 14, color: C.textMuted, maxWidth: 400, margin: "0 auto" }}>
-                Centralised storage for compliance documents — police checks, WWCC cards, vaccination records and more. All searchable, all auditable.
-              </div>
-            </div>
-          )}
+          {activeTab === "documents" && <DocumentsTab workers={allWorkers} />}
 
         </div>
       </div>
