@@ -25,7 +25,8 @@ export default function Login({ onLogin, onBack }) {
     setLoading(true);
 
     setTimeout(async () => {
-      const hash = await sha256(password.trim().toLowerCase());
+      const normalised = password.normalize("NFKC").toLowerCase().replace(/[\u2010-\u2015\u2212]/g, "-").replace(/\s+/g, "");
+      const hash = await sha256(normalised);
       const user = DEMO_USERS.find(
         (u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.passwordHash === hash
       );
