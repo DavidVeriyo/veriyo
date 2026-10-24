@@ -80,36 +80,178 @@ const POLICY_DOCS = [
 
 const DOC_CATEGORIES = ["All", "HR Policy", "Compliance", "Operations", "Early Learning", "Onboarding"];
 
+// Sample per-doc worker breakdown for drill-down
+const DOC_WORKER_STATUS = {
+  pd1:  { outstanding: ["James O'Brien", "Lisa Nguyen"] },
+  pd2:  { outstanding: ["James O'Brien", "Priya Sharma", "Lisa Nguyen"] },
+  pd5:  { outstanding: ["Tom Nguyen"] },
+  pd6:  { outstanding: ["Amara Diallo","Michael Tran","Priya Sharma","Tom Nguyen","Lisa Nguyen","Fatima Park","Marcus Osei","Leon Davis"] },
+  pd7:  { outstanding: ["James O'Brien","Priya Sharma","Tom Nguyen","Lisa Nguyen"] },
+  pd9:  { outstanding: ["James O'Brien","Priya Sharma"] },
+  pd10: { outstanding: ["Amara Diallo","Priya Sharma","Tom Nguyen"] },
+  pd11: { outstanding: ["James O'Brien","Priya Sharma","Tom Nguyen","Fatima Park","Marcus Osei","Leon Davis"] },
+  pd4:  { outstanding: ["Sarah Chen","Amara Diallo","Michael Tran","Priya Sharma","Tom Nguyen"] },
+  pd15: { outstanding: ["Tom Nguyen"] },
+};
+
 function DocumentsTab({ workers }) {
   const [docCategory, setDocCategory] = useState("All");
   const [sentNudge, setSentNudge] = useState({});
-  const [uploadedDocs, setUploadedDocs] = useState([]);
   const [docSearch, setDocSearch] = useState("");
-  const fileRef = useRef(null);
+  const [expandedDoc, setExpandedDoc] = useState(null);
+  const [exportedReport, setExportedReport] = useState(false);
+  const [view, setView] = useState("policies"); // "policies" | "audit"
 
   const filtered = POLICY_DOCS.filter(d =>
     (docCategory === "All" || d.category === docCategory) &&
     (!docSearch || d.title.toLowerCase().includes(docSearch.toLowerCase()))
   );
 
-  const totalDocs = POLICY_DOCS.length;
-  const fullyAcknowledged = POLICY_DOCS.filter(d => d.acknowledged === d.total).length;
-  const needingAction = POLICY_DOCS.filter(d => d.mandatory && d.acknowledged < d.total).length;
-  const avgAck = Math.round(POLICY_DOCS.reduce((s, d) => s + d.acknowledged / d.total, 0) / POLICY_DOCS.length * 100);
+  const totalDocs      = POLICY_DOCS.length;
+  const fullyAcked     = POLICY_DOCS.filter(d => d.acknowledged === d.total).length;
+  const mandatoryGaps  = POLICY_DOCS.filter(d => d.mandatory && d.acknowledged < d.total).length;
+  const avgAck         = Math.round(POLICY_DOCS.reduce((s, d) => s + d.acknowledged / d.total, 0) / POLICY_DOCS.length * 100);
 
-  function sendNudge(docId) {
-    setSentNudge(p => ({ ...p, [docId]: true }));
+  const reportDate = new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
+
+  // ── Audit Report view ──────────────────────────────────────────────────────
+  if (view === "audit") {
+    const mandatoryDocs = POLICY_DOCS.filter(d => d.mandatory);
+    const allGood = mandatoryDocs.every(d => d.acknowledged === d.total);
+    return (
+      <div>
+        {/* Back + header */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+          <button onClick={() => setView("policies")} style={{ background: C.greyBg, border: `1.5px solid ${C.border}`, borderRadius: 8, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: C.textMid, cursor: "pointer" }}>
+            ← Back
+          </button>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>Compliance Audit Report</div>
+            <div style={{ fontSize: 12, color: C.textMuted }}>Generated {reportDate} · Harbour Health Group</div>
+          </div>
+          <button
+            onClick={() => setExportedReport(true)}
+            style={{ padding: "8px 16px", background: exportedReport ? C.greenBg : C.primary, color: exportedReport ? C.green : "#fff", border: exportedReport ? `1.5px solid ${C.greenBorder}` : "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+          >
+            {exportedReport ? "✓ PDF Ready" : "⬇ Export PDF"}
+          </button>
+        </div>
+
+        {/* Overall status banner */}
+        <div style={{ background: allGood ? C.greenBg : C.amberBg, border: `1.5px solid ${allGood ? C.greenBorder : C.amberBorder}`, borderRadius: 14, padding: "16px 20px", marginBottom: 20, display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ fontSize: 32 }}>{allGood ? "✅" : "⚠️"}</div>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: allGood ? C.green : C.amber }}>
+              {allGood ? "All mandatory policies fully acknowledged" : `${mandatoryGaps} mandatory polic${mandatoryGaps === 1 ? "y" : "ies"} have outstanding acknowledgements`}
+            </div>
+            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+              {fullyAcked} of {totalDocs} documents 100% complete · Overall acknowledgement rate: {avgAck}%
+            </div>
+          </div>
+        </div>
+
+        {/* Summary table */}
+        <div style={{ fontSize: 14, fontWeight: 800, color: C.text, marginBottom: 10 }}>Mandatory Policy Summary</div>
+        <div style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 12, overflow: "hidden", marginBottom: 24 }}>
+          {/* Header row */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 80px 80px 80px 100px", gap: 0, background: C.greyBg, borderBottom: `1px solid ${C.border}`, padding: "8px 16px" }}>
+            {["Policy / Document","Version","Updated","Staff Acknowledged","Status"].map(h => (
+              <div key={h} style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</div>
+            ))}
+          </div>
+          {mandatoryDocs.map((doc, i) => {
+            const pct = Math.round(doc.acknowledged / doc.total * 100);
+            const allDone = doc.acknowledged === doc.total;
+            return (
+              <div key={doc.id} style={{ display: "grid", gridTemplateColumns: "1fr 80px 80px 80px 100px", gap: 0, padding: "11px 16px", borderBottom: i < mandatoryDocs.length - 1 ? `1px solid ${C.borderLight}` : "none", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{doc.title}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted }}>{doc.category}</div>
+                </div>
+                <div style={{ fontSize: 12, color: C.textMid }}>{doc.version}</div>
+                <div style={{ fontSize: 12, color: C.textMid }}>{doc.updated}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: allDone ? C.green : C.amber }}>{doc.acknowledged}/{doc.total} ({pct}%)</div>
+                <div>
+                  <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 6, background: allDone ? C.greenBg : C.amberBg, color: allDone ? C.green : C.amber, border: `1px solid ${allDone ? C.greenBorder : C.amberBorder}` }}>
+                    {allDone ? "✓ Complete" : "Pending"}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Outstanding staff per policy */}
+        {mandatoryDocs.some(d => d.acknowledged < d.total) && (
+          <>
+            <div style={{ fontSize: 14, fontWeight: 800, color: C.text, marginBottom: 10 }}>Outstanding Acknowledgements by Policy</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
+              {mandatoryDocs.filter(d => d.acknowledged < d.total).map(doc => {
+                const outstanding = DOC_WORKER_STATUS[doc.id]?.outstanding || [];
+                return (
+                  <div key={doc.id} style={{ background: "#fff", border: `1.5px solid ${C.amberBorder}`, borderRadius: 10, padding: "12px 16px" }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 6 }}>{doc.title}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {outstanding.map(name => (
+                        <span key={name} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 20, background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBorder}`, fontWeight: 600 }}>{name}</span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {/* Worker credential summary */}
+        <div style={{ fontSize: 14, fontWeight: 800, color: C.text, marginBottom: 10 }}>Worker Credential Summary</div>
+        <div style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px 90px", background: C.greyBg, borderBottom: `1px solid ${C.border}`, padding: "8px 16px" }}>
+            {["Worker","Police Check","WWCC","First Aid","NDIS Screen"].map(h => (
+              <div key={h} style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.4px" }}>{h}</div>
+            ))}
+          </div>
+          {workers.slice(0, 10).map((w, i) => {
+            const cell = (status) => (
+              <span style={{ fontSize: 11, fontWeight: 700, color: status === "verified" ? C.green : status === "missing" ? C.red : C.amber }}>
+                {status === "verified" ? "✓ Verified" : status === "missing" ? "✗ Missing" : status === "expired" ? "⚠ Expired" : status === "pending" ? "◷ Pending" : "N/A"}
+              </span>
+            );
+            return (
+              <div key={w.id} style={{ display: "grid", gridTemplateColumns: "1fr 90px 90px 90px 90px", padding: "10px 16px", borderBottom: i < 9 ? `1px solid ${C.borderLight}` : "none", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{w.name}</div>
+                  <div style={{ fontSize: 11, color: C.textMuted }}>{w.role}</div>
+                </div>
+                {cell(w.checks?.police)}
+                {cell(w.checks?.wwcc)}
+                {cell(w.checks?.firstAid)}
+                {cell(w.checks?.ndis)}
+              </div>
+            );
+          })}
+          <div style={{ padding: "10px 16px", fontSize: 12, color: C.textMuted, textAlign: "center", borderTop: `1px solid ${C.borderLight}` }}>
+            Showing 10 of {workers.length} workers — export includes all
+          </div>
+        </div>
+
+        <div style={{ marginTop: 20, padding: "12px 16px", background: C.greyBg, borderRadius: 10, fontSize: 12, color: C.textMuted, textAlign: "center" }}>
+          This report was generated by Veriyo on {reportDate}. It reflects acknowledgement records stored within the platform as at the time of generation.
+        </div>
+      </div>
+    );
   }
 
+  // ── Policy Library view (default) ─────────────────────────────────────────
   return (
     <div>
       {/* ── Hero stats ── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
         {[
-          { num: totalDocs,          label: "Policy Documents",   color: C.primary, bg: C.primaryXLight },
-          { num: `${avgAck}%`,       label: "Avg Acknowledgement", color: C.green,   bg: C.greenBg },
-          { num: fullyAcknowledged,  label: "Fully Acknowledged",  color: C.blue,    bg: C.blueBg },
-          { num: needingAction,      label: "Needs Follow-up",     color: needingAction > 0 ? C.amber : C.green, bg: needingAction > 0 ? C.amberBg : C.greenBg },
+          { num: totalDocs,         label: "Active Policies",      color: C.primary, bg: C.primaryXLight },
+          { num: `${avgAck}%`,      label: "Avg Acknowledgement",  color: C.green,   bg: C.greenBg },
+          { num: fullyAcked,        label: "Fully Acknowledged",   color: C.blue,    bg: C.blueBg },
+          { num: mandatoryGaps,     label: "Mandatory Gaps",       color: mandatoryGaps > 0 ? C.amber : C.green, bg: mandatoryGaps > 0 ? C.amberBg : C.greenBg },
         ].map(({ num, label, color, bg }) => (
           <div key={label} style={{ background: bg, borderRadius: 14, padding: "16px 14px", textAlign: "center" }}>
             <div style={{ fontSize: 28, fontWeight: 900, color, lineHeight: 1, letterSpacing: "-1px" }}>{num}</div>
@@ -118,38 +260,33 @@ function DocumentsTab({ workers }) {
         ))}
       </div>
 
-      {/* ── Section header ── */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+      {/* ── Action bar ── */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
         <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>Policy & Compliance Library</div>
-        <button
-          onClick={() => fileRef.current && fileRef.current.click()}
-          style={{ padding: "8px 14px", background: C.primary, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
-        >
-          + Upload Document
-        </button>
-        <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" hidden onChange={e => {
-          const f = e.target.files[0];
-          if (f) setUploadedDocs(p => [...p, { id: `up${Date.now()}`, title: f.name.replace(/\.[^.]+$/, ""), category: "Uploaded", version: "v1.0", updated: new Date().toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }), acknowledged: 0, total: workers.length, mandatory: false }]);
-          e.target.value = "";
-        }} />
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={() => setView("audit")}
+            style={{ padding: "8px 16px", background: C.primary, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+          >
+            📋 Generate Audit Report
+          </button>
+        </div>
       </div>
 
       {/* ── Search + category filter ── */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-        <input
-          value={docSearch}
-          onChange={e => setDocSearch(e.target.value)}
-          placeholder="🔍  Search documents…"
-          style={{ flex: "1 1 180px", padding: "9px 12px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.text, fontFamily: "inherit", outline: "none" }}
-        />
-      </div>
-      <div style={{ display: "flex", gap: 6, marginBottom: 18, flexWrap: "wrap" }}>
+      <input
+        value={docSearch}
+        onChange={e => setDocSearch(e.target.value)}
+        placeholder="🔍  Search policies…"
+        style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 13, color: C.text, fontFamily: "inherit", outline: "none", marginBottom: 12 }}
+      />
+      <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
         {DOC_CATEGORIES.map(cat => (
           <button
             key={cat}
             onClick={() => setDocCategory(cat)}
             style={{
-              padding: "6px 12px", borderRadius: 20, border: `1.5px solid ${docCategory === cat ? C.primary : C.border}`,
+              padding: "5px 12px", borderRadius: 20, border: `1.5px solid ${docCategory === cat ? C.primary : C.border}`,
               background: docCategory === cat ? C.primary : "#fff", color: docCategory === cat ? "#fff" : C.textMid,
               fontSize: 12, fontWeight: 600, cursor: "pointer",
             }}
@@ -158,94 +295,88 @@ function DocumentsTab({ workers }) {
       </div>
 
       {/* ── Document list ── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
-        {[...filtered, ...uploadedDocs.filter(d => docCategory === "All" || d.category === docCategory)].map(doc => {
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {filtered.map(doc => {
           const pct = Math.round(doc.acknowledged / doc.total * 100);
           const allDone = doc.acknowledged === doc.total;
           const nudged = sentNudge[doc.id];
+          const expanded = expandedDoc === doc.id;
+          const outstanding = DOC_WORKER_STATUS[doc.id]?.outstanding || [];
           return (
-            <div key={doc.id} style={{ background: "#fff", border: `1.5px solid ${allDone ? C.greenBorder : doc.mandatory && !allDone ? C.amberBorder : C.border}`, borderRadius: 12, padding: "14px 16px" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{doc.title}</span>
-                    {doc.mandatory && <span style={{ fontSize: 10, background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>MANDATORY</span>}
-                    {allDone && <span style={{ fontSize: 10, background: C.greenBg, color: C.green, border: `1px solid ${C.greenBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>✓ ALL ACKNOWLEDGED</span>}
+            <div key={doc.id} style={{ background: "#fff", border: `1.5px solid ${allDone ? C.greenBorder : doc.mandatory && !allDone ? C.amberBorder : C.border}`, borderRadius: 12, overflow: "hidden" }}>
+              {/* Main row */}
+              <div style={{ padding: "14px 16px" }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{doc.title}</span>
+                      {doc.mandatory && <span style={{ fontSize: 10, background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>MANDATORY</span>}
+                      {allDone && <span style={{ fontSize: 10, background: C.greenBg, color: C.green, border: `1px solid ${C.greenBorder}`, borderRadius: 4, padding: "1px 6px", fontWeight: 700 }}>✓ ALL ACKNOWLEDGED</span>}
+                    </div>
+                    <div style={{ fontSize: 12, color: C.textMuted, marginTop: 3 }}>
+                      {doc.category} · {doc.version} · Updated {doc.updated}
+                    </div>
                   </div>
-                  <div style={{ fontSize: 12, color: C.textMuted, marginTop: 3 }}>
-                    {doc.category} · {doc.version} · Updated {doc.updated}
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
+                    {!allDone && doc.mandatory && (
+                      <button
+                        onClick={() => setSentNudge(p => ({ ...p, [doc.id]: true }))}
+                        style={{ padding: "5px 10px", border: `1.5px solid ${C.amber}`, borderRadius: 7, background: nudged ? C.amberBg : "#fff", color: C.amber, fontSize: 11, fontWeight: 700, cursor: nudged ? "default" : "pointer" }}
+                      >{nudged ? "✓ Nudged" : "📧 Nudge"}</button>
+                    )}
+                    <button style={{ padding: "5px 10px", border: `1.5px solid ${C.border}`, borderRadius: 7, background: C.greyBg, color: C.textMid, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
+                      View PDF
+                    </button>
+                    {outstanding.length > 0 && (
+                      <button
+                        onClick={() => setExpandedDoc(expanded ? null : doc.id)}
+                        style={{ padding: "5px 10px", border: `1.5px solid ${C.border}`, borderRadius: 7, background: expanded ? C.primaryXLight : C.greyBg, color: expanded ? C.primary : C.textMid, fontSize: 11, fontWeight: 600, cursor: "pointer" }}
+                      >{expanded ? "▲ Hide" : "▼ Who's outstanding"}</button>
+                    )}
                   </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-                  {!allDone && doc.mandatory && (
-                    <button
-                      onClick={() => sendNudge(doc.id)}
-                      style={{ padding: "6px 11px", border: `1.5px solid ${C.amber}`, borderRadius: 7, background: nudged ? C.amberBg : "#fff", color: C.amber, fontSize: 11, fontWeight: 700, cursor: nudged ? "default" : "pointer" }}
-                    >{nudged ? "✓ Nudge sent" : "📧 Nudge unread"}</button>
-                  )}
-                  <button style={{ padding: "6px 11px", border: `1.5px solid ${C.border}`, borderRadius: 7, background: C.greyBg, color: C.textMid, fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
-                    View PDF
-                  </button>
+                {/* Progress bar */}
+                <div style={{ marginTop: 10 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Acknowledgement</span>
+                    <span style={{ fontSize: 11, color: allDone ? C.green : C.textMid, fontWeight: 700 }}>{doc.acknowledged}/{doc.total} staff ({pct}%)</span>
+                  </div>
+                  <div style={{ height: 6, background: "#e8f0eb", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: allDone ? C.green : pct >= 80 ? C.blue : C.amber, borderRadius: 4, transition: "width 0.4s" }} />
+                  </div>
                 </div>
               </div>
-              {/* Acknowledgement bar */}
-              <div style={{ marginTop: 10 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Acknowledgement</span>
-                  <span style={{ fontSize: 11, color: allDone ? C.green : C.textMid, fontWeight: 700 }}>{doc.acknowledged}/{doc.total} staff ({pct}%)</span>
+              {/* Expandable outstanding list */}
+              {expanded && outstanding.length > 0 && (
+                <div style={{ borderTop: `1px solid ${C.amberBorder}`, background: C.amberBg, padding: "10px 16px" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: C.amber, marginBottom: 7, textTransform: "uppercase", letterSpacing: "0.4px" }}>Outstanding — needs to acknowledge</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {outstanding.map(name => (
+                      <span key={name} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "#fff", color: C.amber, border: `1px solid ${C.amberBorder}`, fontWeight: 600 }}>{name}</span>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ height: 6, background: "#e8f0eb", borderRadius: 4, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${pct}%`, background: allDone ? C.green : pct >= 80 ? C.blue : C.amber, borderRadius: 4, transition: "width 0.4s" }} />
-                </div>
-              </div>
+              )}
             </div>
           );
         })}
-        {filtered.length === 0 && uploadedDocs.length === 0 && (
+        {filtered.length === 0 && (
           <div style={{ textAlign: "center", padding: "32px 16px", color: C.textMuted, fontSize: 14 }}>No documents match your search.</div>
         )}
       </div>
 
-      {/* ── Worker credentials section ── */}
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginBottom: 14 }}>Worker Credential Files</div>
-      <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 14 }}>Individual compliance documents uploaded by or on behalf of workers — certificates, clearances, and identity docs.</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {workers.slice(0, 8).map(w => {
-          const credFiles = [
-            w.checks?.police === "verified"   && { label: "National Police Check", icon: "🔵", exp: "Nov 2026" },
-            w.checks?.wwcc   === "verified"   && { label: "Working With Children Check", icon: "🟢", exp: "Mar 2027" },
-            w.checks?.firstAid === "verified" && { label: "First Aid Certificate (HLTAID011)", icon: "🟢", exp: "Jun 2026" },
-            w.checks?.ndis   === "verified"   && { label: "NDIS Worker Screening", icon: "🔵", exp: "Jul 2027" },
-          ].filter(Boolean);
-          return (
-            <div key={w.id} style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "12px 16px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: "50%", background: C.primaryXLight, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, color: C.primary }}>
-                    {w.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{w.name}</div>
-                    <div style={{ fontSize: 12, color: C.textMuted }}>{w.role} · {w.facility}</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {credFiles.length > 0
-                    ? credFiles.map(f => (
-                        <span key={f.label} title={`Expires ${f.exp}`} style={{ fontSize: 11, background: C.greenBg, color: C.green, border: `1px solid ${C.greenBorder}`, borderRadius: 6, padding: "3px 8px", fontWeight: 600 }}>
-                          {f.icon} {f.label.split(" ").slice(0, 2).join(" ")}
-                        </span>
-                      ))
-                    : <span style={{ fontSize: 11, color: C.textMuted }}>No verified credentials yet</span>
-                  }
-                </div>
-              </div>
-            </div>
-          );
-        })}
-        <div style={{ textAlign: "center", padding: "12px", fontSize: 13, color: C.textMuted }}>
-          Showing 8 of {workers.length} workers · <span style={{ color: C.primary, fontWeight: 600, cursor: "pointer" }}>View all →</span>
+      {/* Audit CTA at bottom */}
+      <div style={{ marginTop: 24, background: C.primaryXLight, border: `1.5px solid ${C.primaryBorder}`, borderRadius: 12, padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>Ready for an audit?</div>
+          <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Generate a single-page compliance report with acknowledgement records and credential status — ready to hand to an auditor.</div>
         </div>
+        <button
+          onClick={() => setView("audit")}
+          style={{ padding: "10px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
+        >
+          📋 Generate Audit Report
+        </button>
       </div>
     </div>
   );
@@ -2247,7 +2378,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
             {/* tabs + add */}
             <div className="dash-tabs-row">
               <div className="dash-tabs">
-                {["overview","candidates","active staff","talent pool","documents"].map(t => (
+                {["overview","candidates","active staff","talent pool","compliance reports"].map(t => (
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
@@ -2438,7 +2569,7 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           )}
 
           {/* ── DOCUMENTS TAB ── */}
-          {activeTab === "documents" && <DocumentsTab workers={allWorkers} />}
+          {activeTab === "compliance reports" && <DocumentsTab workers={allWorkers} />}
 
         </div>
       </div>
