@@ -74,6 +74,9 @@ function makeWorkers() {
   const roles      = ["Support Worker","Registered Nurse","Personal Carer","Team Leader","Allied Health","Admin Officer","Care Coordinator","Kitchen Hand","Enrolled Nurse","Early Childhood Educator"];
   const sectors    = ["agedCare","agedCare","homeCare","earlyLearning","disability","agedCare"];
 
+  // Indices 0–7 are seeded as fully compliant for a realistic demo (8 out of 22)
+  const COMPLIANT_INDICES = new Set([0, 2, 5, 8, 11, 14, 17, 20]);
+
   return Array.from({ length: 22 }, (_, i) => {
     const sector   = sectors[i % sectors.length];
     const facility = FACILITIES.filter(f =>
@@ -83,6 +86,8 @@ function makeWorkers() {
       f.sector === "agedCare"
     )[i % 5] || FACILITIES[0];
 
+    const forceCompliant = COMPLIANT_INDICES.has(i);
+
     const checks = {};
     ALL_CHECKS.forEach(c => {
       const applicable =
@@ -90,14 +95,20 @@ function makeWorkers() {
         (c.sector === "ndis" && (sector === "disability" || facility.ndisRequired)) ||
         (c.sector === "agedCare" && (sector === "agedCare" || sector === "homeCare")) ||
         (c.sector === "earlyLearning" && sector === "earlyLearning");
-      checks[c.id] = applicable ? randomStatus(c.mandatory) : "not_required";
+      checks[c.id] = applicable
+        ? (forceCompliant ? "verified" : randomStatus(c.mandatory))
+        : "not_required";
     });
 
     const vals   = Object.values(checks);
     const total  = vals.filter(v => v !== "not_required").length;
     const done   = vals.filter(v => v === "verified").length;
     const pct    = total ? Math.round((done / total) * 100) : 100;
-    const status = vals.includes("missing") ? "risk" : vals.includes("expired") ? "attention" : vals.includes("pending") ? "inprogress" : "compliant";
+    const status = forceCompliant ? "compliant"
+      : vals.includes("missing") ? "risk"
+      : vals.includes("expired") ? "attention"
+      : vals.includes("pending") ? "inprogress"
+      : "compliant";
 
     return {
       id: `w${i + 1}`,
@@ -273,7 +284,7 @@ function StatCard({ num, label, color, bg, border, onClick, active }) {
     >
       <div style={{ fontSize: 34, fontWeight: 900, color: active ? "#fff" : color, lineHeight: 1, letterSpacing: "-1.5px" }}>{num}</div>
       <div style={{ fontSize: 11, color: active ? "rgba(255,255,255,0.85)" : C.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-        {label}{active ? " ✕" : ""}
+        {label}
       </div>
     </div>
   );
