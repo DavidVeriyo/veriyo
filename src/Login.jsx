@@ -25,7 +25,7 @@ export default function Login({ onLogin, onBack }) {
     setLoading(true);
 
     setTimeout(async () => {
-      const hash = await sha256(password);
+      const hash = await sha256(password.trim().toLowerCase());
       const user = DEMO_USERS.find(
         (u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.passwordHash === hash
       );
@@ -54,6 +54,9 @@ export default function Login({ onLogin, onBack }) {
             <label style={styles.label}>Email address</label>
             <input
               type="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@organisation.com.au"
@@ -66,6 +69,9 @@ export default function Login({ onLogin, onBack }) {
             <label style={styles.label}>Password</label>
             <input
               type="password"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
