@@ -2,10 +2,16 @@ import { useState } from "react";
 import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 const DEMO_USERS = [
-  { email: "david@veriyo.com.au", password: "veriyo2024", name: "David Truong", role: "Admin" },
-  { email: "demo@harbourhealth.com.au", password: "demo123", name: "Harbour Health Demo", role: "HR Manager" },
-  { email: "demo@veriyo.com.au", password: "demo123", name: "Demo User", role: "Compliance Officer" },
+  { email: "david@veriyo.com.au", passwordHash: "a53925f57d15c0fc867a9734cf328f0fd5524f4bce4d33682f9635c61361c24c", name: "David Truong", role: "Admin" },
+  { email: "demo@harbourhealth.com.au", passwordHash: "fb95f43451caeb4dac3658290de8f7c6314ca7f2b1c38e82c43865f6380b055b", name: "Harbour Health Demo", role: "HR Manager" },
+  { email: "demo@veriyo.com.au", passwordHash: "70a645d717475e9b0890f2ba3cf7a7f1de3011607e08a2a590f486c55efd5cbd", name: "Demo User", role: "Compliance Officer" },
 ];
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 export default function Login({ onLogin, onBack }) {
   const [email, setEmail] = useState("");
@@ -18,9 +24,10 @@ export default function Login({ onLogin, onBack }) {
     setError("");
     setLoading(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      const hash = await sha256(password);
       const user = DEMO_USERS.find(
-        (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+        (u) => u.email.toLowerCase() === email.trim().toLowerCase() && u.passwordHash === hash
       );
       if (user) {
         onLogin(user);
