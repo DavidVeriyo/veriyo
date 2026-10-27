@@ -219,6 +219,46 @@ function EarlyLearningIllustration() {
   );
 }
 
+function FaqItem({ q, a }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div
+      style={{
+        border: "1px solid #e2e8f0",
+        borderRadius: 12,
+        overflow: "hidden",
+        background: "#fff",
+      }}
+    >
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%",
+          textAlign: "left",
+          background: "none",
+          border: "none",
+          padding: "18px 20px",
+          cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 16,
+          fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
+        }}
+        aria-expanded={open}
+      >
+        <span style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", lineHeight: 1.4 }}>{q}</span>
+        <span style={{ fontSize: 18, color: "#1a7a4a", fontWeight: 700, flexShrink: 0, lineHeight: 1 }}>{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <div style={{ padding: "0 20px 18px", fontSize: 14, color: "#475569", lineHeight: 1.7 }}>
+          {a}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Website({ onLogin }) {
   const [demoEmail, setDemoEmail] = useState("");
   const [demoName, setDemoName] = useState("");
@@ -261,6 +301,7 @@ export default function Website({ onLogin }) {
             <a href="#products" style={s.navLink}>Products</a>
             <a href="#why" style={s.navLink}>Why Veriyo</a>
             <a href="#sectors" style={s.navLink}>Sectors</a>
+            <a href="#faq" style={s.navLink}>FAQ</a>
             <a href="#contact" style={s.navLink}>Contact</a>
           </div>
           <div style={s.navActions}>
@@ -282,9 +323,9 @@ export default function Website({ onLogin }) {
               a thing.
             </h1>
             <p style={s.heroSub}>
-              Veriyo replaces manual compliance checking with an intelligent platform
-              that tracks every document, credential, and clearance — so your team
-              spends less time chasing paperwork and more time delivering care.
+              Veriyo is Australian compliance software built for aged care, NDIS, and early
+              learning providers. Track every worker credential, clearance, and policy
+              acknowledgement — and generate audit-ready reports in one click.
             </p>
             <div style={s.heroCtas}>
               <a href="#demo" style={s.heroPrimary}>Request a Demo</a>
@@ -700,6 +741,47 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
+      {/* ─── FAQ (AEO / GEO) ─── */}
+      <section id="faq" style={s.faqSection}>
+        <div style={s.container}>
+          <div style={s.eyebrow}>Common Questions</div>
+          <h2 style={s.sectionH2}>Everything you need to know about Veriyo</h2>
+          <p style={s.sectionSub}>
+            Answers to the most common questions from aged care, NDIS, and early learning providers.
+          </p>
+          <div style={s.faqGrid}>
+            {[
+              {
+                q: "What compliance checks does Veriyo track for aged care workers?",
+                a: "Veriyo tracks all mandatory requirements for aged care workers: National Police Checks, NDIS Worker Screening, Working With Children Checks (WWCC), aged care qualifications (Cert III/IV), First Aid and CPR certificates, and policy acknowledgements including the Aged Care Code of Conduct. Expiring credentials are flagged automatically before they lapse."
+              },
+              {
+                q: "Does Veriyo support NDIS Worker Screening compliance?",
+                a: "Yes. Veriyo tracks which workers hold a current NDIS Worker Screening clearance, flags those who are pending or expired, and maintains audit-ready records. Veriyo also checks the NDIS Commission banning order register so providers can verify a worker is not listed before they begin work."
+              },
+              {
+                q: "How does Veriyo help early learning centres with compliance?",
+                a: "For childcare and early learning centres, Veriyo tracks Working With Children Checks, early childhood education qualifications, First Aid and Anaphylaxis training, and Child Safe Standards policy acknowledgements. It supports the full National Quality Framework compliance picture."
+              },
+              {
+                q: "What is the difference between Veriyo Onboard and Veriyo Verify?",
+                a: "Veriyo Onboard manages the compliance pipeline for new employees — from offer accepted to Day 1 compliant. Veriyo Verify manages ongoing compliance for contractors, agency staff, locums, and allied health professionals, ensuring every visitor is screened and credentialled before they arrive on site."
+              },
+              {
+                q: "How does Veriyo help providers prepare for an ACQSC audit?",
+                a: "Veriyo generates a one-click Compliance Audit Report covering every worker's credential status, policy acknowledgements, and outstanding items. Instead of pulling records one by one, you can hand an auditor a complete workforce compliance summary in seconds — covering all mandatory documents, expiry dates, and compliance percentages."
+              },
+              {
+                q: "Is Veriyo suitable for multi-site aged care or NDIS providers?",
+                a: "Yes. Veriyo is built for Australian care providers of all sizes, from single-site operations to large multi-site organisations. Compliance managers get a single dashboard across their entire workforce, with reporting by site, role type, and compliance status."
+              },
+            ].map((item, i) => (
+              <FaqItem key={i} q={item.q} a={item.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── DEMO CTA ─── */}
       <section id="demo" style={s.demoSection}>
         <div style={s.demoPhoto}>
@@ -768,6 +850,35 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
+      {/* ─── GEO CONTENT BAND (structured for AI engines) ─── */}
+      <section style={{ background: "#f0f5f2", padding: "48px 24px", borderTop: "1px solid #e3ede8" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 15, fontWeight: 700, color: "#1a7a4a", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.5px" }}>About Veriyo</h2>
+          <p style={{ fontSize: 14, color: "#4a6357", lineHeight: 1.8, marginBottom: 16 }}>
+            <strong>Veriyo</strong> is Australian compliance management software designed for aged care providers,
+            NDIS registered providers, and early learning centres. The platform automates the tracking of
+            worker credentials, regulatory clearances, and policy acknowledgements across an organisation's
+            entire workforce — replacing manual spreadsheets and email chains with a real-time compliance dashboard.
+          </p>
+          <p style={{ fontSize: 14, color: "#4a6357", lineHeight: 1.8, marginBottom: 16 }}>
+            Veriyo's two products — <strong>Veriyo Onboard</strong> (for permanent employees) and{" "}
+            <strong>Veriyo Verify</strong> (for contractors and agency staff) — cover the full compliance
+            lifecycle. Veriyo Onboard collects and validates documents from new hires during onboarding:
+            police checks, NDIS Worker Screening clearances, Working With Children Checks (WWCC), aged care
+            and disability qualifications, First Aid and CPR certificates. Veriyo Verify extends that
+            coverage to third-party workers who visit a facility, ensuring no contractor or locum enters
+            a site without current, verified credentials.
+          </p>
+          <p style={{ fontSize: 14, color: "#4a6357", lineHeight: 1.8 }}>
+            When an audit is required by the Aged Care Quality and Safety Commission (ACQSC), the NDIS
+            Quality and Safeguards Commission, or the Australian Children's Education and Care Quality
+            Authority (ACECQA), Veriyo generates a one-click Compliance Audit Report — covering every
+            worker's credential status, policy acknowledgements, and any outstanding compliance gaps.
+            Veriyo is based in Sydney, Australia, and serves care providers nationwide.
+          </p>
+        </div>
+      </section>
+
       {/* ─── FOOTER ─── */}
       <footer id="contact" style={s.footer}>
         <div style={s.footerInner}>
@@ -804,6 +915,8 @@ export default function Website({ onLogin }) {
     </div>
   );
 }
+
+// ─── FAQ styles are defined inline via FaqItem component above ───
 
 const GREEN = "#1a7a4a";
 const GREEN_LIGHT = "#22a060";
@@ -1598,6 +1711,19 @@ const s = {
   testimonialSection: {
     padding: "80px 24px",
     background: "#fff",
+  },
+
+  // FAQ
+  faqSection: {
+    padding: "80px 24px",
+    background: "#f8fafc",
+  },
+  faqGrid: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    maxWidth: 800,
+    margin: "0 auto",
   },
   testimonialInner: {
     maxWidth: 720,
