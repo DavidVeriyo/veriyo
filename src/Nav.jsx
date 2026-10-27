@@ -1,5 +1,5 @@
 // ─── Veriyo shared top navigation ────────────────────────────────────────────
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useEffect } from "react";
 
 const NAV_STYLE = `
   .nav-bar { padding: 0 20px; }
@@ -56,7 +56,9 @@ export function VeriyoLogo({ height = 36, darkText = false }) {
   // dot position state: [cx, cy, r] in SVG user units
   const [dot, setDot] = useState({ cx: 336, cy: 16, r: 9 });
 
-  useLayoutEffect(() => {
+  // useLayoutEffect SSR-safe: only runs in browser (no-op on server)
+  const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+  useIsomorphicLayoutEffect(() => {
     if (!oRef.current) return;
     try {
       // getExtentOfChar(0) gives the bounding box of the "o" character
