@@ -302,6 +302,7 @@ export default function Website({ onLogin }) {
             <a href="#why" style={s.navLink}>Why Veriyo</a>
             <a href="#sectors" style={s.navLink}>Sectors</a>
             <a href="#faq" style={s.navLink}>FAQ</a>
+            <a href="/blog/" style={s.navLink}>Blog</a>
             <a href="#contact" style={s.navLink}>Contact</a>
           </div>
           <div style={s.navActions}>
@@ -333,9 +334,9 @@ export default function Website({ onLogin }) {
             </div>
             <div style={s.heroStats}>
               {[
-                { num: "140+", label: "compliance failures caught" },
                 { num: "3", label: "care sectors covered" },
-                { num: "Day 1", label: "compliant from first shift" },
+                { num: "2", label: "products: Onboard + Verify" },
+                { num: "Day 1", label: "audit-ready from first hire" },
               ].map((st, i) => (
                 <div key={i} style={s.heroStat}>
                   <span style={s.heroStatNum}>{st.num}</span>
