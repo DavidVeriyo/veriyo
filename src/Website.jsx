@@ -903,6 +903,12 @@ export default function Website({ onLogin }) {
               <a href="#sectors" style={s.footerLink}>Early Learning</a>
             </div>
             <div style={s.footerLinkCol}>
+              <div style={s.footerLinkHead}>Resources</div>
+              <a href="/blog/" style={s.footerLink}>Blog</a>
+              <a href="/blog/ndis-reform-act-2026-registered-providers.html" style={s.footerLink}>NDIS 2026</a>
+              <a href="/blog/support-at-home-2026-aged-care-providers.html" style={s.footerLink}>Aged Care 2026</a>
+            </div>
+            <div style={s.footerLinkCol}>
               <div style={s.footerLinkHead}>Contact</div>
               <a href="mailto:david@veriyo.com.au" style={s.footerLink}>david@veriyo.com.au</a>
               <a href="https://www.veriyo.com.au" style={s.footerLink}>veriyo.com.au</a>
