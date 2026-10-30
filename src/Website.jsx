@@ -265,34 +265,22 @@ export default function Website({ onLogin }) {
   const [demoPhone, setDemoPhone] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
-  // Scroll-jacked sector panels
-  // Outer section height = (PANELS + 1) * 100vh so the sticky inner
-  // stays pinned for exactly PANELS viewports of scroll, then releases.
-  // Panel N activates when scrolled >= N * vh, deactivates at (N+1) * vh.
-  const sectorOuterRef = useRef(null);
-  const sectorTrackRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
 
   useEffect(() => {
-    const outer = sectorOuterRef.current;
-    const track = sectorTrackRef.current;
-    if (!outer || !track) return;
     const PANELS = 3;
-
     const update = () => {
+      const outer = document.getElementById("sectors");
+      const track = document.getElementById("sectors-track");
+      if (!outer || !track) return;
       const vh = window.innerHeight;
-      // How far the top of the outer section is above the viewport top
       const scrolled = -(outer.getBoundingClientRect().top);
-      // Clamp to the active scroll range [0, PANELS * vh]
       const clamped = Math.max(0, Math.min(scrolled, PANELS * vh - 1));
-      // Each panel owns exactly 1vh of scroll distance
       const idx = Math.min(Math.floor(clamped / vh), PANELS - 1);
-      // Panel width = the visible panel container (not the 300%-wide track)
       const panelW = track.parentElement.offsetWidth;
       track.style.transform = `translateX(-${idx * panelW}px)`;
       setActivePanel(idx);
     };
-
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update, { passive: true });
     update();
@@ -605,7 +593,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── SECTORS — scroll-jacked horizontal ── */}
-      <section id="sectors" ref={sectorOuterRef} style={s.sectorsSection}>
+      <section id="sectors" style={s.sectorsSection}>
         {/* sticky viewport */}
         <div style={s.sectorsSticky} className="sectors-sticky">
           {/* left label column */}
@@ -639,7 +627,7 @@ export default function Website({ onLogin }) {
 
           {/* sliding panels */}
           <div style={s.sectorsPanelWrap} className="sectors-panel-wrap">
-            <div ref={sectorTrackRef} style={s.sectorsTrack} className="sectors-track">
+            <div id="sectors-track" style={s.sectorsTrack} className="sectors-track">
               {[
                 {
                   label:"Aged Care", tag:"ACQSC · Aged Care Quality Standards", accent:GREEN_BRIGHT,
