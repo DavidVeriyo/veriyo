@@ -19,16 +19,19 @@ function useReveal(threshold = 0.15) {
 }
 
 // ─── TYPING TEXT ──────────────────────────────────────────────────────────────
+// Re-types every time the element enters the viewport (hero re-types on scroll back up)
 function TypingText({ text, delay = 0, speed = 38, style: styleProp, className }) {
   const [displayed, setDisplayed] = useState("");
-  const [started, setStarted] = useState(false);
+  const [visible, setVisible] = useState(false);
   const ref = useRef(null);
+  const intervalRef = useRef(null);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStarted(true); obs.disconnect(); } },
+      ([entry]) => { setVisible(entry.isIntersecting); },
       { threshold: 0.3 }
     );
     obs.observe(el);
@@ -36,23 +39,30 @@ function TypingText({ text, delay = 0, speed = 38, style: styleProp, className }
   }, []);
 
   useEffect(() => {
-    if (!started) return;
+    clearTimeout(timerRef.current);
+    clearInterval(intervalRef.current);
+    if (!visible) {
+      setDisplayed("");
+      return;
+    }
     let i = 0;
-    const timer = setTimeout(() => {
-      const interval = setInterval(() => {
+    timerRef.current = setTimeout(() => {
+      intervalRef.current = setInterval(() => {
         i++;
         setDisplayed(text.slice(0, i));
-        if (i >= text.length) clearInterval(interval);
+        if (i >= text.length) clearInterval(intervalRef.current);
       }, speed);
-      return () => clearInterval(interval);
     }, delay);
-    return () => clearTimeout(timer);
-  }, [started, text, delay, speed]);
+    return () => {
+      clearTimeout(timerRef.current);
+      clearInterval(intervalRef.current);
+    };
+  }, [visible, text, delay, speed]);
 
   return (
     <span ref={ref} style={styleProp} className={className}>
       {displayed}
-      {displayed.length < text.length && started && (
+      {displayed.length < text.length && visible && (
         <span style={{ borderRight: "2px solid currentColor", marginLeft: 1, animation: "blink 0.7s step-end infinite" }} />
       )}
     </span>
@@ -84,109 +94,127 @@ function CountUp({ target, suffix = "", duration = 1800 }) {
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-// ─── ILLUSTRATIONS (unchanged) ───────────────────────────────────────────────
-function IllustrationWrap({ children, bg = "#0a2e1a" }) {
+// ─── SECTOR UI MOCKUPS ────────────────────────────────────────────────────────
+function AgedCareMockup() {
   return (
-    <div style={{ width: "100%", height: "100%", background: bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <svg viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "85%", height: "85%" }}>
-        <circle cx="140" cy="105" r="82" fill="rgba(255,255,255,0.04)" />
-        {children}
-      </svg>
+    <div style={{ width:"100%", height:"100%", background:"#0a1f12", display:"flex", alignItems:"center", justifyContent:"center", padding:32 }}>
+      <div style={{ width:"100%", maxWidth:380, background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", fontFamily:"'Inter',sans-serif" }}>
+        <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.06)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.6)", letterSpacing:"-0.2px" }}>Worker Compliance — Aged Care</span>
+          <span style={{ fontSize:10, fontWeight:700, color:"#3dbd74", background:"rgba(61,189,116,0.12)", border:"1px solid rgba(61,189,116,0.2)", borderRadius:4, padding:"2px 8px" }}>ACQSC Ready</span>
+        </div>
+        <div style={{ padding:"14px 18px 0" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:16 }}>
+            {[{n:"18",l:"Compliant",c:"#3dbd74"},{n:"4",l:"Expiring Soon",c:"#f59e0b"},{n:"2",l:"Action Req.",c:"#ef4444"}].map((t,i)=>(
+              <div key={i} style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:8, padding:"10px 12px" }}>
+                <div style={{ fontSize:20, fontWeight:800, color:t.c, letterSpacing:"-1px" }}>{t.n}</div>
+                <div style={{ fontSize:9, color:"rgba(255,255,255,0.3)", marginTop:2, fontWeight:500, lineHeight:1.3 }}>{t.l}</div>
+              </div>
+            ))}
+          </div>
+          {[
+            { name:"Sarah Chen", role:"Personal Carer", checks:"6/6", status:"Compliant", color:"#3dbd74" },
+            { name:"James O'Brien", role:"Support Worker", checks:"4/6", status:"Expiring 14 Nov", color:"#f59e0b" },
+            { name:"Amara Diallo", role:"Reg. Nurse", checks:"2/6", status:"Action required", color:"#ef4444" },
+          ].map((r,i)=>(
+            <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+              <div>
+                <div style={{ fontSize:12, fontWeight:600, color:"rgba(255,255,255,0.8)" }}>{r.name}</div>
+                <div style={{ fontSize:10, color:"rgba(255,255,255,0.28)" }}>{r.role}</div>
+              </div>
+              <div style={{ textAlign:"right" }}>
+                <div style={{ fontSize:10, color:"rgba(255,255,255,0.35)", marginBottom:2 }}>{r.checks} checks</div>
+                <div style={{ fontSize:10, fontWeight:700, color:r.color }}>{r.status}</div>
+              </div>
+            </div>
+          ))}
+          <div style={{ margin:"12px 0", padding:"10px 14px", background:"rgba(245,158,11,0.07)", border:"1px solid rgba(245,158,11,0.15)", borderRadius:8, display:"flex", alignItems:"center", gap:8 }}>
+            <div style={{ width:6, height:6, borderRadius:"50%", background:"#f59e0b", flexShrink:0 }} />
+            <span style={{ fontSize:10, color:"rgba(255,255,255,0.45)", lineHeight:1.4 }}>4 police checks renewing within 30 days — send reminders?</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function AgedCareIllustration() {
+function NDISMockup() {
   return (
-    <IllustrationWrap>
-      <circle cx="90" cy="82" r="18" fill="#f5c5a3" />
-      <path d="M72 74 Q90 58 108 74" fill="#d1d5db" />
-      <ellipse cx="90" cy="68" rx="18" ry="10" fill="#d1d5db" />
-      <circle cx="84" cy="82" r="5" fill="none" stroke="#6b7280" strokeWidth="1.5" />
-      <circle cx="96" cy="82" r="5" fill="none" stroke="#6b7280" strokeWidth="1.5" />
-      <line x1="89" y1="82" x2="91" y2="82" stroke="#6b7280" strokeWidth="1.5" />
-      <path d="M86 88 Q90 92 94 88" stroke="#c084a0" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M70 100 Q90 95 110 100 L112 150 L68 150Z" fill="#f9a8d4" />
-      <rect x="72" y="148" width="16" height="28" rx="6" fill="#9ca3af" />
-      <rect x="90" y="148" width="16" height="28" rx="6" fill="#9ca3af" />
-      <line x1="108" y1="120" x2="115" y2="178" stroke="#6b7280" strokeWidth="3" strokeLinecap="round" />
-      <path d="M105 120 Q108 115 113 118" stroke="#6b7280" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <path d="M108 110 Q120 108 128 115" stroke="#f5c5a3" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <circle cx="130" cy="116" r="6" fill="#f5c5a3" />
-      <circle cx="188" cy="76" r="20" fill="#c8956c" />
-      <path d="M168 68 Q188 52 208 68 Q208 58 188 54 Q168 58 168 68Z" fill="#374151" />
-      <path d="M182 82 Q188 87 194 82" stroke="#92400e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M166 98 Q188 92 210 98 L214 158 L162 158Z" fill="#1a7a4a" />
-      <path d="M180 98 L188 108 L196 98" fill="#166840" />
-      <rect x="168" y="156" width="18" height="24" rx="6" fill="#1e3a5f" />
-      <rect x="188" y="156" width="18" height="24" rx="6" fill="#1e3a5f" />
-      <path d="M166 108 Q152 110 144 118" stroke="#c8956c" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <circle cx="142" cy="119" r="6" fill="#c8956c" />
-      <ellipse cx="136" cy="118" rx="10" ry="7" fill="#f5c5a3" opacity="0.8" />
-      <path d="M134 58 C134 54 128 50 128 56 C128 62 134 66 134 66 C134 66 140 62 140 56 C140 50 134 54 134 58Z" fill="#f472b6" />
-      <rect x="210" y="138" width="44" height="28" rx="8" fill="rgba(255,255,255,0.12)" />
-      <path d="M218 148 L222 153 L230 144" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="233" y="147" width="16" height="3" rx="1.5" fill="rgba(255,255,255,0.3)" />
-      <rect x="233" y="153" width="11" height="3" rx="1.5" fill="rgba(255,255,255,0.2)" />
-    </IllustrationWrap>
+    <div style={{ width:"100%", height:"100%", background:"#0a1525", display:"flex", alignItems:"center", justifyContent:"center", padding:32 }}>
+      <div style={{ width:"100%", maxWidth:380, fontFamily:"'Inter',sans-serif" }}>
+        <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden", marginBottom:10 }}>
+          <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.06)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+            <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.6)" }}>NDIS Worker Screening</span>
+            <span style={{ fontSize:10, fontWeight:700, color:"#60a5fa", background:"rgba(96,165,250,0.1)", border:"1px solid rgba(96,165,250,0.2)", borderRadius:4, padding:"2px 8px" }}>NDIS Commission</span>
+          </div>
+          <div style={{ padding:"14px 18px" }}>
+            {[
+              { name:"Michael Tran", id:"WS-2024-11834", status:"Cleared", exp:"Mar 2027", color:"#3dbd74" },
+              { name:"Priya Sharma", id:"WS-2024-09921", status:"Cleared", exp:"Jul 2026", color:"#3dbd74" },
+              { name:"David Walsh", id:"WS-2023-77201", status:"Expiring", exp:"Dec 2024", color:"#f59e0b" },
+              { name:"Nguyen Linh", id:"Pending", status:"In Progress", exp:"—", color:"#60a5fa" },
+            ].map((r,i)=>(
+              <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"9px 0", borderBottom: i<3 ? "1px solid rgba(255,255,255,0.05)":"none" }}>
+                <div>
+                  <div style={{ fontSize:12, fontWeight:600, color:"rgba(255,255,255,0.8)" }}>{r.name}</div>
+                  <div style={{ fontSize:9, color:"rgba(255,255,255,0.25)", fontFamily:"monospace" }}>{r.id}</div>
+                </div>
+                <div style={{ textAlign:"right" }}>
+                  <div style={{ fontSize:10, fontWeight:700, color:r.color }}>{r.status}</div>
+                  <div style={{ fontSize:9, color:"rgba(255,255,255,0.25)" }}>Exp: {r.exp}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ background:"rgba(96,165,250,0.06)", border:"1px solid rgba(96,165,250,0.15)", borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ width:6, height:6, borderRadius:"50%", background:"#60a5fa", flexShrink:0 }} />
+          <span style={{ fontSize:10, color:"rgba(255,255,255,0.4)", lineHeight:1.4 }}>Banning order register check: all workers verified as of today</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
-function NDISIllustration() {
+function EarlyLearningMockup() {
   return (
-    <IllustrationWrap>
-      <circle cx="140" cy="105" r="82" fill="rgba(255,255,255,0.04)" />
-      <circle cx="100" cy="162" r="18" fill="none" stroke="#4ade80" strokeWidth="3" />
-      <circle cx="100" cy="162" r="5" fill="#4ade80" />
-      <line x1="100" y1="144" x2="100" y2="162" stroke="#4ade80" strokeWidth="1.5" />
-      <line x1="82" y1="162" x2="100" y2="162" stroke="#4ade80" strokeWidth="1.5" />
-      <line x1="87" y1="149" x2="100" y2="162" stroke="#4ade80" strokeWidth="1.5" />
-      <line x1="113" y1="149" x2="100" y2="162" stroke="#4ade80" strokeWidth="1.5" />
-      <circle cx="130" cy="162" r="10" fill="none" stroke="#4ade80" strokeWidth="2.5" />
-      <circle cx="130" cy="162" r="3" fill="#4ade80" />
-      <rect x="82" y="130" width="52" height="30" rx="6" fill="rgba(255,255,255,0.08)" />
-      <line x1="82" y1="130" x2="82" y2="100" stroke="rgba(255,255,255,0.2)" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="120" cy="72" r="19" fill="#c8956c" />
-      <path d="M101 64 Q120 48 139 64 Q139 54 120 50 Q101 54 101 64Z" fill="#374151" />
-      <path d="M100 92 Q120 86 140 92 L143 130 L97 130Z" fill="#1a7a4a" />
-      <rect x="103" y="128" width="16" height="14" rx="4" fill="#166840" />
-      <rect x="121" y="128" width="16" height="14" rx="4" fill="#166840" />
-      <rect x="152" y="90" width="60" height="42" rx="8" fill="rgba(255,255,255,0.1)" />
-      <rect x="157" y="96" width="50" height="6" rx="3" fill="rgba(255,255,255,0.3)" />
-      <rect x="157" y="106" width="35" height="4" rx="2" fill="rgba(255,255,255,0.2)" />
-      <path d="M157 118 L161 123 L169 114" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="173" y="116" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.2)" />
-      <path d="M140 102 Q148 98 152 102" stroke="#c8956c" strokeWidth="6" strokeLinecap="round" fill="none" />
-    </IllustrationWrap>
-  );
-}
-
-function EarlyLearningIllustration() {
-  return (
-    <IllustrationWrap>
-      <circle cx="140" cy="105" r="82" fill="rgba(255,255,255,0.04)" />
-      <rect x="60" y="100" width="160" height="80" rx="12" fill="rgba(255,255,255,0.06)" />
-      <rect x="60" y="100" width="160" height="20" rx="12" fill="rgba(255,255,255,0.08)" />
-      <circle cx="100" cy="68" r="20" fill="#f5c5a3" />
-      <path d="M80 60 Q100 44 120 60 Q118 48 100 44 Q82 48 80 60Z" fill="#fbbf24" />
-      <path d="M80 88 Q100 82 120 88 L122 130 L78 130Z" fill="#fb7185" />
-      <rect x="84" y="128" width="14" height="18" rx="5" fill="#f43f5e" />
-      <rect x="100" y="128" width="14" height="18" rx="5" fill="#f43f5e" />
-      <path d="M120 98 Q132 92 140 98" stroke="#f5c5a3" strokeWidth="6" strokeLinecap="round" fill="none" />
-      <circle cx="172" cy="72" r="16" fill="#c8956c" />
-      <path d="M156 65 Q172 52 188 65 Q186 55 172 52 Q158 55 156 65Z" fill="#374151" />
-      <path d="M158 88 Q172 83 186 88 L188 122 L156 122Z" fill="#1a7a4a" />
-      <rect x="160" y="120" width="12" height="14" rx="4" fill="#166840" />
-      <rect x="174" y="120" width="12" height="14" rx="4" fill="#166840" />
-      <rect x="88" y="108" width="104" height="60" rx="6" fill="rgba(255,255,255,0.05)" />
-      <rect x="94" y="114" width="38" height="4" rx="2" fill="rgba(255,255,255,0.2)" />
-      <path d="M94 124 L98 129 L106 120" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="110" y="122" width="24" height="3" rx="1.5" fill="rgba(255,255,255,0.15)" />
-      <path d="M94 136 L98 141 L106 132" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="110" y="134" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.15)" />
-      <path d="M94 148 L98 153 L106 144" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="110" y="146" width="20" height="3" rx="1.5" fill="rgba(255,255,255,0.1)" />
-    </IllustrationWrap>
+    <div style={{ width:"100%", height:"100%", background:"#191008", display:"flex", alignItems:"center", justifyContent:"center", padding:32 }}>
+      <div style={{ width:"100%", maxWidth:380, fontFamily:"'Inter',sans-serif" }}>
+        <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, overflow:"hidden" }}>
+          <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.06)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+            <span style={{ fontSize:12, fontWeight:700, color:"rgba(255,255,255,0.6)" }}>Educator Compliance — ACECQA</span>
+            <span style={{ fontSize:10, fontWeight:700, color:"#fbbf24", background:"rgba(251,191,36,0.1)", border:"1px solid rgba(251,191,36,0.2)", borderRadius:4, padding:"2px 8px" }}>NQF Ready</span>
+          </div>
+          <div style={{ padding:"14px 18px" }}>
+            <div style={{ marginBottom:14 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
+                <span style={{ fontSize:10, color:"rgba(255,255,255,0.35)", fontWeight:600 }}>Overall compliance rate</span>
+                <span style={{ fontSize:10, fontWeight:700, color:"#fbbf24" }}>87%</span>
+              </div>
+              <div style={{ height:4, background:"rgba(255,255,255,0.06)", borderRadius:2, overflow:"hidden" }}>
+                <div style={{ width:"87%", height:"100%", background:"linear-gradient(90deg,#fbbf24,#f59e0b)", borderRadius:2 }} />
+              </div>
+            </div>
+            {[
+              { label:"Working With Children Check", done:14, total:14, color:"#3dbd74" },
+              { label:"Anaphylaxis Management", done:11, total:14, color:"#fbbf24" },
+              { label:"Cert III/IV Early Childhood Ed.", done:13, total:14, color:"#3dbd74" },
+              { label:"First Aid & CPR", done:10, total:14, color:"#f59e0b" },
+            ].map((row,i)=>(
+              <div key={i} style={{ padding:"9px 0", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
+                  <span style={{ fontSize:10, color:"rgba(255,255,255,0.55)", fontWeight:500 }}>{row.label}</span>
+                  <span style={{ fontSize:10, fontWeight:700, color:row.color }}>{row.done}/{row.total}</span>
+                </div>
+                <div style={{ height:3, background:"rgba(255,255,255,0.06)", borderRadius:2, overflow:"hidden" }}>
+                  <div style={{ width:`${(row.done/row.total)*100}%`, height:"100%", background:row.color, borderRadius:2, opacity:0.7 }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -233,21 +261,35 @@ export default function Website({ onLogin }) {
   const [demoPhone, setDemoPhone] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
-  // Horizontal scroll
-  const hScrollRef = useRef(null);
+  // Scroll-jacked sector panels
+  const sectorOuterRef = useRef(null);
+  const sectorTrackRef = useRef(null);
+  const [activePanel, setActivePanel] = useState(0);
+  const scrollJackActive = useRef(false);
+
   useEffect(() => {
-    const container = hScrollRef.current;
-    if (!container) return;
-    const onWheel = (e) => {
-      const atLeft = container.scrollLeft === 0;
-      const atRight = container.scrollLeft + container.clientWidth >= container.scrollWidth - 2;
-      if ((e.deltaY > 0 && !atRight) || (e.deltaY < 0 && !atLeft)) {
-        e.preventDefault();
-        container.scrollLeft += e.deltaY;
-      }
+    const outer = sectorOuterRef.current;
+    const track = sectorTrackRef.current;
+    if (!outer || !track) return;
+    const PANELS = 3;
+
+    const onScroll = () => {
+      if (!outer) return;
+      const rect = outer.getBoundingClientRect();
+      const sectionH = outer.offsetHeight;
+      const panelH = sectionH / PANELS;
+      // How far we've scrolled into the sticky section
+      const scrolled = -rect.top;
+      if (scrolled < 0 || scrolled > sectionH - window.innerHeight) return;
+      const idx = Math.min(Math.floor(scrolled / panelH), PANELS - 1);
+      setActivePanel(idx);
+      // slide the track horizontally
+      const panelW = track.offsetWidth / PANELS;
+      track.style.transform = `translateX(-${idx * panelW}px)`;
     };
-    container.addEventListener("wheel", onWheel, { passive: false });
-    return () => container.removeEventListener("wheel", onWheel);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   async function handleDemoRequest(e) {
@@ -294,6 +336,12 @@ export default function Website({ onLogin }) {
           .footer-inner{flex-direction:column!important;gap:40px!important}
           .products-split{flex-direction:column!important}
           .products-split-rev{flex-direction:column-reverse!important}
+          .sectors-sticky{flex-direction:column!important;height:auto!important;position:relative!important}
+          .sectors-label-col{width:100%!important;padding:48px 24px 24px!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,0.06)!important}
+          .sectors-panel-wrap{overflow:visible!important}
+          .sectors-track{flex-direction:column!important;width:100%!important;transform:none!important;transition:none!important}
+          .sector-slide{height:auto!important;min-height:0!important}
+          .sector-mockup{flex:0 0 auto!important;height:320px!important}
         }
       `}</style>
 
@@ -508,8 +556,8 @@ export default function Website({ onLogin }) {
                   <a href="#demo" style={s.productCta}>Request a demo →</a>
                 </div>
                 <div style={s.productRight}>
-                  <div style={{ width: "100%", height: "100%" }}>
-                    {i === 0 ? <AgedCareIllustration /> : <NDISIllustration />}
+                  <div style={{ width: "100%", height: "100%", minHeight: 400 }}>
+                    {i === 0 ? <AgedCareMockup /> : <NDISMockup />}
                   </div>
                 </div>
               </div>
@@ -546,65 +594,84 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
-      {/* ── SECTORS — horizontal scroll ── */}
-      <section id="sectors" style={s.sectorsSection}>
-        <div style={s.sectorsTop}>
-          <RevealSection>
+      {/* ── SECTORS — scroll-jacked horizontal ── */}
+      <section id="sectors" ref={sectorOuterRef} style={s.sectorsSection}>
+        {/* sticky viewport */}
+        <div style={s.sectorsSticky} className="sectors-sticky">
+          {/* left label column */}
+          <div style={s.sectorsLabelCol} className="sectors-label-col">
             <p style={s.sectionLabel}>Built For Your Sector</p>
-            <h2 style={s.sectorsH2}>
-              Every sector has different rules.<br />
-              Veriyo knows them all.
-            </h2>
-            <p style={s.sectorsSub}>Scroll to explore →</p>
-          </RevealSection>
-        </div>
-        <div style={s.hScrollWrap}>
-          <div ref={hScrollRef} style={s.hScroll} className="h-scroll">
-            {[
-              {
-                label: "Aged Care",
-                tag: "ACQSC · Aged Care Quality Standards",
-                desc: "Track every mandatory requirement under the Aged Care Quality Standards — police checks, qualifications, Code of Conduct acknowledgements, and more.",
-                checks: ["National Police Check", "Aged Care Code of Conduct", "Certificate III / IV in Aged Care", "First Aid & CPR", "Manual Handling", "ACQSC audit readiness"],
-                Illo: AgedCareIllustration,
-                accent: GREEN_BRIGHT,
-              },
-              {
-                label: "NDIS",
-                tag: "NDIS Commission · Worker Screening",
-                desc: "Stay compliant with the NDIS Practice Standards. Track Worker Screening clearances, monitor the banning order register, and keep every support worker verified.",
-                checks: ["NDIS Worker Screening Check", "NDIS Practice Standards", "Working With Children Check", "First Aid certificate", "Banning order monitoring", "NDIS Commission audit readiness"],
-                Illo: NDISIllustration,
-                accent: "#60a5fa",
-              },
-              {
-                label: "Early Learning",
-                tag: "ACECQA · National Quality Framework",
-                desc: "Meet every requirement under the National Quality Framework. Track WWCC, educator qualifications, anaphylaxis training, and child safety compliance.",
-                checks: ["Working With Children Check", "ACECQA educator qualifications", "Anaphylaxis management", "Child Safe Standards", "First Aid & CPR", "National Quality Framework"],
-                Illo: EarlyLearningIllustration,
-                accent: "#fbbf24",
-              },
-            ].map((sector, i) => (
-              <div key={i} style={s.sectorPanel}>
-                <div style={s.sectorIllo}>
-                  <sector.Illo />
+            <h2 style={s.sectorsH2}>Every sector.<br />Every rule.<br />Covered.</h2>
+            {/* dot nav */}
+            <div style={{ display:"flex", flexDirection:"column", gap:10, marginTop:40 }}>
+              {["Aged Care","NDIS","Early Learning"].map((label,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:12 }}>
+                  <div style={{
+                    width: activePanel===i ? 24 : 8,
+                    height: 8,
+                    borderRadius: 4,
+                    background: activePanel===i
+                      ? [GREEN_BRIGHT,"#60a5fa","#fbbf24"][i]
+                      : "rgba(255,255,255,0.12)",
+                    transition:"all 0.35s cubic-bezier(0.4,0,0.2,1)",
+                    flexShrink:0,
+                  }} />
+                  <span style={{
+                    fontSize:13, fontWeight: activePanel===i ? 700 : 500,
+                    color: activePanel===i ? "#fff" : "rgba(255,255,255,0.25)",
+                    transition:"color 0.3s",
+                  }}>{label}</span>
                 </div>
-                <div style={s.sectorBody}>
-                  <p style={{ ...s.sectorTag, color: sector.accent, borderColor: sector.accent }}>{sector.tag}</p>
-                  <h3 style={s.sectorTitle}>{sector.label}</h3>
-                  <p style={s.sectorDesc}>{sector.desc}</p>
-                  <ul style={s.sectorChecks}>
-                    {sector.checks.map((c, j) => (
-                      <li key={j} style={s.sectorCheck}>
-                        <span style={{ color: sector.accent, fontWeight: 700, fontSize: 13 }}>✓</span>
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
+              ))}
+            </div>
+            <p style={{ fontSize:11, color:"rgba(255,255,255,0.2)", marginTop:32, fontStyle:"italic" }}>Keep scrolling ↓</p>
+          </div>
+
+          {/* sliding panels */}
+          <div style={s.sectorsPanelWrap} className="sectors-panel-wrap">
+            <div ref={sectorTrackRef} style={s.sectorsTrack} className="sectors-track">
+              {[
+                {
+                  label:"Aged Care", tag:"ACQSC · Aged Care Quality Standards", accent:GREEN_BRIGHT,
+                  desc:"Track every mandatory requirement under the Aged Care Quality Standards — police checks, qualifications, Code of Conduct acknowledgements, and more.",
+                  checks:["National Police Check","Aged Care Code of Conduct","Certificate III / IV in Aged Care","First Aid & CPR","Manual Handling","ACQSC audit readiness"],
+                  Mockup: AgedCareMockup,
+                },
+                {
+                  label:"NDIS", tag:"NDIS Commission · Worker Screening", accent:"#60a5fa",
+                  desc:"Stay compliant with the NDIS Practice Standards. Track Worker Screening clearances, monitor the banning order register, and keep every support worker verified.",
+                  checks:["NDIS Worker Screening Check","NDIS Practice Standards","Working With Children Check","First Aid certificate","Banning order monitoring","NDIS Commission audit readiness"],
+                  Mockup: NDISMockup,
+                },
+                {
+                  label:"Early Learning", tag:"ACECQA · National Quality Framework", accent:"#fbbf24",
+                  desc:"Meet every requirement under the National Quality Framework. Track WWCC, educator qualifications, anaphylaxis training, and child safety compliance.",
+                  checks:["Working With Children Check","ACECQA educator qualifications","Anaphylaxis management","Child Safe Standards","First Aid & CPR","National Quality Framework"],
+                  Mockup: EarlyLearningMockup,
+                },
+              ].map((sector, i) => (
+                <div key={i} style={s.sectorSlide} className="sector-slide">
+                  {/* mockup */}
+                  <div style={{ ...s.sectorMockup, opacity: activePanel===i ? 1 : 0.3, transform: activePanel===i ? "scale(1)" : "scale(0.97)", transition:"all 0.5s cubic-bezier(0.4,0,0.2,1)" }} className="sector-mockup">
+                    <sector.Mockup />
+                  </div>
+                  {/* copy */}
+                  <div style={s.sectorCopy}>
+                    <p style={{ ...s.sectorTag, color:sector.accent, borderColor:sector.accent }}>{sector.tag}</p>
+                    <h3 style={s.sectorTitle}>{sector.label}</h3>
+                    <p style={s.sectorDesc}>{sector.desc}</p>
+                    <ul style={s.sectorChecks}>
+                      {sector.checks.map((c,j)=>(
+                        <li key={j} style={s.sectorCheck}>
+                          <span style={{ color:sector.accent, fontWeight:700, fontSize:12 }}>✓</span>
+                          {c}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1302,67 +1369,70 @@ const s = {
     margin: 0,
   },
 
-  // SECTORS
+  // SECTORS — scroll-jacked
   sectorsSection: {
     background: DEEP,
-    paddingTop: 120,
+    height: "300vh", // 3 panels × 100vh of scroll room
     borderTop: "1px solid rgba(255,255,255,0.05)",
+    position: "relative",
+  },
+  sectorsSticky: {
+    position: "sticky",
+    top: 0,
+    height: "100vh",
+    display: "flex",
     overflow: "hidden",
   },
-  sectorsTop: {
-    maxWidth: 1160,
-    margin: "0 auto",
-    padding: "0 40px 64px",
-  },
-  sectorsH2: {
-    fontSize: "clamp(32px,4.5vw,58px)",
-    fontWeight: 900,
-    color: "#fff",
-    margin: "0 0 12px",
-    letterSpacing: "-3px",
-    lineHeight: 1.05,
-    textWrap: "balance",
-  },
-  sectorsSub: {
-    fontSize: 13,
-    color: "rgba(255,255,255,0.25)",
-    margin: 0,
-    fontWeight: 500,
-  },
-  hScrollWrap: {
-    position: "relative",
-    paddingLeft: 40,
-  },
-  hScroll: {
-    display: "flex",
-    gap: 1,
-    overflowX: "auto",
-    scrollSnapType: "x mandatory",
-    scrollBehavior: "smooth",
-    msOverflowStyle: "none",
-    scrollbarWidth: "none",
-    cursor: "grab",
-  },
-  sectorPanel: {
-    flex: "0 0 520px",
-    scrollSnapAlign: "start",
+  sectorsLabelCol: {
+    width: 300,
+    flexShrink: 0,
+    padding: "60px 40px 60px 40px",
     display: "flex",
     flexDirection: "column",
-    border: "1px solid rgba(255,255,255,0.07)",
-    borderRadius: 16,
-    overflow: "hidden",
-    marginRight: 20,
-    marginBottom: 80,
+    justifyContent: "center",
+    borderRight: "1px solid rgba(255,255,255,0.06)",
+    background: DEEP,
+    zIndex: 2,
   },
-  sectorIllo: {
-    height: 260,
-    background: FOREST,
-    flexShrink: 0,
+  sectorsH2: {
+    fontSize: "clamp(24px,2.5vw,36px)",
+    fontWeight: 900,
+    color: "#fff",
+    margin: "0 0 0",
+    letterSpacing: "-2px",
+    lineHeight: 1.1,
   },
-  sectorBody: {
-    padding: "36px 40px 44px",
+  sectorsPanelWrap: {
     flex: 1,
-    background: "rgba(255,255,255,0.02)",
+    overflow: "hidden",
+    position: "relative",
+  },
+  sectorsTrack: {
+    display: "flex",
+    width: "300%", // 3 panels side by side
+    height: "100%",
+    transition: "transform 0.6s cubic-bezier(0.4,0,0.2,1)",
+    willChange: "transform",
+  },
+  sectorSlide: {
+    flex: "1 0 0",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  },
+  sectorMockup: {
+    flex: "0 0 55%",
+    overflow: "hidden",
+  },
+  sectorCopy: {
+    flex: 1,
+    padding: "28px 40px 28px",
+    overflowY: "auto",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    borderTop: "1px solid rgba(255,255,255,0.06)",
   },
   sectorTag: {
     fontSize: 10,
@@ -1373,35 +1443,35 @@ const s = {
     borderRadius: 5,
     padding: "3px 10px",
     display: "inline-block",
-    margin: "0 0 16px",
+    margin: "0 0 12px",
   },
   sectorTitle: {
-    fontSize: 28,
+    fontSize: "clamp(22px,2.5vw,32px)",
     fontWeight: 900,
     color: "#fff",
-    margin: "0 0 12px",
+    margin: "0 0 8px",
     letterSpacing: "-1.5px",
   },
   sectorDesc: {
-    fontSize: 14,
+    fontSize: 13,
     color: "rgba(255,255,255,0.4)",
-    lineHeight: 1.75,
-    margin: "0 0 24px",
+    lineHeight: 1.7,
+    margin: "0 0 16px",
   },
   sectorChecks: {
     listStyle: "none",
     padding: 0,
     margin: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "6px 16px",
   },
   sectorCheck: {
     display: "flex",
     alignItems: "center",
-    gap: 10,
-    fontSize: 12,
-    color: "rgba(255,255,255,0.5)",
+    gap: 8,
+    fontSize: 11,
+    color: "rgba(255,255,255,0.45)",
     fontWeight: 500,
   },
 
