@@ -290,6 +290,7 @@ export default function Website({ onLogin }) {
         @keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
+        .stack-card { position:sticky; top:0; border-radius:24px 24px 0 0; overflow:hidden; box-shadow:0 -8px 40px rgba(0,0,0,0.4); }
         .reveal-d1 { transition-delay:0.1s; }
         .reveal-d2 { transition-delay:0.2s; }
         .reveal-d3 { transition-delay:0.3s; }
@@ -440,6 +441,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── STATEMENT BAND ── */}
+      <div className="stack-card" style={{ zIndex:2, background:"#fff" }}>
       <RevealSection style={s.statementBand}>
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
@@ -478,8 +480,10 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end stack-card 2 */}
 
       {/* ── PRODUCTS ── */}
+      <div className="stack-card" style={{ zIndex:3, background:DEEP }}>
       <section id="products" style={s.productsSection}>
         <div style={s.productsSectionInner}>
           <RevealSection>
@@ -536,8 +540,10 @@ export default function Website({ onLogin }) {
           ))}
         </div>
       </section>
+      </div>{/* end stack-card 3 */}
 
       {/* ── HOW IT WORKS ── */}
+      <div className="stack-card" style={{ zIndex:4, background:FOREST }}>
       <section style={s.howSection}>
         <div style={s.howInner}>
           <RevealSection>
@@ -563,8 +569,10 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end stack-card 4 */}
 
       {/* ── SECTORS — 3-card static layout ── */}
+      <div className="stack-card" style={{ zIndex:5, background:DEEP }}>
       <RevealSection style={s.sectorsSection}>
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
@@ -645,8 +653,10 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end stack-card 5 */}
 
       {/* ── DEMO CTA ── */}
+      <div className="stack-card" style={{ zIndex:6, background:FOREST2 }}>
       <section id="demo" style={s.demoSection}>
         <div style={s.demoOrb} />
         <div style={s.demoInner} className="demo-inner">
@@ -696,6 +706,7 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end stack-card 6 */}
 
       {/* ── GEO SEO BAND (hidden visually but indexed) ── */}
       <div style={{ background: DEEP, padding: "40px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
