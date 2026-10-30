@@ -576,7 +576,7 @@ export default function Website({ onLogin }) {
         </div>
       </section>
       {/* ── SECTORS — 3-card static layout ── */}
-      <RevealSection style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
+      <RevealSection id="sectors" style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
           <h2 style={s.sectorsH2}><TypingText text="Every sector. Every rule. Covered." speed={30} delay={100} /></h2>
@@ -757,11 +757,13 @@ export default function Website({ onLogin }) {
 }
 
 // ─── REVEAL WRAPPER ───────────────────────────────────────────────────────────
-function RevealSection({ children, style: styleProp, delay = 0 }) {
+function RevealSection({ children, style: styleProp, delay = 0, id, className }) {
   const [ref, visible] = useReveal(0.12);
   return (
     <div
       ref={ref}
+      id={id}
+      className={className}
       style={{
         ...styleProp,
         opacity: visible ? 1 : 0,
