@@ -266,8 +266,9 @@ export default function Website({ onLogin }) {
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
   // Scroll-jacked sector panels
-  // The outer section is (PANELS * 100vh) tall so each panel = 1 viewport of scroll.
-  // The inner sticky div stays fixed to the viewport while the page scrolls behind it.
+  // Outer section height = (PANELS + 1) * 100vh so the sticky inner
+  // stays pinned for exactly PANELS viewports of scroll, then releases.
+  // Panel N activates when scrolled >= N * vh, deactivates at (N+1) * vh.
   const sectorOuterRef = useRef(null);
   const sectorTrackRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
@@ -278,40 +279,27 @@ export default function Website({ onLogin }) {
     if (!outer || !track) return;
     const PANELS = 3;
 
-    const onScroll = () => {
-      const rect = outer.getBoundingClientRect();
-      // scrolled = how many px we've scrolled past the top of this section
-      const scrolled = -rect.top;
-      // Each panel owns one full viewport height of scroll distance
-      const panelScrollH = window.innerHeight;
-      const maxScroll = panelScrollH * (PANELS - 1);
-
-      if (scrolled <= 0) {
-        // Above the section — show panel 0, no translate
-        setActivePanel(0);
-        track.style.transform = "translateX(0px)";
-        return;
-      }
-      if (scrolled >= maxScroll + panelScrollH) {
-        // Past the section — keep at last panel
-        setActivePanel(PANELS - 1);
-        const panelW = track.parentElement.offsetWidth;
-        track.style.transform = `translateX(-${(PANELS - 1) * panelW}px)`;
-        return;
-      }
-
-      const progress = Math.min(scrolled / maxScroll, 1);
-      const idx = Math.min(Math.floor(scrolled / panelScrollH), PANELS - 1);
-      setActivePanel(idx);
-      // panelW = the visible container width (NOT track.offsetWidth which is 300%)
+    const update = () => {
+      const vh = window.innerHeight;
+      // How far the top of the outer section is above the viewport top
+      const scrolled = -(outer.getBoundingClientRect().top);
+      // Clamp to the active scroll range [0, PANELS * vh]
+      const clamped = Math.max(0, Math.min(scrolled, PANELS * vh - 1));
+      // Each panel owns exactly 1vh of scroll distance
+      const idx = Math.min(Math.floor(clamped / vh), PANELS - 1);
+      // Panel width = the visible panel container (not the 300%-wide track)
       const panelW = track.parentElement.offsetWidth;
       track.style.transform = `translateX(-${idx * panelW}px)`;
+      setActivePanel(idx);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    // Run once on mount so state is correct if page loads mid-scroll
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   async function handleDemoRequest(e) {
@@ -1408,9 +1396,9 @@ const s = {
     overflow: "hidden",
   },
   sectorsLabelCol: {
-    width: 300,
+    width: 240,
     flexShrink: 0,
-    padding: "60px 40px 60px 40px",
+    padding: "40px 32px 40px 40px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -1433,30 +1421,30 @@ const s = {
   },
   sectorsTrack: {
     display: "flex",
-    width: "300%", // 3 panels side by side
+    width: "300%", // 3 panels side by side — each slide is 1/3 of this = 1× panelWrap
     height: "100%",
-    transition: "transform 0.6s cubic-bezier(0.4,0,0.2,1)",
+    transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)",
     willChange: "transform",
   },
   sectorSlide: {
     flex: "1 0 0",
     height: "100%",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row", // mockup left, copy right — side by side
     overflow: "hidden",
   },
   sectorMockup: {
-    flex: "0 0 55%",
+    flex: "0 0 52%",
     overflow: "hidden",
+    borderRight: "1px solid rgba(255,255,255,0.06)",
   },
   sectorCopy: {
     flex: 1,
-    padding: "28px 40px 28px",
+    padding: "40px 40px",
     overflowY: "auto",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    borderTop: "1px solid rgba(255,255,255,0.06)",
   },
   sectorTag: {
     fontSize: 10,
@@ -1486,9 +1474,9 @@ const s = {
     listStyle: "none",
     padding: 0,
     margin: 0,
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "6px 16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
   },
   sectorCheck: {
     display: "flex",
