@@ -290,7 +290,7 @@ export default function Website({ onLogin }) {
         @keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
-        .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -12px 48px rgba(0,0,0,0.5); }
+        .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -16px 60px rgba(0,0,0,0.6); }
         .reveal-d1 { transition-delay:0.1s; }
         .reveal-d2 { transition-delay:0.2s; }
         .reveal-d3 { transition-delay:0.3s; }
@@ -441,7 +441,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── STATEMENT BAND ── */}
-      <RevealSection style={{ ...s.statementBand, position:"sticky", top:0, zIndex:2 }} className="stack-card">
+      <RevealSection style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card">
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
           <h2 style={s.statementH2}>
@@ -452,7 +452,7 @@ export default function Website({ onLogin }) {
       </RevealSection>
 
       {/* ── PROBLEM — large stats ── */}
-      <section id="why" style={{ ...s.problemSection, position:"sticky", top:0, zIndex:3 }} className="stack-card">
+      <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }}>
         <div style={s.problemInner} className="problem-inner">
           <div style={s.problemLeft}>
             <p style={s.sectionLabel}>The Cost of Manual Compliance</p>
@@ -481,7 +481,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── PRODUCTS ── */}
-      <section id="products" style={{ ...s.productsSection, position:"sticky", top:0, zIndex:4 }} className="stack-card">
+      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }}>
         <div style={s.productsSectionInner}>
           <RevealSection>
             <p style={s.sectionLabel}>Two Products. One Platform.</p>
@@ -539,7 +539,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ ...s.howSection, position:"sticky", top:0, zIndex:5 }} className="stack-card">
+      <section style={{ ...s.howSection, position:"relative", zIndex:2 }}>
         <div style={s.howInner}>
           <RevealSection>
             <p style={s.sectionLabelLight}>How It Works</p>
@@ -565,7 +565,7 @@ export default function Website({ onLogin }) {
         </div>
       </section>
       {/* ── SECTORS — 3-card static layout ── */}
-      <RevealSection style={{ ...s.sectorsSection, position:"sticky", top:0, zIndex:6 }} className="stack-card">
+      <RevealSection style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
           <h2 style={s.sectorsH2}>Every sector. Every rule. Covered.</h2>
@@ -614,7 +614,7 @@ export default function Website({ onLogin }) {
       </RevealSection>
 
       {/* ── PULL QUOTE ── */}
-      <RevealSection style={{ ...s.quoteSection, position:"sticky", top:0, zIndex:7 }} className="stack-card">
+      <RevealSection style={{ ...s.quoteSection, position:"relative", zIndex:2 }}>
         <div style={s.quoteInner}>
           <div style={s.quoteRule} />
           <p style={s.quoteText}>
@@ -626,7 +626,7 @@ export default function Website({ onLogin }) {
       </RevealSection>
 
       {/* ── FAQ ── */}
-      <section id="faq" style={{ ...s.faqSection, position:"sticky", top:0, zIndex:8 }} className="stack-card">
+      <section id="faq" style={{ ...s.faqSection, position:"relative", zIndex:2 }}>
         <div style={s.faqInner}>
           <RevealSection style={s.faqLeft}>
             <p style={s.sectionLabel}>FAQ</p>
@@ -647,7 +647,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── DEMO CTA ── */}
-      <section id="demo" style={{ ...s.demoSection, position:"sticky", top:0, zIndex:9 }} className="stack-card">
+      <section id="demo" style={{ ...s.demoSection, position:"relative", zIndex:2 }}>
         <div style={s.demoOrb} />
         <div style={s.demoInner} className="demo-inner">
           <RevealSection style={s.demoLeft}>
@@ -844,12 +844,14 @@ const s = {
     letterSpacing: "-0.1px",
   },
 
-  // HERO
+  // HERO — sticky so content slides over it
   hero: {
     background: `linear-gradient(160deg, ${DEEP} 0%, ${FOREST} 50%, ${FOREST2} 100%)`,
     paddingTop: 96,
     paddingBottom: 0,
-    position: "relative",
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
     overflow: "hidden",
   },
   heroNoise: {
