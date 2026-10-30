@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
-// ─── SCROLL REVEAL HOOK ───────────────────────────────────────────────────────
+// ─── SCROLL REVEAL HOOK — re-triggers every time element enters viewport ──────
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -9,7 +9,7 @@ function useReveal(threshold = 0.15) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([entry]) => { setVisible(entry.isIntersecting); },
       { threshold }
     );
     obs.observe(el);
@@ -69,15 +69,18 @@ function TypingText({ text, delay = 0, speed = 38, style: styleProp, className }
   );
 }
 
-// ─── COUNT UP ─────────────────────────────────────────────────────────────────
+// ─── COUNT UP — re-triggers every time element enters viewport ────────────────
 function CountUp({ target, suffix = "", duration = 1800 }) {
   const [count, setCount] = useState(0);
   const [ref, visible] = useReveal(0.3);
-  const started = useRef(false);
+  const rafRef = useRef(null);
 
   useEffect(() => {
-    if (!visible || started.current) return;
-    started.current = true;
+    cancelAnimationFrame(rafRef.current);
+    if (!visible) {
+      setCount(0);
+      return;
+    }
     const num = parseFloat(target);
     const isFloat = target.includes(".");
     const start = performance.now();
@@ -86,9 +89,10 @@ function CountUp({ target, suffix = "", duration = 1800 }) {
       const eased = 1 - Math.pow(1 - progress, 3);
       const val = num * eased;
       setCount(isFloat ? val.toFixed(1) : Math.round(val));
-      if (progress < 1) requestAnimationFrame(tick);
+      if (progress < 1) rafRef.current = requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, [visible, target, duration]);
 
   return <span ref={ref}>{count}{suffix}</span>;
@@ -262,10 +266,11 @@ export default function Website({ onLogin }) {
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
   // Scroll-jacked sector panels
+  // The outer section is (PANELS * 100vh) tall so each panel = 1 viewport of scroll.
+  // The inner sticky div stays fixed to the viewport while the page scrolls behind it.
   const sectorOuterRef = useRef(null);
   const sectorTrackRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
-  const scrollJackActive = useRef(false);
 
   useEffect(() => {
     const outer = sectorOuterRef.current;
@@ -274,21 +279,38 @@ export default function Website({ onLogin }) {
     const PANELS = 3;
 
     const onScroll = () => {
-      if (!outer) return;
       const rect = outer.getBoundingClientRect();
-      const sectionH = outer.offsetHeight;
-      const panelH = sectionH / PANELS;
-      // How far we've scrolled into the sticky section
+      // scrolled = how many px we've scrolled past the top of this section
       const scrolled = -rect.top;
-      if (scrolled < 0 || scrolled > sectionH - window.innerHeight) return;
-      const idx = Math.min(Math.floor(scrolled / panelH), PANELS - 1);
+      // Each panel owns one full viewport height of scroll distance
+      const panelScrollH = window.innerHeight;
+      const maxScroll = panelScrollH * (PANELS - 1);
+
+      if (scrolled <= 0) {
+        // Above the section — show panel 0, no translate
+        setActivePanel(0);
+        track.style.transform = "translateX(0px)";
+        return;
+      }
+      if (scrolled >= maxScroll + panelScrollH) {
+        // Past the section — keep at last panel
+        setActivePanel(PANELS - 1);
+        const panelW = track.parentElement.offsetWidth;
+        track.style.transform = `translateX(-${(PANELS - 1) * panelW}px)`;
+        return;
+      }
+
+      const progress = Math.min(scrolled / maxScroll, 1);
+      const idx = Math.min(Math.floor(scrolled / panelScrollH), PANELS - 1);
       setActivePanel(idx);
-      // slide the track horizontally
-      const panelW = track.offsetWidth / PANELS;
+      // panelW = the visible container width (NOT track.offsetWidth which is 300%)
+      const panelW = track.parentElement.offsetWidth;
       track.style.transform = `translateX(-${idx * panelW}px)`;
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Run once on mount so state is correct if page loads mid-scroll
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -1370,9 +1392,11 @@ const s = {
   },
 
   // SECTORS — scroll-jacked
+  // Height = viewport × (panels + 1): the extra 1vh keeps the sticky pinned
+  // for 3 full scrolls (one per panel), then releases naturally.
   sectorsSection: {
     background: DEEP,
-    height: "300vh", // 3 panels × 100vh of scroll room
+    height: "400vh",
     borderTop: "1px solid rgba(255,255,255,0.05)",
     position: "relative",
   },
