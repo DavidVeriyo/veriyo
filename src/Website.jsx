@@ -464,13 +464,15 @@ export default function Website({ onLogin }) {
           </div>
           <div style={s.problemRight}>
             {[
-              { stat: "68%", colour: GREEN_BRIGHT, label: "of providers still track compliance in spreadsheets", desc: "Manual processes create gaps that auditors find — and regulators penalise." },
-              { stat: "$14k", colour: "#f59e0b", label: "average fine per compliance breach in aged care", desc: "ACQSC and NDIS Commission enforcement actions are increasing year on year." },
-              { stat: "30+", colour: "#ef4444", label: "checks required per worker before Day 1", desc: "Police checks, WWCC, NDIS screening, qualifications, inductions — tracked manually by your team." },
-              { stat: "1 click", colour: GREEN_BRIGHT, label: "to generate a full audit report with Veriyo", desc: "Instead of days pulling files, give auditors a complete compliance snapshot instantly." },
+              { prefix: "",  target: "68",  suffix: "%",     colour: GREEN_BRIGHT, label: "of providers still track compliance in spreadsheets", desc: "Manual processes create gaps that auditors find — and regulators penalise." },
+              { prefix: "$", target: "14",  suffix: "k",     colour: "#f59e0b",    label: "average fine per compliance breach in aged care", desc: "ACQSC and NDIS Commission enforcement actions are increasing year on year." },
+              { prefix: "",  target: "30",  suffix: "+",     colour: "#ef4444",    label: "checks required per worker before Day 1", desc: "Police checks, WWCC, NDIS screening, qualifications, inductions — tracked manually by your team." },
+              { prefix: "",  target: "1",   suffix: " click",colour: GREEN_BRIGHT, label: "to generate a full audit report with Veriyo", desc: "Instead of days pulling files, give auditors a complete compliance snapshot instantly." },
             ].map((item, i) => (
               <RevealRow key={i} delay={i * 80} style={s.problemRow} className="problem-row">
-                <div style={{ ...s.problemStat, color: item.colour }}>{item.stat}</div>
+                <div style={{ ...s.problemStat, color: item.colour }}>
+                  {item.prefix}<CountUp target={item.target} suffix={item.suffix} duration={1600} />
+                </div>
                 <div style={s.problemText}>
                   <div style={s.problemLabel}>{item.label}</div>
                   <p style={s.problemDesc}>{item.desc}</p>
