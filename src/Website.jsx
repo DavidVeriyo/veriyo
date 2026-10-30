@@ -646,7 +646,6 @@ export default function Website({ onLogin }) {
               <br />
               <TypingText text="questions." speed={40} delay={600} />
             </h2>
-            <p style={s.faqSub}>Everything else: <a href="mailto:hello@veriyo.com.au" style={{ color: GREEN_BRIGHT, textDecoration: "none" }} className="faq-link">hello@veriyo.com.au</a></p>
           </RevealSection>
           <div style={s.faqRight}>
             {[
@@ -731,7 +730,6 @@ export default function Website({ onLogin }) {
           <div style={s.footerBrand}>
             <VeriyoLogoSVG height={32} darkText={false} />
             <p style={s.footerTagline}>Workforce compliance software<br />for Australian care providers.</p>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.15)", margin: 0 }}>hello@veriyo.com.au</p>
           </div>
           <div style={s.footerLinks}>
             {[
