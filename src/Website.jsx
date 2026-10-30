@@ -445,8 +445,9 @@ export default function Website({ onLogin }) {
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
           <h2 style={s.statementH2}>
-            Most compliance failures aren't accidents.<br />
-            They're <em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}>spreadsheets.</em>
+            <TypingText text="Most compliance failures aren't accidents." speed={30} delay={100} />
+            <br />
+            <span>They're <em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}><TypingText text="spreadsheets." speed={30} delay={1400} /></em></span>
           </h2>
         </div>
       </RevealSection>
@@ -485,7 +486,11 @@ export default function Website({ onLogin }) {
         <div style={s.productsSectionInner}>
           <RevealSection>
             <p style={s.sectionLabel}>Two Products. One Platform.</p>
-            <h2 style={s.productsH2}>Built for every stage<br />of the compliance lifecycle.</h2>
+            <h2 style={s.productsH2}>
+              <TypingText text="Built for every stage" speed={32} delay={100} />
+              <br />
+              <TypingText text="of the compliance lifecycle." speed={32} delay={900} />
+            </h2>
           </RevealSection>
 
           {[
@@ -543,7 +548,11 @@ export default function Website({ onLogin }) {
         <div style={s.howInner}>
           <RevealSection>
             <p style={s.sectionLabelLight}>How It Works</p>
-            <h2 style={s.howH2}>Up and running<br />in under a week.</h2>
+            <h2 style={s.howH2}>
+              <TypingText text="Up and running" speed={35} delay={100} />
+              <br />
+              <TypingText text="in under a week." speed={35} delay={800} />
+            </h2>
           </RevealSection>
           <div style={s.howGrid} className="how-grid">
             {[
@@ -568,7 +577,7 @@ export default function Website({ onLogin }) {
       <RevealSection style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
-          <h2 style={s.sectorsH2}>Every sector. Every rule. Covered.</h2>
+          <h2 style={s.sectorsH2}><TypingText text="Every sector. Every rule. Covered." speed={30} delay={100} /></h2>
         </div>
         <div style={s.sectorsGrid} className="sectors-grid">
           {[
@@ -630,7 +639,11 @@ export default function Website({ onLogin }) {
         <div style={s.faqInner}>
           <RevealSection style={s.faqLeft}>
             <p style={s.sectionLabel}>FAQ</p>
-            <h2 style={s.faqH2}>Common<br />questions.</h2>
+            <h2 style={s.faqH2}>
+              <TypingText text="Common" speed={40} delay={100} />
+              <br />
+              <TypingText text="questions." speed={40} delay={600} />
+            </h2>
             <p style={s.faqSub}>Everything else: <a href="mailto:hello@veriyo.com.au" style={{ color: GREEN_BRIGHT, textDecoration: "none" }} className="faq-link">hello@veriyo.com.au</a></p>
           </RevealSection>
           <div style={s.faqRight}>
@@ -652,7 +665,11 @@ export default function Website({ onLogin }) {
         <div style={s.demoInner} className="demo-inner">
           <RevealSection style={s.demoLeft}>
             <p style={s.sectionLabelLight}>Get Started</p>
-            <h2 style={s.demoH2}>Ready to see<br />Veriyo in action?</h2>
+            <h2 style={s.demoH2}>
+              <TypingText text="Ready to see" speed={35} delay={100} />
+              <br />
+              <TypingText text="Veriyo in action?" speed={35} delay={700} />
+            </h2>
             <p style={s.demoSub}>
               Book a personalised walkthrough with our team. We'll show you exactly how
               Veriyo works for your sector and your team size.
