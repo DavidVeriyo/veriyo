@@ -265,30 +265,6 @@ export default function Website({ onLogin }) {
   const [demoPhone, setDemoPhone] = useState("");
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
-  const [activePanel, setActivePanel] = useState(0);
-
-  useEffect(() => {
-    const PANELS = 3;
-    const update = () => {
-      const outer = document.getElementById("sectors");
-      const track = document.getElementById("sectors-track");
-      if (!outer || !track) return;
-      const vh = window.innerHeight;
-      const scrolled = -(outer.getBoundingClientRect().top);
-      const clamped = Math.max(0, Math.min(scrolled, PANELS * vh - 1));
-      const idx = Math.min(Math.floor(clamped / vh), PANELS - 1);
-      const panelW = track.parentElement.offsetWidth;
-      track.style.transform = `translateX(-${idx * panelW}px)`;
-      setActivePanel(idx);
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
-    update();
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
 
   async function handleDemoRequest(e) {
     e.preventDefault();
@@ -334,12 +310,8 @@ export default function Website({ onLogin }) {
           .footer-inner{flex-direction:column!important;gap:40px!important}
           .products-split{flex-direction:column!important}
           .products-split-rev{flex-direction:column-reverse!important}
-          .sectors-sticky{flex-direction:column!important;height:auto!important;position:relative!important}
-          .sectors-label-col{width:100%!important;padding:48px 24px 24px!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,0.06)!important}
-          .sectors-panel-wrap{overflow:visible!important}
-          .sectors-track{flex-direction:column!important;width:100%!important;transform:none!important;transition:none!important}
-          .sector-slide{height:auto!important;min-height:0!important}
-          .sector-mockup{flex:0 0 auto!important;height:320px!important}
+          .sectors-grid{grid-template-columns:1fr!important}
+          .sector-card-mockup{height:200px!important}
         }
       `}</style>
 
@@ -592,87 +564,54 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
-      {/* ── SECTORS — scroll-jacked horizontal ── */}
-      <section id="sectors" style={s.sectorsSection}>
-        {/* sticky viewport */}
-        <div style={s.sectorsSticky} className="sectors-sticky">
-          {/* left label column */}
-          <div style={s.sectorsLabelCol} className="sectors-label-col">
-            <p style={s.sectionLabel}>Built For Your Sector</p>
-            <h2 style={s.sectorsH2}>Every sector.<br />Every rule.<br />Covered.</h2>
-            {/* dot nav */}
-            <div style={{ display:"flex", flexDirection:"column", gap:10, marginTop:40 }}>
-              {["Aged Care","NDIS","Early Learning"].map((label,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:12 }}>
-                  <div style={{
-                    width: activePanel===i ? 24 : 8,
-                    height: 8,
-                    borderRadius: 4,
-                    background: activePanel===i
-                      ? [GREEN_BRIGHT,"#60a5fa","#fbbf24"][i]
-                      : "rgba(255,255,255,0.12)",
-                    transition:"all 0.35s cubic-bezier(0.4,0,0.2,1)",
-                    flexShrink:0,
-                  }} />
-                  <span style={{
-                    fontSize:13, fontWeight: activePanel===i ? 700 : 500,
-                    color: activePanel===i ? "#fff" : "rgba(255,255,255,0.25)",
-                    transition:"color 0.3s",
-                  }}>{label}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ fontSize:11, color:"rgba(255,255,255,0.2)", marginTop:32, fontStyle:"italic" }}>Keep scrolling ↓</p>
-          </div>
-
-          {/* sliding panels */}
-          <div style={s.sectorsPanelWrap} className="sectors-panel-wrap">
-            <div id="sectors-track" style={s.sectorsTrack} className="sectors-track">
-              {[
-                {
-                  label:"Aged Care", tag:"ACQSC · Aged Care Quality Standards", accent:GREEN_BRIGHT,
-                  desc:"Track every mandatory requirement under the Aged Care Quality Standards — police checks, qualifications, Code of Conduct acknowledgements, and more.",
-                  checks:["National Police Check","Aged Care Code of Conduct","Certificate III / IV in Aged Care","First Aid & CPR","Manual Handling","ACQSC audit readiness"],
-                  Mockup: AgedCareMockup,
-                },
-                {
-                  label:"NDIS", tag:"NDIS Commission · Worker Screening", accent:"#60a5fa",
-                  desc:"Stay compliant with the NDIS Practice Standards. Track Worker Screening clearances, monitor the banning order register, and keep every support worker verified.",
-                  checks:["NDIS Worker Screening Check","NDIS Practice Standards","Working With Children Check","First Aid certificate","Banning order monitoring","NDIS Commission audit readiness"],
-                  Mockup: NDISMockup,
-                },
-                {
-                  label:"Early Learning", tag:"ACECQA · National Quality Framework", accent:"#fbbf24",
-                  desc:"Meet every requirement under the National Quality Framework. Track WWCC, educator qualifications, anaphylaxis training, and child safety compliance.",
-                  checks:["Working With Children Check","ACECQA educator qualifications","Anaphylaxis management","Child Safe Standards","First Aid & CPR","National Quality Framework"],
-                  Mockup: EarlyLearningMockup,
-                },
-              ].map((sector, i) => (
-                <div key={i} style={s.sectorSlide} className="sector-slide">
-                  {/* mockup */}
-                  <div style={{ ...s.sectorMockup, opacity: activePanel===i ? 1 : 0.3, transform: activePanel===i ? "scale(1)" : "scale(0.97)", transition:"all 0.5s cubic-bezier(0.4,0,0.2,1)" }} className="sector-mockup">
-                    <sector.Mockup />
-                  </div>
-                  {/* copy */}
-                  <div style={s.sectorCopy}>
-                    <p style={{ ...s.sectorTag, color:sector.accent, borderColor:sector.accent }}>{sector.tag}</p>
-                    <h3 style={s.sectorTitle}>{sector.label}</h3>
-                    <p style={s.sectorDesc}>{sector.desc}</p>
-                    <ul style={s.sectorChecks}>
-                      {sector.checks.map((c,j)=>(
-                        <li key={j} style={s.sectorCheck}>
-                          <span style={{ color:sector.accent, fontWeight:700, fontSize:12 }}>✓</span>
-                          {c}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* ── SECTORS — 3-card static layout ── */}
+      <RevealSection style={s.sectorsSection}>
+        <div style={s.sectorsHeader}>
+          <p style={s.sectionLabel}>Built For Your Sector</p>
+          <h2 style={s.sectorsH2}>Every sector. Every rule. Covered.</h2>
         </div>
-      </section>
+        <div style={s.sectorsGrid} className="sectors-grid">
+          {[
+            {
+              label:"Aged Care", tag:"ACQSC · Aged Care Quality Standards", accent:GREEN_BRIGHT,
+              desc:"Track every mandatory requirement under the Aged Care Quality Standards — police checks, qualifications, Code of Conduct acknowledgements, and more.",
+              checks:["National Police Check","Aged Care Code of Conduct","Certificate III / IV in Aged Care","First Aid & CPR","Manual Handling","ACQSC audit readiness"],
+              Mockup: AgedCareMockup,
+            },
+            {
+              label:"NDIS", tag:"NDIS Commission · Worker Screening", accent:"#60a5fa",
+              desc:"Stay compliant with the NDIS Practice Standards. Track Worker Screening clearances, monitor the banning order register, and keep every support worker verified.",
+              checks:["NDIS Worker Screening Check","NDIS Practice Standards","Working With Children Check","First Aid certificate","Banning order monitoring","NDIS Commission audit readiness"],
+              Mockup: NDISMockup,
+            },
+            {
+              label:"Early Learning", tag:"ACECQA · National Quality Framework", accent:"#fbbf24",
+              desc:"Meet every requirement under the National Quality Framework. Track WWCC, educator qualifications, anaphylaxis training, and child safety compliance.",
+              checks:["Working With Children Check","ACECQA educator qualifications","Anaphylaxis management","Child Safe Standards","First Aid & CPR","National Quality Framework"],
+              Mockup: EarlyLearningMockup,
+            },
+          ].map((sector, i) => (
+            <div key={i} style={s.sectorCard}>
+              <div style={s.sectorCardMockup}>
+                <sector.Mockup />
+              </div>
+              <div style={s.sectorCardBody}>
+                <p style={{ ...s.sectorTag, color:sector.accent, borderColor:sector.accent }}>{sector.tag}</p>
+                <h3 style={{ ...s.sectorTitle, color: sector.accent }}>{sector.label}</h3>
+                <p style={s.sectorDesc}>{sector.desc}</p>
+                <ul style={s.sectorChecks}>
+                  {sector.checks.map((c,j)=>(
+                    <li key={j} style={s.sectorCheck}>
+                      <span style={{ color:sector.accent, fontWeight:700, fontSize:12 }}>✓</span>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </RevealSection>
 
       {/* ── PULL QUOTE ── */}
       <RevealSection style={s.quoteSection}>
@@ -1367,72 +1306,50 @@ const s = {
     margin: 0,
   },
 
-  // SECTORS — scroll-jacked
-  // Height = viewport × (panels + 1): the extra 1vh keeps the sticky pinned
-  // for 3 full scrolls (one per panel), then releases naturally.
+  // SECTORS — clean 3-card static layout
   sectorsSection: {
     background: DEEP,
-    height: "400vh",
     borderTop: "1px solid rgba(255,255,255,0.05)",
-    position: "relative",
+    padding: "100px 40px 120px",
   },
-  sectorsSticky: {
-    position: "sticky",
-    top: 0,
-    height: "100vh",
-    display: "flex",
-    overflow: "hidden",
-  },
-  sectorsLabelCol: {
-    width: 240,
-    flexShrink: 0,
-    padding: "40px 32px 40px 40px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    borderRight: "1px solid rgba(255,255,255,0.06)",
-    background: DEEP,
-    zIndex: 2,
+  sectorsHeader: {
+    textAlign: "center",
+    marginBottom: 64,
   },
   sectorsH2: {
-    fontSize: "clamp(24px,2.5vw,36px)",
+    fontSize: "clamp(28px,3vw,44px)",
     fontWeight: 900,
     color: "#fff",
     margin: "0 0 0",
     letterSpacing: "-2px",
     lineHeight: 1.1,
   },
-  sectorsPanelWrap: {
-    flex: 1,
+  sectorsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 24,
+    maxWidth: 1280,
+    margin: "0 auto",
+  },
+  sectorCard: {
+    background: FOREST,
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderRadius: 16,
     overflow: "hidden",
-    position: "relative",
-  },
-  sectorsTrack: {
-    display: "flex",
-    width: "300%", // 3 panels side by side — each slide is 1/3 of this = 1× panelWrap
-    height: "100%",
-    transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)",
-    willChange: "transform",
-  },
-  sectorSlide: {
-    flex: "1 0 0",
-    height: "100%",
-    display: "flex",
-    flexDirection: "row", // mockup left, copy right — side by side
-    overflow: "hidden",
-  },
-  sectorMockup: {
-    flex: "0 0 52%",
-    overflow: "hidden",
-    borderRight: "1px solid rgba(255,255,255,0.06)",
-  },
-  sectorCopy: {
-    flex: 1,
-    padding: "40px 40px",
-    overflowY: "auto",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+  },
+  sectorCardMockup: {
+    height: 260,
+    overflow: "hidden",
+    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    flexShrink: 0,
+  },
+  sectorCardBody: {
+    padding: "28px 28px 32px",
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
   },
   sectorTag: {
     fontSize: 10,
