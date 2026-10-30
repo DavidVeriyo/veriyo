@@ -447,7 +447,7 @@ export default function Website({ onLogin }) {
           <h2 style={s.statementH2}>
             <TypingText text="Most compliance failures aren't accidents." speed={30} delay={100} />
             <br />
-            <span>They're <em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}><TypingText text="spreadsheets." speed={30} delay={1400} /></em></span>
+            <TypingText text="They're " speed={30} delay={1460} /><em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}><TypingText text="spreadsheets." speed={30} delay={1940} /></em>
           </h2>
         </div>
       </RevealSection>
