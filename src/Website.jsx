@@ -291,6 +291,8 @@ export default function Website({ onLogin }) {
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
         .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -16px 60px rgba(0,0,0,0.6); }
+        .stack-wrapper { position:relative; }
+        .stack-inner { position:sticky; top:0; overflow:hidden; }
         .reveal-d1 { transition-delay:0.1s; }
         .reveal-d2 { transition-delay:0.2s; }
         .reveal-d3 { transition-delay:0.3s; }
@@ -335,7 +337,8 @@ export default function Website({ onLogin }) {
       </nav>
 
       {/* ── HERO ── */}
-      <section style={s.hero}>
+      <div className="stack-wrapper" style={{ height:"160vh", zIndex:1, position:"relative" }}>
+      <section style={s.hero} className="stack-inner">
         {/* noise texture overlay */}
         <div style={s.heroNoise} />
         {/* glow orbs */}
@@ -439,9 +442,11 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end hero stack-wrapper */}
 
       {/* ── STATEMENT BAND ── */}
-      <RevealSection style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card">
+      <div className="stack-wrapper" style={{ height:"120vh", zIndex:2, position:"relative" }}>
+      <RevealSection style={{ ...s.statementBand }} className="stack-inner stack-card">
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
           <h2 style={s.statementH2}>
@@ -451,9 +456,11 @@ export default function Website({ onLogin }) {
           </h2>
         </div>
       </RevealSection>
+      </div>{/* end statement stack-wrapper */}
 
       {/* ── PROBLEM — large stats ── */}
-      <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }}>
+      <div className="stack-wrapper" style={{ height:"170vh", zIndex:3, position:"relative" }}>
+      <section id="why" style={{ ...s.problemSection }} className="stack-inner stack-card">
         <div style={s.problemInner} className="problem-inner">
           <div style={s.problemLeft}>
             <p style={s.sectionLabel}>The Cost of Manual Compliance</p>
@@ -482,9 +489,11 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end problem stack-wrapper */}
 
       {/* ── PRODUCTS ── */}
-      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }}>
+      <div className="stack-wrapper" style={{ height:"220vh", zIndex:4, position:"relative" }}>
+      <section id="products" style={{ ...s.productsSection }} className="stack-inner stack-card">
         <div style={s.productsSectionInner}>
           <RevealSection>
             <p style={s.sectionLabel}>Two Products. One Platform.</p>
@@ -544,9 +553,11 @@ export default function Website({ onLogin }) {
           ))}
         </div>
       </section>
+      </div>{/* end products stack-wrapper */}
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ ...s.howSection, position:"relative", zIndex:2 }}>
+      <div className="stack-wrapper" style={{ height:"160vh", zIndex:5, position:"relative" }}>
+      <section style={{ ...s.howSection }} className="stack-inner stack-card">
         <div style={s.howInner}>
           <RevealSection>
             <p style={s.sectionLabelLight}>How It Works</p>
@@ -575,8 +586,11 @@ export default function Website({ onLogin }) {
           </div>
         </div>
       </section>
+      </div>{/* end how stack-wrapper */}
+
       {/* ── SECTORS — 3-card static layout ── */}
-      <RevealSection id="sectors" style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
+      <div className="stack-wrapper" style={{ height:"160vh", zIndex:6, position:"relative" }}>
+      <RevealSection id="sectors" style={{ ...s.sectorsSection }} className="stack-inner stack-card">
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
           <h2 style={s.sectorsH2}><TypingText text="Every sector. Every rule. Covered." speed={30} delay={100} /></h2>
@@ -623,9 +637,10 @@ export default function Website({ onLogin }) {
           ))}
         </div>
       </RevealSection>
+      </div>{/* end sectors stack-wrapper */}
 
       {/* ── PULL QUOTE ── */}
-      <RevealSection style={{ ...s.quoteSection, position:"relative", zIndex:2 }}>
+      <RevealSection style={{ ...s.quoteSection, position:"relative", zIndex:7 }}>
         <div style={s.quoteInner}>
           <div style={s.quoteRule} />
           <p style={s.quoteText}>
@@ -637,7 +652,7 @@ export default function Website({ onLogin }) {
       </RevealSection>
 
       {/* ── FAQ ── */}
-      <section id="faq" style={{ ...s.faqSection, position:"relative", zIndex:2 }}>
+      <section id="faq" style={{ ...s.faqSection, position:"relative", zIndex:7 }}>
         <div style={s.faqInner}>
           <RevealSection style={s.faqLeft}>
             <p style={s.sectionLabel}>FAQ</p>
@@ -661,7 +676,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── DEMO CTA ── */}
-      <section id="demo" style={{ ...s.demoSection, position:"relative", zIndex:2 }}>
+      <section id="demo" style={{ ...s.demoSection, position:"relative", zIndex:7 }}>
         <div style={s.demoOrb} />
         <div style={s.demoInner} className="demo-inner">
           <RevealSection style={s.demoLeft}>
@@ -863,15 +878,13 @@ const s = {
     letterSpacing: "-0.1px",
   },
 
-  // HERO — sticky so content slides over it
+  // HERO — sticky handled by stack-wrapper
   hero: {
     background: `linear-gradient(160deg, ${DEEP} 0%, ${FOREST} 50%, ${FOREST2} 100%)`,
     paddingTop: 96,
-    paddingBottom: 0,
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
+    paddingBottom: 80,
     overflow: "hidden",
+    minHeight: "100vh",
   },
   heroNoise: {
     position: "absolute",
@@ -1058,6 +1071,9 @@ const s = {
   statementBand: {
     padding: "100px 40px",
     background: "#fff",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
   },
   statementInner: {
     maxWidth: 1160,
@@ -1104,6 +1120,7 @@ const s = {
     padding: "120px 40px",
     background: "#fff",
     borderTop: "1px solid #ebebeb",
+    minHeight: "100vh",
   },
   problemInner: {
     maxWidth: 1160,
@@ -1163,6 +1180,7 @@ const s = {
     background: DEEP,
     paddingBottom: 120,
     borderTop: "1px solid rgba(255,255,255,0.05)",
+    minHeight: "100vh",
   },
   productsSectionInner: {
     maxWidth: 1160,
@@ -1274,6 +1292,7 @@ const s = {
     background: FOREST,
     padding: "120px 0",
     borderTop: "1px solid rgba(255,255,255,0.05)",
+    minHeight: "100vh",
   },
   howInner: {
     maxWidth: 1160,
@@ -1332,6 +1351,7 @@ const s = {
     background: DEEP,
     borderTop: "1px solid rgba(255,255,255,0.05)",
     padding: "100px 40px 120px",
+    minHeight: "100vh",
   },
   sectorsHeader: {
     textAlign: "center",
