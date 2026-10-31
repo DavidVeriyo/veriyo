@@ -352,8 +352,14 @@ export default function Website({ onLogin }) {
         .faq-link:hover { color:${GREEN_BRIGHT} !important; }
         @media(max-width:768px){
           .nav-links-wrap{display:none!important}
-          .hero-h1{font-size:clamp(42px,11vw,72px)!important;letter-spacing:-3px!important}
-          .hero-cols{flex-direction:column!important;gap:40px!important}
+          .hero-h1{font-size:clamp(38px,10vw,64px)!important;letter-spacing:-2px!important;margin-bottom:20px!important}
+          .hero-cols{flex-direction:column!important;gap:16px!important;margin-bottom:28px!important}
+          .hero-sub{font-size:15px!important}
+          .hero-actions{flex-direction:column!important;gap:10px!important}
+          .hero-stats{margin-bottom:32px!important}
+          .hero-stat{padding:16px 24px 16px 0!important;margin-right:24px!important}
+          .hero-stat-num{font-size:26px!important}
+          .hero-mock-wrap{display:none!important}
           .problem-inner{flex-direction:column!important;gap:24px!important}
           .problem-left{flex:none!important;position:static!important}
           .problem-row{gap:20px!important;padding:24px 0!important}
@@ -408,7 +414,7 @@ export default function Website({ onLogin }) {
             <TypingText text="a thing." delay={1600} speed={42} />
           </h1>
           <div style={s.heroCols} className="hero-cols">
-            <p style={s.heroSub}>
+            <p style={s.heroSub} className="hero-sub">
               Veriyo is workforce compliance software purpose-built for Australian aged care,
               NDIS, and early learning providers. Every credential. Every clearance.
               Audit-ready from Day&nbsp;1.
@@ -420,14 +426,14 @@ export default function Website({ onLogin }) {
           </div>
 
           {/* Stats row */}
-          <div style={s.heroStats}>
+          <div style={s.heroStats} className="hero-stats">
             {[
               { num: "100", suffix: "%", label: "audit-ready from Day 1" },
               { num: "3", suffix: "", label: "care sectors covered" },
               { num: "30", suffix: "s", label: "to generate a compliance report" },
             ].map((st, i) => (
-              <div key={i} style={s.heroStat}>
-                <div style={s.heroStatNum}>
+              <div key={i} style={s.heroStat} className="hero-stat">
+                <div style={s.heroStatNum} className="hero-stat-num">
                   <CountUp target={st.num} suffix={st.suffix} />
                 </div>
                 <div style={s.heroStatLabel}>{st.label}</div>
@@ -436,7 +442,7 @@ export default function Website({ onLogin }) {
           </div>
 
           {/* Dashboard mock */}
-          <div style={s.heroMockWrap}>
+          <div style={s.heroMockWrap} className="hero-mock-wrap">
             <div style={s.heroMock}>
               <div style={s.mockBar}>
                 <div style={s.mockDots}>
