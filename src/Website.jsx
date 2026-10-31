@@ -537,7 +537,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── PRODUCTS ── */}
-      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
+      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }} className="stack-card">
         <div style={s.productsSectionInner}>
           <RevealSection>
             <p style={s.sectionLabel}>Two Products. One Platform.</p>
@@ -1229,9 +1229,9 @@ const s = {
   // PRODUCTS
   productsSection: {
     background: DEEP,
+    paddingTop: 100,
     paddingBottom: 120,
     borderTop: "1px solid rgba(255,255,255,0.05)",
-    minHeight: "100vh",
   },
   productsSectionInner: {
     maxWidth: 1160,
