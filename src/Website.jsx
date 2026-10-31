@@ -354,7 +354,10 @@ export default function Website({ onLogin }) {
           .nav-links-wrap{display:none!important}
           .hero-h1{font-size:clamp(42px,11vw,72px)!important;letter-spacing:-3px!important}
           .hero-cols{flex-direction:column!important;gap:40px!important}
-          .problem-inner{flex-direction:column!important;gap:48px!important}
+          .problem-inner{flex-direction:column!important;gap:24px!important}
+          .problem-left{flex:none!important;position:static!important}
+          .problem-row{gap:20px!important;padding:24px 0!important}
+          .problem-stat{width:100px!important;font-size:clamp(32px,9vw,48px)!important}
           .how-grid{grid-template-columns:1fr!important}
           .demo-inner{flex-direction:column!important;align-items:center!important}
           .footer-inner{flex-direction:column!important;gap:40px!important}
@@ -504,7 +507,7 @@ export default function Website({ onLogin }) {
       {/* ── PROBLEM — large stats ── */}
       <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.problemInner} className="problem-inner">
-          <div style={s.problemLeft}>
+          <div style={s.problemLeft} className="problem-left">
             <h2 style={s.problemH2}>
               <TypingText text="The Cost of Manual" speed={32} delay={100} />
               <br />
@@ -1176,6 +1179,7 @@ const s = {
     gap: 80,
     alignItems: "flex-start",
   },
+  // NOTE: mobile override for problemInner is handled via .problem-inner media query
   problemH2: {
     fontSize: "clamp(32px,4vw,52px)",
     fontWeight: 900,
