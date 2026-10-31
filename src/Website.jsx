@@ -385,11 +385,6 @@ export default function Website({ onLogin }) {
 
       {/* ── HERO ── */}
       <section style={s.hero} className="pin-section">
-        {/* noise texture overlay */}
-        <div style={s.heroNoise} />
-        {/* glow orbs */}
-        <div style={{ ...s.heroOrb, width: 600, height: 600, top: -100, left: -100, background: "radial-gradient(circle, rgba(45,158,95,0.18) 0%, transparent 70%)" }} />
-        <div style={{ ...s.heroOrb, width: 400, height: 400, top: 200, right: -80, background: "radial-gradient(circle, rgba(45,158,95,0.10) 0%, transparent 70%)" }} />
 
         <div style={s.heroInner}>
           <div style={{ animation: "fadeIn 0.6s ease both" }}>
@@ -918,12 +913,11 @@ const s = {
 
   // HERO — GSAP ScrollTrigger handles pinning
   hero: {
-    background: `linear-gradient(160deg, ${DEEP} 0%, ${FOREST} 50%, ${FOREST2} 100%)`,
+    background: FOREST,
     paddingTop: 96,
     paddingBottom: 80,
     position: "relative",
     zIndex: 1,
-    overflow: "hidden",
   },
   heroNoise: {
     position: "absolute",
