@@ -296,8 +296,8 @@ export default function Website({ onLogin }) {
           start: "top top",
           pin: true,
           pinSpacing: false,
-          // Each section stays pinned until the NEXT section fully covers it
-          end: () => `+=${section.offsetHeight}`,
+          // Each section stays pinned until all its content has scrolled through
+          end: () => `+=${section.scrollHeight}`,
         });
       });
       ScrollTrigger.refresh();
@@ -332,7 +332,7 @@ export default function Website({ onLogin }) {
         @keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
-        .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -20px 80px rgba(0,0,0,0.7); }
+        .stack-card { border-radius:0; box-shadow:0 -4px 40px rgba(0,0,0,0.5); }
         .pin-section { will-change:transform; }
         .pin-section:nth-of-type(1) { z-index:1; }
         .pin-section:nth-of-type(2) { z-index:2; }
@@ -505,7 +505,11 @@ export default function Website({ onLogin }) {
       <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.problemInner} className="problem-inner">
           <div style={s.problemLeft}>
-            <p style={s.sectionLabel}>The Cost of Manual Compliance</p>
+            <h2 style={s.problemH2}>
+              <TypingText text="The Cost of Manual" speed={32} delay={100} />
+              <br />
+              <TypingText text="Compliance." speed={32} delay={900} />
+            </h2>
             <p style={s.problemIntro}>
               Australian care providers face increasing regulatory scrutiny.
               Manual tracking leaves teams exposed — and workers at risk.
@@ -1167,8 +1171,17 @@ const s = {
     gap: 80,
     alignItems: "flex-start",
   },
+  problemH2: {
+    fontSize: "clamp(32px,4vw,52px)",
+    fontWeight: 900,
+    color: "#0a1f12",
+    letterSpacing: "-2px",
+    lineHeight: 1.05,
+    margin: "0 0 20px",
+    textWrap: "balance",
+  },
   problemLeft: {
-    flex: "0 0 280px",
+    flex: "0 0 320px",
     position: "sticky",
     top: 80,
   },
