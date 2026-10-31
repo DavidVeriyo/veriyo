@@ -330,6 +330,18 @@ export default function Website({ onLogin }) {
         @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         @keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+        @keyframes fabIn { from{opacity:0;transform:translateY(8px) scale(0.85)} to{opacity:1;transform:translateY(0) scale(1)} }
+        .fab-wrap { position:fixed; bottom:28px; right:24px; z-index:999; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+        .fab-actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; pointer-events:none; opacity:0; transform:translateY(8px); transition:opacity 0.22s ease, transform 0.22s ease; }
+        .fab-wrap:hover .fab-actions { opacity:1; transform:translateY(0); pointer-events:auto; }
+        .fab-action { display:flex; align-items:center; gap:10px; background:#0a1f12; border:1px solid rgba(255,255,255,0.12); border-radius:100px; padding:10px 18px 10px 14px; cursor:pointer; text-decoration:none; white-space:nowrap; box-shadow:0 4px 24px rgba(0,0,0,0.35); transition:background 0.15s, border-color 0.15s; }
+        .fab-action:hover { background:#122d1a; border-color:rgba(61,189,116,0.4); }
+        .fab-action-icon { width:28px; height:28px; border-radius:50%; background:rgba(61,189,116,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+        .fab-action-label { font-size:13px; font-weight:600; color:rgba(255,255,255,0.85); letter-spacing:-0.1px; }
+        .fab-main { width:48px; height:48px; border-radius:50%; background:#2d9e5f; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(45,158,95,0.45); transition:background 0.15s, transform 0.15s; flex-shrink:0; }
+        .fab-main:hover { background:#3dbd74; transform:scale(1.07); }
+        .fab-main svg { transition:transform 0.22s ease; }
+        .fab-wrap:hover .fab-main svg { transform:rotate(45deg); }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
         .stack-card { border-radius:0; box-shadow:0 -4px 40px rgba(0,0,0,0.5); }
@@ -790,6 +802,26 @@ export default function Website({ onLogin }) {
             Veriyo provides workforce compliance software for Australian aged care providers, NDIS registered providers, and early learning centres across New South Wales, Victoria, Queensland, Western Australia, and South Australia. Our platform supports ACQSC audit preparation, NDIS Worker Screening compliance, ACECQA educator qualification tracking, and Working With Children Check (WWCC) management. Built in Sydney, serving care providers across Australia.
           </p>
         </div>
+      </div>
+
+      {/* ── FLOATING ACTION BUTTON ── */}
+      <div className="fab-wrap">
+        <div className="fab-actions">
+          <a href="mailto:david@veriyo.com.au" className="fab-action">
+            <span className="fab-action-icon">✉</span>
+            <span className="fab-action-label">Contact Us</span>
+          </a>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="fab-action" style={{ background: "none", fontFamily: "inherit" }}>
+            <span className="fab-action-icon">↑</span>
+            <span className="fab-action-label">Back to Top</span>
+          </button>
+        </div>
+        <button className="fab-main" aria-label="Quick actions">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <line x1="4" y1="10" x2="16" y2="10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="10" y1="4" x2="10" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        </button>
       </div>
 
       {/* ── FOOTER ── */}
