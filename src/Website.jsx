@@ -356,12 +356,17 @@ export default function Website({ onLogin }) {
           .hero-cols{flex-direction:column!important;gap:40px!important}
           .problem-inner{flex-direction:column!important;gap:48px!important}
           .how-grid{grid-template-columns:1fr!important}
-          .demo-inner{flex-direction:column!important}
+          .demo-inner{flex-direction:column!important;align-items:center!important}
           .footer-inner{flex-direction:column!important;gap:40px!important}
           .products-split{flex-direction:column!important}
           .products-split-rev{flex-direction:column-reverse!important}
           .sectors-grid{grid-template-columns:1fr!important}
           .sector-card-mockup{height:200px!important}
+          .faq-inner{flex-direction:column!important;gap:40px!important}
+          .faq-left{position:static!important;flex:none!important}
+          .demo-right{width:100%!important;max-width:480px!important}
+          .demo-left{width:100%!important;max-width:480px!important;text-align:center!important}
+          .demo-chips{justify-content:center!important}
         }
       `}</style>
 
@@ -686,8 +691,8 @@ export default function Website({ onLogin }) {
 
       {/* ── FAQ ── */}
       <section id="faq" style={{ ...s.faqSection, position:"relative", zIndex:2 }}>
-        <div style={s.faqInner}>
-          <RevealSection style={s.faqLeft}>
+        <div style={s.faqInner} className="faq-inner">
+          <RevealSection style={s.faqLeft} className="faq-left">
             <p style={s.sectionLabel}>FAQ</p>
             <h2 style={s.faqH2}>
               <TypingText text="Common" speed={40} delay={100} />
@@ -712,7 +717,7 @@ export default function Website({ onLogin }) {
       <section id="demo" style={{ ...s.demoSection, position:"relative", zIndex:2 }}>
         <div style={s.demoOrb} />
         <div style={s.demoInner} className="demo-inner">
-          <RevealSection style={s.demoLeft}>
+          <RevealSection style={s.demoLeft} className="demo-left">
             <p style={s.sectionLabelLight}>Get Started</p>
             <h2 style={s.demoH2}>
               <TypingText text="Ready to see" speed={35} delay={100} />
@@ -729,7 +734,7 @@ export default function Website({ onLogin }) {
               ))}
             </div>
           </RevealSection>
-          <div style={s.demoRight}>
+          <div style={s.demoRight} className="demo-right">
             {demoSubmitted ? (
               <div style={s.demoSuccess}>
                 <div style={{ fontSize: 32, marginBottom: 12 }}>✓</div>
@@ -1106,7 +1111,7 @@ const s = {
 
   // STATEMENT BAND
   statementBand: {
-    padding: "0 40px",
+    padding: "80px 40px",
     background: "#fff",
     minHeight: "100vh",
     display: "flex",
@@ -1155,7 +1160,7 @@ const s = {
 
   // PROBLEM
   problemSection: {
-    padding: "0 40px",
+    padding: "80px 40px",
     background: "#fff",
     borderTop: "1px solid #ebebeb",
     minHeight: "100vh",
@@ -1625,13 +1630,13 @@ const s = {
     gap: 10,
   },
   demoInput: {
-    padding: "14px 18px",
-    borderRadius: 8,
-    border: "1px solid rgba(255,255,255,0.08)",
-    fontSize: 14,
+    padding: "16px 20px",
+    borderRadius: 10,
+    border: "1px solid rgba(255,255,255,0.1)",
+    fontSize: 16,
     fontFamily: "inherit",
     color: "#fff",
-    background: "rgba(255,255,255,0.04)",
+    background: "rgba(255,255,255,0.06)",
     letterSpacing: "-0.1px",
     width: "100%",
     transition: "border-color 0.2s",
@@ -1640,13 +1645,13 @@ const s = {
     background: GREEN,
     color: "#fff",
     border: "none",
-    borderRadius: 8,
-    padding: "14px 24px",
-    fontSize: 15,
+    borderRadius: 10,
+    padding: "18px 24px",
+    fontSize: 17,
     fontWeight: 700,
     cursor: "pointer",
     fontFamily: "inherit",
-    marginTop: 4,
+    marginTop: 6,
     letterSpacing: "-0.2px",
     width: "100%",
   },
