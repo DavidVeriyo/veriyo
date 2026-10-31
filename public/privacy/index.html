@@ -1,0 +1,354 @@
+<title>Veriyo Privacy Policy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Layout: single-column legal document, max 720px, dark Veriyo brand */
+  :root {
+    --bg: #ffffff;
+    --fg: #111827;
+    --fg-mid: #374151;
+    --fg-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2d9e5f;
+    --accent-dim: rgba(45,158,95,0.08);
+    --nav-bg: #0a1f12;
+    --nav-fg: rgba(255,255,255,0.9);
+    --tag-bg: rgba(45,158,95,0.10);
+    --tag-fg: #2d9e5f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #060f0a;
+      --fg: rgba(255,255,255,0.92);
+      --fg-mid: rgba(255,255,255,0.65);
+      --fg-muted: rgba(255,255,255,0.38);
+      --border: rgba(255,255,255,0.08);
+      --accent: #3dbd74;
+      --accent-dim: rgba(61,189,116,0.08);
+      --nav-bg: #0a1f12;
+      --nav-fg: rgba(255,255,255,0.9);
+      --tag-bg: rgba(61,189,116,0.12);
+      --tag-fg: #3dbd74;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #060f0a;
+    --fg: rgba(255,255,255,0.92);
+    --fg-mid: rgba(255,255,255,0.65);
+    --fg-muted: rgba(255,255,255,0.38);
+    --border: rgba(255,255,255,0.08);
+    --accent: #3dbd74;
+    --accent-dim: rgba(61,189,116,0.08);
+    --nav-bg: #0a1f12;
+    --nav-fg: rgba(255,255,255,0.9);
+    --tag-bg: rgba(61,189,116,0.12);
+    --tag-fg: #3dbd74;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--nav-bg);
+    padding-block: 18px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+  }
+  .nav-logo {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--nav-fg);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-back {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: rgba(255,255,255,0.85); }
+
+  /* PAGE HEADER */
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding-block: 56px 40px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+  .page-header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .doc-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tag-fg);
+    background: var(--tag-bg);
+    border: 1px solid rgba(45,158,95,0.2);
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin-bottom: 16px;
+  }
+  .page-header h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--fg);
+    text-wrap: balance;
+    margin-bottom: 12px;
+  }
+  .page-header .meta {
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+
+  /* CONTENT */
+  .content {
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    padding-block: 48px 80px;
+  }
+  .content-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* SECTIONS */
+  .section { display: flex; flex-direction: column; gap: 12px; }
+  .section h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.3px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section p {
+    font-size: 15px;
+    color: var(--fg-mid);
+    line-height: 1.8;
+  }
+  .section ul {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .section ul li {
+    font-size: 15px;
+    color: var(--fg-mid);
+    line-height: 1.7;
+    padding-left: 20px;
+    position: relative;
+  }
+  .section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .section strong {
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  /* CONTACT BOX */
+  .contact-box {
+    background: var(--accent-dim);
+    border: 1px solid rgba(45,158,95,0.18);
+    border-radius: 10px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact-box .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .contact-box p {
+    font-size: 14px;
+    color: var(--fg-mid);
+    line-height: 1.7;
+  }
+  .contact-box a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .contact-box a:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-block: 28px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+  footer a {
+    font-size: 13px;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page-header { padding-block: 36px 28px; }
+    nav { padding-block: 14px; }
+  }
+</style>
+
+<nav>
+  <a href="https://www.veriyo.com.au" class="nav-logo">Veriyo<span>.</span></a>
+  <a href="https://www.veriyo.com.au" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <span class="doc-tag">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated: October 2026</p>
+  </div>
+</div>
+
+<div class="content">
+  <div class="content-inner">
+
+    <div class="section">
+      <h2>About this policy</h2>
+      <p>Veriyo ("Veriyo", "we", "us", "our") operates a compliance management platform for Australian care providers. This Privacy Policy explains how we collect, hold, use and disclose personal information when you use our platform, and how we comply with the <strong>Privacy Act 1988 (Cth)</strong> and the <strong>Australian Privacy Principles (APPs)</strong>.</p>
+      <p>It also describes how we handle information relating to NDIS participants and aged care recipients in line with the NDIS Practice Standards and the Aged Care Quality Standards.</p>
+    </div>
+
+    <div class="section">
+      <h2>Information we collect</h2>
+      <p>We collect personal information that is reasonably necessary to provide the service, including:</p>
+      <ul>
+        <li><strong>Account and organisation details</strong> — your name, work email, role, organisation name, ABN and billing contact.</li>
+        <li><strong>Content you upload</strong> — policies, procedures, compliance records, credentials and other documents, which may contain personal or sensitive information about your workers.</li>
+        <li><strong>Usage and technical data</strong> — log data, device and browser information, IP address and activity needed to operate, secure and improve the service.</li>
+        <li><strong>Demo and enquiry details</strong> — name, organisation, email and phone number provided when you request a demo or contact us.</li>
+      </ul>
+      <p>Where you provide personal information about other individuals (such as workers), you confirm you are authorised to do so and have made those individuals aware of this Policy.</p>
+    </div>
+
+    <div class="section">
+      <h2>How we use your information</h2>
+      <p>We use personal information to deliver and improve the service, manage workforce compliance tracking, generate compliance reports, administer your account and billing, provide support, send service communications, and meet our legal and regulatory obligations.</p>
+      <p>We do not sell your personal information, and we do not use the content you upload to train publicly available machine-learning models.</p>
+    </div>
+
+    <div class="section">
+      <h2>Disclosure and third-party providers</h2>
+      <p>We disclose personal information only as needed to run the service. We use trusted sub-processors bound by confidentiality and data-protection obligations to support application hosting, database storage, billing and payment processing, and transactional email delivery.</p>
+      <p>We may also disclose information where required by law, in connection with a business transfer, or to protect our legal rights.</p>
+    </div>
+
+    <div class="section">
+      <h2>Data storage, security and overseas disclosure</h2>
+      <p>Your data is encrypted in transit (TLS) and at rest. We apply appropriate technical and organisational measures — including access controls, encryption and auditing — to protect information against unauthorised access, loss or misuse.</p>
+      <p>Some processing or storage may occur with sub-processors located outside Australia. Where data is disclosed outside Australia, we take reasonable steps under APP 8 to ensure the recipient handles your information consistently with the APPs.</p>
+    </div>
+
+    <div class="section">
+      <h2>Participant and sensitive information</h2>
+      <p>Some content you upload may include sensitive information about NDIS participants or aged care recipients. We treat this information with additional care, restrict access to authorised personnel and systems, and handle it consistently with the NDIS Practice Standards relating to privacy, dignity and the management of participant information.</p>
+      <p>You remain the controller of your participants' records and are responsible for obtaining any consents required for their collection and use.</p>
+    </div>
+
+    <div class="section">
+      <h2>Worker and employee information</h2>
+      <p>When a provider uses our workforce compliance features, we hold information about that provider's workers on the provider's behalf. This can include contact details, employment details, qualifications, training records, and the status of worker screening checks including police checks and Working With Children Checks.</p>
+      <p>We hold this information because the provider is required to keep it to demonstrate compliance with their obligations as a registered provider.</p>
+      <p><strong>If you are a worker, not a customer:</strong> your employer — not Veriyo — decides what information about you is recorded and why. If you want to see, correct or query what is held about you, please contact your employer directly. We do not use worker information for marketing, and we do not sell it or disclose it to anyone other than the provider whose records they are, our service providers, or where we are required to by law.</p>
+    </div>
+
+    <div class="section">
+      <h2>Data retention</h2>
+      <p>We retain personal information for as long as your account is active and as needed to provide the service and meet our legal, accounting and audit obligations. When information is no longer required, we securely delete or de-identify it. On account closure you may request export or deletion of your data.</p>
+    </div>
+
+    <div class="section">
+      <h2>Analytics and cookies</h2>
+      <p>We may use analytics tools to understand how visitors use our website. These tools may use cookies or similar identifiers and receive information about your visit, including pages viewed and general location. You can control cookies through your browser settings.</p>
+      <p>We use essential cookies to keep you signed in and to keep the service secure. Disabling essential cookies may affect functionality.</p>
+    </div>
+
+    <div class="section">
+      <h2>Your rights and how to contact us</h2>
+      <p>Under the APPs you may request access to, or correction of, the personal information we hold about you, and you may ask us to delete it where we are not required to retain it.</p>
+      <p>If you are not satisfied with our response, you may lodge a complaint with the <strong>Office of the Australian Information Commissioner (OAIC)</strong> at oaic.gov.au.</p>
+    </div>
+
+    <div class="section">
+      <h2>Changes to this policy</h2>
+      <p>We may update this Policy from time to time. We will post the updated version on this page and revise the "Last updated" date above. Material changes will be communicated to account holders.</p>
+    </div>
+
+    <div class="contact-box">
+      <div class="label">Privacy enquiries</div>
+      <p>For any privacy enquiry or to exercise your rights, contact our Privacy Officer:</p>
+      <p><a href="mailto:david@veriyo.com.au">david@veriyo.com.au</a></p>
+      <p>Veriyo · Sydney, NSW, Australia</p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Veriyo. All rights reserved.</p>
+  <a href="https://www.veriyo.com.au">veriyo.com.au</a>
+</footer>

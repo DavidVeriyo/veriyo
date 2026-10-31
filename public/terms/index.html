@@ -1,0 +1,343 @@
+<title>Veriyo Terms of Service</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Layout: single-column legal document, max 720px, dark Veriyo brand */
+  :root {
+    --bg: #ffffff;
+    --fg: #111827;
+    --fg-mid: #374151;
+    --fg-muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2d9e5f;
+    --accent-dim: rgba(45,158,95,0.08);
+    --nav-bg: #0a1f12;
+    --nav-fg: rgba(255,255,255,0.9);
+    --tag-bg: rgba(45,158,95,0.10);
+    --tag-fg: #2d9e5f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #060f0a;
+      --fg: rgba(255,255,255,0.92);
+      --fg-mid: rgba(255,255,255,0.65);
+      --fg-muted: rgba(255,255,255,0.38);
+      --border: rgba(255,255,255,0.08);
+      --accent: #3dbd74;
+      --accent-dim: rgba(61,189,116,0.08);
+      --nav-bg: #0a1f12;
+      --nav-fg: rgba(255,255,255,0.9);
+      --tag-bg: rgba(61,189,116,0.12);
+      --tag-fg: #3dbd74;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #060f0a;
+    --fg: rgba(255,255,255,0.92);
+    --fg-mid: rgba(255,255,255,0.65);
+    --fg-muted: rgba(255,255,255,0.38);
+    --border: rgba(255,255,255,0.08);
+    --accent: #3dbd74;
+    --accent-dim: rgba(61,189,116,0.08);
+    --nav-bg: #0a1f12;
+    --nav-fg: rgba(255,255,255,0.9);
+    --tag-bg: rgba(61,189,116,0.12);
+    --tag-fg: #3dbd74;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  nav {
+    background: var(--nav-bg);
+    padding-block: 18px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+  }
+  .nav-logo {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--nav-fg);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-back {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: rgba(255,255,255,0.85); }
+
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding-block: 56px 40px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+  .page-header-inner { max-width: 720px; margin: 0 auto; }
+  .doc-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tag-fg);
+    background: var(--tag-bg);
+    border: 1px solid rgba(45,158,95,0.2);
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin-bottom: 16px;
+  }
+  .page-header h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--fg);
+    text-wrap: balance;
+    margin-bottom: 12px;
+  }
+  .page-header .meta { font-size: 13px; color: var(--fg-muted); }
+
+  .content {
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    padding-block: 48px 80px;
+  }
+  .content-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .section { display: flex; flex-direction: column; gap: 12px; }
+  .section h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.3px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section p {
+    font-size: 15px;
+    color: var(--fg-mid);
+    line-height: 1.8;
+  }
+  .section ul {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .section ul li {
+    font-size: 15px;
+    color: var(--fg-mid);
+    line-height: 1.7;
+    padding-left: 20px;
+    position: relative;
+  }
+  .section ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .section strong { font-weight: 600; color: var(--fg); }
+
+  .notice-box {
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.18);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .notice-box .icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #f59e0b;
+  }
+  .notice-box p {
+    font-size: 14px;
+    color: var(--fg-mid);
+    line-height: 1.7;
+  }
+
+  .contact-box {
+    background: var(--accent-dim);
+    border: 1px solid rgba(45,158,95,0.18);
+    border-radius: 10px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact-box .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .contact-box p { font-size: 14px; color: var(--fg-mid); line-height: 1.7; }
+  .contact-box a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .contact-box a:hover { text-decoration: underline; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-block: 28px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer p { font-size: 13px; color: var(--fg-muted); }
+  footer a { font-size: 13px; color: var(--fg-muted); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page-header { padding-block: 36px 28px; }
+    nav { padding-block: 14px; }
+  }
+</style>
+
+<nav>
+  <a href="https://www.veriyo.com.au" class="nav-logo">Veriyo<span>.</span></a>
+  <a href="https://www.veriyo.com.au" class="nav-back">← Back to home</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <span class="doc-tag">Legal</span>
+    <h1>Terms of Service</h1>
+    <p class="meta">Last updated: October 2026</p>
+  </div>
+</div>
+
+<div class="content">
+  <div class="content-inner">
+
+    <div class="section">
+      <h2>About these Terms</h2>
+      <p>These Terms of Service ("Terms") govern your access to and use of the Veriyo platform ("Veriyo", "we", "us"). By creating an account or using the service you agree to these Terms. If you are entering into these Terms on behalf of an organisation, you confirm you are authorised to bind that organisation.</p>
+    </div>
+
+    <div class="section">
+      <h2>Use of the service</h2>
+      <p>Veriyo provides workforce compliance management tools for Australian aged care, NDIS and early learning providers — including credential tracking, worker screening management, policy acknowledgement records and compliance reporting.</p>
+      <p>You are responsible for the accuracy of the information you provide, for maintaining your own records, and for ensuring your use of the service complies with applicable laws, regulations and professional obligations. You must not misuse the service, attempt to gain unauthorised access, or upload unlawful content or content you are not authorised to share.</p>
+    </div>
+
+    <div class="section">
+      <h2>Your data and confidentiality</h2>
+      <p>You retain ownership of the content you upload. You grant us a limited licence to host and process that content solely to provide the service to you. We handle personal information in accordance with our <a href="https://www.veriyo.com.au/privacy" style="color:var(--accent);text-decoration:none;font-weight:500;">Privacy Policy</a>, including information relating to your workers.</p>
+    </div>
+
+    <div class="section">
+      <h2>Worker and employee records</h2>
+      <p>Veriyo includes features that let you keep compliance records about your workers — employees, contractors, volunteers and agency staff. Depending on the features you use, those records may include contact details, employment type and role, qualifications, training records, and the status and outcome of worker screening checks such as NDIS Worker Screening, Working With Children Checks, police checks and professional registrations.</p>
+      <p>These records exist so you can demonstrate compliance with your obligations as a registered provider. <strong>The obligation to hold and maintain these records is yours, not ours.</strong> Veriyo is a tool for meeting it.</p>
+      <p>You are responsible for:</p>
+      <ul>
+        <li>Telling your workers what you record about them and why</li>
+        <li>Obtaining any consent or authorisation required before collecting it, particularly for police checks and health information</li>
+        <li>Keeping records accurate and up to date, and correcting them when a worker advises they are wrong</li>
+        <li>Deciding who in your organisation should have access</li>
+        <li>Removing records you no longer have a lawful reason to keep</li>
+      </ul>
+      <p>Veriyo cannot do these things for you and does not check whether you have done them. Access to worker records is controlled by the user roles you assign within your account.</p>
+      <p>You can ask us to export or delete your worker records at any time by contacting us, and we will do so within a reasonable period.</p>
+    </div>
+
+    <div class="section">
+      <h2>Accounts and billing</h2>
+      <p>You must provide accurate account information and keep your credentials secure. Subscription plans, pricing and any free trial terms will be presented to you at the time of sign-up and are subject to change with notice.</p>
+      <p>Fees are in Australian dollars. You can cancel your subscription at any time. After a paid subscription has started, access continues until the end of the current billing period and fees already paid are non-refundable except where required by law.</p>
+    </div>
+
+    <div class="section">
+      <h2>Compliance disclaimer</h2>
+      <div class="notice-box">
+        <svg class="icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+        </svg>
+        <p>Veriyo is a tool to assist with compliance management and does not constitute legal, regulatory or professional advice. You remain responsible for meeting your own compliance obligations and for any decisions made based on the platform's output. Always seek qualified advice where required.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Availability and support</h2>
+      <p>We aim to keep the service available and secure but do not guarantee uninterrupted access. We may modify, suspend or discontinue features, and may carry out maintenance, from time to time. We will endeavour to provide reasonable notice of significant changes.</p>
+    </div>
+
+    <div class="section">
+      <h2>Consumer guarantees and limitation of liability</h2>
+      <p>Nothing in these Terms excludes, restricts or modifies any consumer guarantee, right or remedy you have under the <strong>Australian Consumer Law</strong> that cannot lawfully be excluded. Subject to those rights, the service is provided "as is", and to the maximum extent permitted by law we are not liable for any indirect or consequential loss. Our total liability arising from the service is limited to the fees you paid in the 12 months before the claim.</p>
+    </div>
+
+    <div class="section">
+      <h2>Termination</h2>
+      <p>You may stop using the service and close your account at any time. We may suspend or terminate access if you breach these Terms or use the service unlawfully. On termination you may request export of your data as described in our Privacy Policy.</p>
+    </div>
+
+    <div class="section">
+      <h2>Governing law and changes</h2>
+      <p>These Terms are governed by the laws of New South Wales, Australia, and you submit to the non-exclusive jurisdiction of its courts. We may update these Terms from time to time; the updated version will be posted on this page with a revised "Last updated" date, and continued use of the service constitutes acceptance.</p>
+    </div>
+
+    <div class="contact-box">
+      <div class="label">Questions about these Terms</div>
+      <p>Contact us at:</p>
+      <p><a href="mailto:david@veriyo.com.au">david@veriyo.com.au</a></p>
+      <p>Veriyo · Sydney, NSW, Australia</p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Veriyo. All rights reserved.</p>
+  <a href="https://www.veriyo.com.au">veriyo.com.au</a>
+</footer>
