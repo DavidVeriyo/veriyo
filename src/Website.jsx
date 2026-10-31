@@ -1106,6 +1106,9 @@ const s = {
   statementBand: {
     padding: "100px 40px",
     background: "#fff",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
   },
   statementInner: {
     maxWidth: 1160,
@@ -1152,10 +1155,14 @@ const s = {
     padding: "120px 40px",
     background: "#fff",
     borderTop: "1px solid #ebebeb",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
   },
   problemInner: {
     maxWidth: 1160,
     margin: "0 auto",
+    width: "100%",
     display: "flex",
     gap: 80,
     alignItems: "flex-start",
@@ -1211,6 +1218,7 @@ const s = {
     background: DEEP,
     paddingBottom: 120,
     borderTop: "1px solid rgba(255,255,255,0.05)",
+    minHeight: "100vh",
   },
   productsSectionInner: {
     maxWidth: 1160,
@@ -1322,11 +1330,15 @@ const s = {
     background: FOREST,
     padding: "120px 0",
     borderTop: "1px solid rgba(255,255,255,0.05)",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
   },
   howInner: {
     maxWidth: 1160,
     margin: "0 auto",
     padding: "0 40px",
+    width: "100%",
   },
   howH2: {
     fontSize: "clamp(36px,5vw,64px)",
@@ -1380,6 +1392,7 @@ const s = {
     background: DEEP,
     borderTop: "1px solid rgba(255,255,255,0.05)",
     padding: "100px 40px 120px",
+    minHeight: "100vh",
   },
   sectorsHeader: {
     textAlign: "center",
