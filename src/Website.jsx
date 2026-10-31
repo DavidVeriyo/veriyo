@@ -1,4 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
+
+// Load GSAP + ScrollTrigger from CDN once
+function loadGSAP() {
+  return new Promise((resolve) => {
+    if (window.gsap && window.ScrollTrigger) { resolve(); return; }
+    const s1 = document.createElement("script");
+    s1.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js";
+    s1.onload = () => {
+      const s2 = document.createElement("script");
+      s2.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
+      s2.onload = () => { window.gsap.registerPlugin(window.ScrollTrigger); resolve(); };
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s1);
+  });
+}
 import { VeriyoLogo as VeriyoLogoSVG } from "./Nav";
 
 // ─── SCROLL REVEAL HOOK — re-triggers every time element enters viewport ──────
@@ -266,6 +282,32 @@ export default function Website({ onLogin }) {
   const [demoSubmitted, setDemoSubmitted] = useState(false);
 
 
+  // ── GSAP ScrollTrigger pin effect ──
+  useEffect(() => {
+    loadGSAP().then(() => {
+      const { gsap, ScrollTrigger } = window;
+      const sections = document.querySelectorAll(".pin-section");
+      // Pin each section; pinSpacing:false means no gap is inserted
+      sections.forEach((section, i) => {
+        // Last section doesn't need pinning — it scrolls away naturally
+        if (i === sections.length - 1) return;
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          pin: true,
+          pinSpacing: false,
+          // Each section stays pinned until the NEXT section fully covers it
+          end: () => `+=${section.offsetHeight}`,
+        });
+      });
+      ScrollTrigger.refresh();
+    });
+    return () => {
+      // Clean up on unmount
+      if (window.ScrollTrigger) window.ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, []);
+
   async function handleDemoRequest(e) {
     e.preventDefault();
     try {
@@ -290,7 +332,14 @@ export default function Website({ onLogin }) {
         @keyframes pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
         .reveal.in { opacity:1; transform:translateY(0); }
-        .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -16px 60px rgba(0,0,0,0.6); }
+        .stack-card { border-radius:24px 24px 0 0; box-shadow:0 -20px 80px rgba(0,0,0,0.7); }
+        .pin-section { will-change:transform; }
+        .pin-section:nth-of-type(1) { z-index:1; }
+        .pin-section:nth-of-type(2) { z-index:2; }
+        .pin-section:nth-of-type(3) { z-index:3; }
+        .pin-section:nth-of-type(4) { z-index:4; }
+        .pin-section:nth-of-type(5) { z-index:5; }
+        .pin-section:nth-of-type(6) { z-index:6; }
         .reveal-d1 { transition-delay:0.1s; }
         .reveal-d2 { transition-delay:0.2s; }
         .reveal-d3 { transition-delay:0.3s; }
@@ -335,7 +384,7 @@ export default function Website({ onLogin }) {
       </nav>
 
       {/* ── HERO ── */}
-      <section style={s.hero}>
+      <section style={s.hero} className="pin-section">
         {/* noise texture overlay */}
         <div style={s.heroNoise} />
         {/* glow orbs */}
@@ -441,7 +490,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── STATEMENT BAND ── */}
-      <RevealSection style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card">
+      <RevealSection style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
           <h2 style={s.statementH2}>
@@ -453,7 +502,7 @@ export default function Website({ onLogin }) {
       </RevealSection>
 
       {/* ── PROBLEM — large stats ── */}
-      <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }}>
+      <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.problemInner} className="problem-inner">
           <div style={s.problemLeft}>
             <p style={s.sectionLabel}>The Cost of Manual Compliance</p>
@@ -484,7 +533,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── PRODUCTS ── */}
-      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }}>
+      <section id="products" style={{ ...s.productsSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.productsSectionInner}>
           <RevealSection>
             <p style={s.sectionLabel}>Two Products. One Platform.</p>
@@ -546,7 +595,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ ...s.howSection, position:"relative", zIndex:2 }}>
+      <section style={{ ...s.howSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.howInner}>
           <RevealSection>
             <p style={s.sectionLabelLight}>How It Works</p>
@@ -576,7 +625,7 @@ export default function Website({ onLogin }) {
         </div>
       </section>
       {/* ── SECTORS — 3-card static layout ── */}
-      <RevealSection id="sectors" style={{ ...s.sectorsSection, position:"relative", zIndex:2 }}>
+      <RevealSection id="sectors" style={{ ...s.sectorsSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.sectorsHeader}>
           <p style={s.sectionLabel}>Built For Your Sector</p>
           <h2 style={s.sectorsH2}><TypingText text="Every sector. Every rule. Covered." speed={30} delay={100} /></h2>
@@ -863,13 +912,12 @@ const s = {
     letterSpacing: "-0.1px",
   },
 
-  // HERO — sticky so content slides over it
+  // HERO — GSAP ScrollTrigger handles pinning
   hero: {
     background: `linear-gradient(160deg, ${DEEP} 0%, ${FOREST} 50%, ${FOREST2} 100%)`,
     paddingTop: 96,
-    paddingBottom: 0,
-    position: "sticky",
-    top: 0,
+    paddingBottom: 80,
+    position: "relative",
     zIndex: 1,
     overflow: "hidden",
   },
