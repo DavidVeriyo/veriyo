@@ -490,7 +490,7 @@ export default function Website({ onLogin }) {
       </section>
 
       {/* ── STATEMENT BAND ── */}
-      <RevealSection style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card pin-section">
+      <section style={{ ...s.statementBand, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.statementInner}>
           <p style={s.statementEyebrow}>The Problem</p>
           <h2 style={s.statementH2}>
@@ -499,7 +499,7 @@ export default function Website({ onLogin }) {
             <TypingText text="They're " speed={30} delay={1460} /><em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}><TypingText text="spreadsheets." speed={30} delay={1940} /></em>
           </h2>
         </div>
-      </RevealSection>
+      </section>
 
       {/* ── PROBLEM — large stats ── */}
       <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
