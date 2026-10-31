@@ -352,14 +352,20 @@ export default function Website({ onLogin }) {
         .faq-link:hover { color:${GREEN_BRIGHT} !important; }
         @media(max-width:768px){
           .nav-links-wrap{display:none!important}
-          .hero-h1{font-size:clamp(38px,10vw,64px)!important;letter-spacing:-2px!important;margin-bottom:20px!important}
-          .hero-cols{flex-direction:column!important;gap:16px!important;margin-bottom:28px!important}
-          .hero-sub{font-size:15px!important}
-          .hero-actions{flex-direction:column!important;gap:10px!important}
-          .hero-stats{margin-bottom:32px!important}
-          .hero-stat{padding:16px 24px 16px 0!important;margin-right:24px!important}
-          .hero-stat-num{font-size:26px!important}
+          .hero-h1{font-size:clamp(36px,10vw,60px)!important;letter-spacing:-2px!important;margin-bottom:16px!important}
+          .hero-kicker{margin-bottom:16px!important}
+          .hero-cols{flex-direction:column!important;gap:12px!important;margin-bottom:20px!important}
+          .hero-sub{font-size:14px!important;line-height:1.55!important}
+          .hero-actions{flex-direction:row!important;gap:12px!important;flex-wrap:wrap!important}
+          .hero-primary{padding:12px 20px!important;font-size:13px!important}
+          .hero-secondary{font-size:12px!important}
+          .hero-stats{margin-bottom:0!important;padding:0!important}
+          .hero-stat{padding:14px 20px 14px 0!important;margin-right:20px!important}
+          .hero-stat-num{font-size:24px!important;letter-spacing:-1px!important}
+          .hero-stat-label{font-size:10px!important}
           .hero-mock-wrap{display:none!important}
+          .hero-inner{padding-bottom:32px!important}
+          .hero-section{padding-top:48px!important;padding-bottom:0!important}
           .problem-inner{flex-direction:column!important;gap:24px!important}
           .problem-left{flex:none!important;position:static!important}
           .problem-row{gap:20px!important;padding:24px 0!important}
@@ -398,11 +404,11 @@ export default function Website({ onLogin }) {
       </nav>
 
       {/* ── HERO ── */}
-      <section style={s.hero} className="pin-section">
+      <section style={s.hero} className="pin-section hero-section">
 
-        <div style={s.heroInner}>
+        <div style={s.heroInner} className="hero-inner">
           <div style={{ animation: "fadeIn 0.6s ease both" }}>
-            <p style={s.heroKicker}>🇦🇺 Built for Australian care providers</p>
+            <p style={s.heroKicker} className="hero-kicker">🇦🇺 Built for Australian care providers</p>
           </div>
           <h1 style={s.heroH1} className="hero-h1">
             <TypingText text="Compliance that" delay={200} speed={42} />
@@ -419,9 +425,9 @@ export default function Website({ onLogin }) {
               NDIS, and early learning providers. Every credential. Every clearance.
               Audit-ready from Day&nbsp;1.
             </p>
-            <div style={s.heroActions}>
-              <a href="#demo" style={s.heroPrimary}>Request a Demo</a>
-              <button onClick={onLogin} style={s.heroSecondary}>View live demo →</button>
+            <div style={s.heroActions} className="hero-actions">
+              <a href="#demo" style={s.heroPrimary} className="hero-primary">Request a Demo</a>
+              <button onClick={onLogin} style={s.heroSecondary} className="hero-secondary">View live demo →</button>
             </div>
           </div>
 
@@ -436,7 +442,7 @@ export default function Website({ onLogin }) {
                 <div style={s.heroStatNum} className="hero-stat-num">
                   <CountUp target={st.num} suffix={st.suffix} />
                 </div>
-                <div style={s.heroStatLabel}>{st.label}</div>
+                <div style={s.heroStatLabel} className="hero-stat-label">{st.label}</div>
               </div>
             ))}
           </div>
@@ -956,6 +962,7 @@ const s = {
     padding: "0 40px 80px",
     position: "relative",
     zIndex: 1,
+    // className="hero-inner" for mobile override
   },
   heroKicker: {
     fontSize: 12,
