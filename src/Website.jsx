@@ -354,16 +354,17 @@ export default function Website({ onLogin }) {
           .nav-links-wrap{display:none!important}
           .hero-h1{font-size:clamp(36px,10vw,60px)!important;letter-spacing:-2px!important;margin-bottom:14px!important}
           .hero-kicker{margin-bottom:14px!important}
-          .hero-cols{flex-direction:column!important;gap:10px!important;margin-bottom:0!important}
-          .hero-sub{font-size:14px!important;line-height:1.55!important;margin-bottom:0!important}
-          .hero-actions-desktop{display:none!important}
-          .hero-mobile-cta{display:block!important;margin:18px 0 0!important}
-          .hero-stats{margin-top:20px!important;margin-bottom:0!important}
-          .hero-stat{padding:12px 18px 12px 0!important;margin-right:16px!important}
+          .hero-cols{flex-direction:column!important;gap:14px!important;margin-bottom:16px!important}
+          .hero-sub{font-size:14px!important;line-height:1.5!important}
+          .hero-actions{flex-direction:column!important;gap:0!important;align-items:stretch!important}
+          .hero-primary{padding:18px 24px!important;font-size:17px!important;font-weight:800!important;border-radius:10px!important;text-align:center!important;display:block!important}
+          .hero-secondary{display:none!important}
+          .hero-stats{margin-bottom:0!important;margin-top:16px!important}
+          .hero-stat{padding:12px 16px 12px 0!important;margin-right:16px!important}
           .hero-stat-num{font-size:22px!important;letter-spacing:-1px!important;margin-bottom:2px!important}
           .hero-stat-label{font-size:10px!important}
           .hero-mock-wrap{display:none!important}
-          .hero-inner{padding-bottom:32px!important}
+          .hero-inner{padding-bottom:24px!important}
           .hero-section{padding-top:40px!important;padding-bottom:0!important}
           .problem-inner{flex-direction:column!important;gap:24px!important}
           .problem-left{flex:none!important;position:static!important}
@@ -424,14 +425,10 @@ export default function Website({ onLogin }) {
               NDIS, and early learning providers. Every credential. Every clearance.
               Audit-ready from Day&nbsp;1.
             </p>
-            <div style={s.heroActions} className="hero-actions hero-actions-desktop">
+            <div style={s.heroActions} className="hero-actions">
               <a href="#demo" style={s.heroPrimary} className="hero-primary">Request a Demo</a>
               <button onClick={onLogin} style={s.heroSecondary} className="hero-secondary">View live demo →</button>
             </div>
-          </div>
-          {/* Mobile-only CTA — sits right under subtitle */}
-          <div className="hero-mobile-cta" style={{ display: "none" }}>
-            <a href="#demo" style={{ ...s.heroPrimary, fontSize: 17, padding: "16px 32px", borderRadius: 10, display: "block", textAlign: "center" }}>Request a Demo</a>
           </div>
 
           {/* Stats row */}
