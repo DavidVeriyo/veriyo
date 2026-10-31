@@ -1108,11 +1108,12 @@ const s = {
 
   // STATEMENT BAND
   statementBand: {
-    padding: "100px 40px",
+    padding: "0 40px",
     background: "#fff",
     minHeight: "100vh",
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
   },
   statementInner: {
     maxWidth: 1160,
@@ -1156,12 +1157,13 @@ const s = {
 
   // PROBLEM
   problemSection: {
-    padding: "120px 40px",
+    padding: "0 40px",
     background: "#fff",
     borderTop: "1px solid #ebebeb",
     minHeight: "100vh",
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
   },
   problemInner: {
     maxWidth: 1160,
