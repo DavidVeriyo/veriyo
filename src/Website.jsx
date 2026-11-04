@@ -528,6 +528,21 @@ export default function Website({ onLogin }) {
         </div>
       </section>
 
+      {/* ── SOLUTION STATEMENT ── */}
+      <section style={{ ...s.statementBand, background: FOREST, position:"relative", zIndex:2 }} className="stack-card pin-section">
+        <div style={s.statementInner}>
+          <p style={{ ...s.statementEyebrow, color: GREEN_BRIGHT }}>The Solution</p>
+          <h2 style={{ ...s.statementH2, color: "#fff" }}>
+            <TypingText text="Veriyo doesn't just track compliance" speed={28} delay={100} />
+            <br />
+            <TypingText text="— it " speed={28} delay={1800} /><em style={{ color: GREEN_BRIGHT, fontStyle: "italic" }}><TypingText text="runs it." speed={28} delay={2080} /></em>
+          </h2>
+          <p style={{ marginTop: 32, fontSize: "clamp(16px, 2vw, 22px)", color: "rgba(255,255,255,0.6)", maxWidth: 680, lineHeight: 1.6, fontWeight: 400 }}>
+            AI checks credentials, chases renewals, and flags gaps before they become problems.
+          </p>
+        </div>
+      </section>
+
       {/* ── PROBLEM — large stats ── */}
       <section id="why" style={{ ...s.problemSection, position:"relative", zIndex:2 }} className="stack-card pin-section">
         <div style={s.problemInner} className="problem-inner">
