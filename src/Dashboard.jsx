@@ -459,77 +459,83 @@ const ACTIVE_STAFF = [
     id: "s1", name: "Sarah Chen", role: "Support Worker", sector: "agedCare",
     facility: "Harbour Health — Parramatta", startDate: "2022-03-14",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(312),  renewYears: 3,  status: "current" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(841),  renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(28),   renewYears: 3,  status: "expiring" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(28),   renewYears: 1,  status: "expiring" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(204),  renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(312),  renewYears: 3,    status: "current"  },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(841),  renewYears: 5,    status: "current"  },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-40), recheckDays: 365, status: "current"  },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(28),   renewYears: 3,    status: "expiring" },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(28),   renewYears: 1,    status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(204),  renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s2", name: "James O'Brien", role: "Registered Nurse", sector: "agedCare",
     facility: "Harbour Health — Liverpool", startDate: "2021-07-01",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(14),   renewYears: 3,  status: "expiring" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(620),  renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(190),  renewYears: 3,  status: "current" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(-5),   renewYears: 1,  status: "expired" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(88),   renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(14),   renewYears: 3,    status: "expiring" },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(620),  renewYears: 5,    status: "current"  },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-390), recheckDays: 365, status: "recheck" },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(190),  renewYears: 3,    status: "current"  },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(-5),   renewYears: 1,    status: "expired"  },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(88),   renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s3", name: "Amara Diallo", role: "Personal Carer", sector: "disability",
     facility: "Harbour Health — Blacktown", startDate: "2023-01-09",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(540),  renewYears: 3,  status: "current" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(42),   renewYears: 5,  status: "expiring" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(380),  renewYears: 3,  status: "current" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(42),   renewYears: 1,  status: "expiring" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(130),  renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(540),  renewYears: 3,    status: "current"  },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(42),   renewYears: 5,    status: "expiring" },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-20), recheckDays: 365, status: "current"  },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(380),  renewYears: 3,    status: "current"  },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(42),   renewYears: 1,    status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(130),  renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s4", name: "Michael Tran", role: "Team Leader", sector: "agedCare",
     facility: "Harbour Health — Home Care", startDate: "2020-11-23",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(-12),  renewYears: 3,  status: "expired" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(700),  renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(55),   renewYears: 3,  status: "expiring" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(-30),  renewYears: 1,  status: "expired" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(160),  renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(-12),  renewYears: 3,    status: "expired"  },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(700),  renewYears: 5,    status: "current"  },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-410), recheckDays: 365, status: "recheck" },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(55),   renewYears: 3,    status: "expiring" },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(-30),  renewYears: 1,    status: "expired"  },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(160),  renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s5", name: "Priya Sharma", role: "Care Coordinator", sector: "agedCare",
     facility: "Harbour Health — Parramatta", startDate: "2022-08-15",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(480),  renewYears: 3,  status: "current" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(910),  renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(290),  renewYears: 3,  status: "current" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(60),   renewYears: 1,  status: "expiring" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(310),  renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(480),  renewYears: 3,    status: "current"  },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(910),  renewYears: 5,    status: "current"  },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-180), recheckDays: 365, status: "current" },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(290),  renewYears: 3,    status: "current"  },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(60),   renewYears: 1,    status: "expiring" },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(310),  renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s6", name: "Lindiwe Dube", role: "Early Childhood Educator", sector: "earlyLearning",
     facility: "Sunrise Early Learning — Bella Vista", startDate: "2023-04-03",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(730),  renewYears: 3,  status: "current" },
-      { id: "wwcc",     label: "Working With Children",    expiryDate: daysFromNow(1100), renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(420),  renewYears: 3,  status: "current" },
-      { id: "anaphylaxis", label: "Anaphylaxis Management", expiryDate: daysFromNow(55), renewYears: 3,  status: "expiring" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(250),  renewYears: 1,  status: "current" },
+      { id: "police",      label: "National Police Check",      expiryDate: daysFromNow(730),  renewYears: 3,    status: "current"  },
+      { id: "wwcc",        label: "Working With Children",      expiryDate: daysFromNow(1100), renewYears: 5,    status: "current"  },
+      { id: "firstaid",    label: "First Aid Certificate",      expiryDate: daysFromNow(420),  renewYears: 3,    status: "current"  },
+      { id: "anaphylaxis", label: "Anaphylaxis Management",     expiryDate: daysFromNow(55),   renewYears: 3,    status: "expiring" },
+      { id: "flu",         label: "Influenza Vaccination",      expiryDate: daysFromNow(250),  renewYears: 1,    status: "current"  },
     ],
   },
   {
     id: "s7", name: "Kevin Park", role: "Support Worker", sector: "disability",
     facility: "Harbour Health — Disability Support", startDate: "2023-09-18",
     checks: [
-      { id: "police",   label: "National Police Check",    expiryDate: daysFromNow(600),  renewYears: 3,  status: "current" },
-      { id: "ndis",     label: "NDIS Worker Screening",    expiryDate: daysFromNow(1200), renewYears: 5,  status: "current" },
-      { id: "firstaid", label: "First Aid Certificate",    expiryDate: daysFromNow(500),  renewYears: 3,  status: "current" },
-      { id: "cpr",      label: "CPR Certificate",          expiryDate: daysFromNow(180),  renewYears: 1,  status: "current" },
-      { id: "flu",      label: "Influenza Vaccination",    expiryDate: daysFromNow(340),  renewYears: 1,  status: "current" },
+      { id: "police",   label: "National Police Check",         expiryDate: daysFromNow(600),  renewYears: 3,    status: "current"  },
+      { id: "ndis",     label: "NDIS Worker Screening",         expiryDate: daysFromNow(1200), renewYears: 5,    status: "current"  },
+      { id: "banning",  label: "NDIS Banning Order Check",      lastChecked: daysFromNow(-90), recheckDays: 365, status: "current"  },
+      { id: "firstaid", label: "First Aid Certificate",         expiryDate: daysFromNow(500),  renewYears: 3,    status: "current"  },
+      { id: "cpr",      label: "CPR Certificate",               expiryDate: daysFromNow(180),  renewYears: 1,    status: "current"  },
+      { id: "flu",      label: "Influenza Vaccination",         expiryDate: daysFromNow(340),  renewYears: 1,    status: "current"  },
     ],
   },
 ];
@@ -537,24 +543,28 @@ const ACTIVE_STAFF = [
 function staffOverallStatus(staff) {
   const statuses = staff.checks.map(c => c.status);
   if (statuses.includes("expired")) return "expired";
+  if (statuses.includes("recheck")) return "recheck";
   if (statuses.includes("expiring")) return "expiring";
   return "current";
 }
 
 const staffStatusMeta = {
-  current:      { label: "All Current",    color: C.green,   bg: C.greenBg,  border: C.greenBorder },
-  expiring:     { label: "Expiring Soon",  color: C.amber,   bg: C.amberBg,  border: C.amberBorder },
-  expired:      { label: "Action Needed",  color: C.red,     bg: C.redBg,    border: C.redBorder   },
-  onLeave:      { label: "On Leave",       color: "#7c3aed", bg: "#f5f3ff",  border: "#c4b5fd"     },
-  returningSoon:{ label: "⚠️ Renewal Due", color: "#7c3aed", bg: "#faf5ff",  border: "#c4b5fd"     },
+  current:      { label: "All Current",       color: C.green,   bg: C.greenBg,  border: C.greenBorder },
+  expiring:     { label: "Expiring Soon",      color: C.amber,   bg: C.amberBg,  border: C.amberBorder },
+  expired:      { label: "Action Needed",      color: C.red,     bg: C.redBg,    border: C.redBorder   },
+  recheck:      { label: "Re-check Due",       color: C.amber,   bg: C.amberBg,  border: C.amberBorder },
+  onLeave:      { label: "On Leave",           color: "#7c3aed", bg: "#f5f3ff",  border: "#c4b5fd"     },
+  returningSoon:{ label: "⚠️ Renewal Due",    color: "#7c3aed", bg: "#faf5ff",  border: "#c4b5fd"     },
 };
 
 const statusMeta = {
-  verified:     { label: "Verified",    color: C.green, bg: C.greenBg, border: C.greenBorder, dot: "✓" },
-  pending:      { label: "Pending",     color: C.amber, bg: C.amberBg, border: C.amberBorder, dot: "◷" },
-  expired:      { label: "Expired",     color: C.red,   bg: C.redBg,   border: C.redBorder,   dot: "!" },
-  missing:      { label: "Missing",     color: C.red,   bg: C.redBg,   border: C.redBorder,   dot: "✕" },
-  not_required: { label: "N/A",         color: C.grey,  bg: C.greyBg,  border: C.greyBorder,  dot: "–" },
+  verified:     { label: "Verified",       color: C.green, bg: C.greenBg, border: C.greenBorder, dot: "✓" },
+  pending:      { label: "Pending",        color: C.amber, bg: C.amberBg, border: C.amberBorder, dot: "◷" },
+  expired:      { label: "Expired",        color: C.red,   bg: C.redBg,   border: C.redBorder,   dot: "!" },
+  missing:      { label: "Missing",        color: C.red,   bg: C.redBg,   border: C.redBorder,   dot: "✕" },
+  recheck:      { label: "Re-check Due",   color: C.amber, bg: C.amberBg, border: C.amberBorder, dot: "↻" },
+  current:      { label: "Current",        color: C.green, bg: C.greenBg, border: C.greenBorder, dot: "✓" },
+  not_required: { label: "N/A",            color: C.grey,  bg: C.greyBg,  border: C.greyBorder,  dot: "–" },
 };
 
 const workerStatusMeta = {
@@ -801,10 +811,11 @@ function OverviewTab({ stats, workers }) {
   ];
 
   // Live active staff stats derived from ACTIVE_STAFF
-  const staffTotal    = ACTIVE_STAFF.length;
+  const staffTotal     = ACTIVE_STAFF.length;
   const staffAllChecks = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "current").length;
-  const staffExpired  = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expired").length;
-  const staffExpiring = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expiring").length;
+  const staffExpired   = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expired").length;
+  const staffExpiring  = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "expiring").length;
+  const staffRecheck   = ACTIVE_STAFF.filter(s => staffOverallStatus(s) === "recheck").length;
   const staffCompliantPct = Math.round((staffAllChecks / staffTotal) * 100);
 
   // Check-type breakdown across all active staff
@@ -1440,6 +1451,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
   const expiredCount    = staffWithStatus.filter(s => s.overallStatus === "expired").length;
   const expiringCount   = staffWithStatus.filter(s => s.overallStatus === "expiring").length;
   const currentCount    = staffWithStatus.filter(s => s.overallStatus === "current").length;
+  const recheckCount    = staffWithStatus.filter(s => s.overallStatus === "recheck").length;
 
   // Apply all filters
   const filtered = staffWithStatus.filter(s => {
@@ -1468,13 +1480,17 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
     return true;
   });
 
-  // Flatten all upcoming expiries — skip staff fully on leave (alerts paused)
+  // Flatten all upcoming expiries + banning re-checks due — skip staff fully on leave
   const allExpiries = staffWithStatus
     .filter(s => s.overallStatus !== "onLeave")
     .flatMap(s =>
       s.checks
-        .filter(c => c.status === "expiring" || c.status === "expired")
+        .filter(c => c.status === "expiring" || c.status === "expired" || c.status === "recheck")
         .map(c => {
+          if (c.status === "recheck") {
+            const daysSince = Math.round((new Date() - new Date(c.lastChecked)) / 86400000);
+            return { staffName: s.name, staffId: s.id, check: c.label, days: -(daysSince - c.recheckDays), status: "recheck", returningSoon: s.overallStatus === "returningSoon" };
+          }
           const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
           return { staffName: s.name, staffId: s.id, check: c.label, days, status: c.status, expiryDate: c.expiryDate, returningSoon: s.overallStatus === "returningSoon" };
         })
@@ -1489,6 +1505,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
         <StatCard num={currentCount}           label="All Checks Current" color={C.green}   bg={C.greenBg}       onClick={() => setFilterStaffStatus(s => s === "current"  ? "all" : "current")}  active={filterStaffStatus === "current"} />
         <StatCard num={expiringCount}          label="Expiring Soon"      color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStaffStatus(s => s === "expiring" ? "all" : "expiring")} active={filterStaffStatus === "expiring"} />
         <StatCard num={expiredCount}           label="Action Needed"      color={C.red}     bg={C.redBg}         onClick={() => setFilterStaffStatus(s => s === "expired"  ? "all" : "expired")}  active={filterStaffStatus === "expired"} />
+        {recheckCount > 0 && <StatCard num={recheckCount} label="Re-check Due" color={C.amber} bg={C.amberBg} onClick={() => setFilterStaffStatus(s => s === "recheck" ? "all" : "recheck")} active={filterStaffStatus === "recheck"} />}
         {onLeaveCount > 0 && <StatCard num={onLeaveCount} label="On Leave" color="#7c3aed" bg="#f5f3ff" onClick={() => setFilterStaffStatus(s => s === "onLeave" ? "all" : "onLeave")} active={filterStaffStatus === "onLeave"} />}
       </div>
 
@@ -1535,6 +1552,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {allExpiries.slice(0, 4).map((e, i) => {
               const isExpired = e.status === "expired";
+              const isRecheck = e.status === "recheck";
               const col = isExpired ? C.red : C.amber;
               return (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13 }}>
@@ -1543,7 +1561,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
                   <span style={{ color: C.textMid }}>—</span>
                   <span style={{ color: C.textMid, flex: 1 }}>{e.check}</span>
                   <span style={{ fontWeight: 700, color: col, flexShrink: 0 }}>
-                    {isExpired ? `Expired ${Math.abs(e.days)}d ago` : `${e.days}d left`}
+                    {isRecheck ? "Re-check overdue" : isExpired ? `Expired ${Math.abs(e.days)}d ago` : `${e.days}d left`}
                   </span>
                 </div>
               );
@@ -1561,7 +1579,7 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
           const sm = staffStatusMeta[s.overallStatus];
           const onLeave = s.overallStatus === "onLeave" || s.overallStatus === "returningSoon";
           const leaveRec = leaveRecords[s.id];
-          const expiringChecks = s.checks.filter(c => c.status === "expiring" || c.status === "expired");
+          const expiringChecks = s.checks.filter(c => c.status === "expiring" || c.status === "expired" || c.status === "recheck");
           const returnDays = daysUntilReturn(s.id);
           // Checks expiring before return date
           const expiringDuringLeave = onLeave && leaveRec ? s.checks.filter(c => {
@@ -1620,30 +1638,33 @@ function ActiveStaffTab({ graduatedStaff = [], alumniStaff = [], onResign, onReh
               {!onLeave && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   {s.checks.map(c => {
-                    const col = c.status === "current" ? C.green : c.status === "expiring" ? C.amber : C.red;
-                    const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                    const isRecheck = c.status === "recheck";
+                    const col = c.status === "current" ? C.green : (c.status === "expiring" || isRecheck) ? C.amber : C.red;
+                    const titleText = isRecheck ? `${c.label}: Re-check overdue` : c.status === "expired" ? `${c.label}: Expired` : `${c.label}: ${Math.round((new Date(c.expiryDate) - new Date()) / 86400000)}d left`;
                     return (
-                      <div key={c.id} title={`${c.label}: ${c.status === "expired" ? "Expired" : `${days}d left`}`}
+                      <div key={c.id} title={titleText}
                         style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: col, background: col + "18", border: `1px solid ${col}44`, borderRadius: 20, padding: "2px 8px", fontWeight: 700 }}>
                         <span style={{ width: 6, height: 6, borderRadius: "50%", background: col, display: "inline-block" }} />
-                        {c.id === "firstaid" ? "FA" : c.id === "anaphylaxis" ? "Ana" : c.id.charAt(0).toUpperCase() + c.id.slice(1, 3)}
+                        {c.id === "firstaid" ? "FA" : c.id === "anaphylaxis" ? "Ana" : c.id === "banning" ? "Ban" : c.id.charAt(0).toUpperCase() + c.id.slice(1, 3)}
                       </div>
                     );
                   })}
                 </div>
               )}
 
-              {/* show expiring details inline — only when not on leave */}
+              {/* show expiring / recheck details inline — only when not on leave */}
               {!onLeave && expiringChecks.length > 0 && (
                 <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.borderLight}` }}>
                   {expiringChecks.map(c => {
-                    const days = Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                    const isRecheck = c.status === "recheck";
                     const isExpired = c.status === "expired";
+                    const days = isRecheck ? null : Math.round((new Date(c.expiryDate) - new Date()) / 86400000);
+                    const daysSince = isRecheck ? Math.round((new Date() - new Date(c.lastChecked)) / 86400000) : null;
                     return (
                       <div key={c.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: C.textMid, marginBottom: 4 }}>
                         <span>{c.label}</span>
                         <span style={{ fontWeight: 700, color: isExpired ? C.red : C.amber }}>
-                          {isExpired ? `Expired ${Math.abs(days)}d ago` : `${days}d left`}
+                          {isRecheck ? `Last checked ${daysSince}d ago — re-check due` : isExpired ? `Expired ${Math.abs(days)}d ago` : `${days}d left`}
                         </span>
                       </div>
                     );
