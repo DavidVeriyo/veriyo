@@ -2436,12 +2436,38 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           {/* ── OVERVIEW TAB ── */}
           {activeTab === "overview" && (
             <>
-              <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Candidates"   color={C.primary} bg={C.primaryXLight} onClick={() => { setFilterStatus("all");        setActiveTab("candidates"); }} active={false} />
-                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => { setFilterStatus("compliant");   setActiveTab("candidates"); }} active={false} />
-                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => { setFilterStatus("inprogress");  setActiveTab("candidates"); }} active={false} />
-                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => { setFilterStatus("attention");   setActiveTab("candidates"); }} active={false} />
-                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => { setFilterStatus("risk");        setActiveTab("candidates"); }} active={false} />
+              {/* At Risk — full-width priority banner */}
+              {stats.risk > 0 && (
+                <div
+                  onClick={() => { setFilterStatus("risk"); setActiveTab("candidates"); }}
+                  style={{
+                    background: C.red, borderRadius: 14, padding: "20px 24px", marginBottom: 12,
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    cursor: "pointer", boxShadow: `0 4px 20px ${C.red}40`,
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = "0.92"}
+                  onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <span style={{ fontSize: 28 }}>🚨</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Requires Immediate Attention</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>These workers have critical compliance gaps</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: 48, fontWeight: 900, color: "#fff", lineHeight: 1, letterSpacing: "-2px" }}>{stats.risk}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.75)", textTransform: "uppercase", letterSpacing: "0.5px" }}>At Risk</div>
+                  </div>
+                </div>
+              )}
+              {/* Remaining stats — 2×2 grid */}
+              <div className="dash-stats" style={{ gridTemplateColumns: "repeat(2,1fr)" }}>
+                <StatCard num={stats.total}     label="Total Candidates" color={C.primary} bg={C.primaryXLight} onClick={() => { setFilterStatus("all");       setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => { setFilterStatus("compliant");  setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => { setFilterStatus("inprogress"); setActiveTab("candidates"); }} active={false} />
+                <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => { setFilterStatus("attention");  setActiveTab("candidates"); }} active={false} />
               </div>
               <OverviewTab stats={stats} workers={allWorkers} />
             </>
@@ -2450,12 +2476,38 @@ function VeriyoDashboard({ user, onOpenPortal }) {
           {/* ── WORKERS TAB ── */}
           {activeTab === "candidates" && (
             <>
-              <div className="dash-stats">
-                <StatCard num={stats.total}     label="Total Candidates"   color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStatus("all")}        active={filterStatus === "all"} />
+              {/* At Risk — full-width priority banner */}
+              {stats.risk > 0 && (
+                <div
+                  onClick={() => setFilterStatus(s => s === "risk" ? "all" : "risk")}
+                  style={{
+                    background: filterStatus === "risk" ? C.red : C.redBg,
+                    border: `2px solid ${C.red}`,
+                    borderRadius: 14, padding: "20px 24px", marginBottom: 12,
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    cursor: "pointer", boxShadow: filterStatus === "risk" ? `0 4px 20px ${C.red}40` : "none",
+                    transition: "all 0.15s",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <span style={{ fontSize: 28 }}>🚨</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: filterStatus === "risk" ? "rgba(255,255,255,0.8)" : C.red, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Requires Immediate Attention</div>
+                      <div style={{ fontSize: 13, color: filterStatus === "risk" ? "rgba(255,255,255,0.7)" : C.textMuted }}>Click to filter by at-risk workers</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ fontSize: 48, fontWeight: 900, color: filterStatus === "risk" ? "#fff" : C.red, lineHeight: 1, letterSpacing: "-2px" }}>{stats.risk}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: filterStatus === "risk" ? "rgba(255,255,255,0.75)" : C.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>At Risk</div>
+                  </div>
+                </div>
+              )}
+              {/* Remaining stats — 2×2 grid */}
+              <div className="dash-stats" style={{ gridTemplateColumns: "repeat(2,1fr)" }}>
+                <StatCard num={stats.total}     label="Total Candidates" color={C.primary} bg={C.primaryXLight} onClick={() => setFilterStatus("all")}        active={filterStatus === "all"} />
                 <StatCard num={stats.compliant}  label="Fully Compliant" color={C.green}   bg={C.greenBg}       onClick={() => setFilterStatus(s => s === "compliant"  ? "all" : "compliant")}  active={filterStatus === "compliant"} />
                 <StatCard num={stats.inprogress} label="In Progress"     color={C.blue}    bg={C.blueBg}        onClick={() => setFilterStatus(s => s === "inprogress" ? "all" : "inprogress")} active={filterStatus === "inprogress"} />
                 <StatCard num={stats.attention}  label="Need Attention"  color={C.amber}   bg={C.amberBg}       onClick={() => setFilterStatus(s => s === "attention"  ? "all" : "attention")}  active={filterStatus === "attention"} />
-                <StatCard num={stats.risk}       label="At Risk"         color={C.red}     bg={C.redBg}         onClick={() => setFilterStatus(s => s === "risk"       ? "all" : "risk")}       active={filterStatus === "risk"} />
               </div>
 
               {/* filters */}
