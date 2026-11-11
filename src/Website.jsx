@@ -862,7 +862,7 @@ export default function Website({ onLogin }) {
           </div>
         </div>
         <div style={s.footerBottom}>
-          <p style={s.footerCopy}>© {new Date().getFullYear()} Veriyo. All rights reserved. ABN to be confirmed. Built in Sydney, Australia.</p>
+          <p style={s.footerCopy}>© {new Date().getFullYear()} Veriyo. All rights reserved. ABN 11 641 443 092. Built in Sydney, Australia.</p>
           <div style={{ display:"flex", gap:20, marginTop:12, flexWrap:"wrap" }}>
             <a href="/privacy" style={s.footerLegal}>Privacy Policy</a>
             <a href="/terms" style={s.footerLegal}>Terms of Service</a>
