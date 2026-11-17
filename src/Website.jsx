@@ -274,7 +274,7 @@ const FOREST = "#0a1f12";
 const FOREST2 = "#0d2b1a";
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-export default function Website({ onLogin }) {
+export default function Website({ onLogin, onPassport }) {
   const [demoEmail, setDemoEmail] = useState("");
   const [demoName, setDemoName] = useState("");
   const [demoOrg, setDemoOrg] = useState("");
@@ -409,6 +409,7 @@ export default function Website({ onLogin }) {
             ))}
           </div>
           <div style={s.navActions}>
+            <button onClick={onPassport} style={{ ...s.loginBtn, color: "#34c274", borderColor: "rgba(52,194,116,0.4)" }}>Worker Passport</button>
             <button onClick={onLogin} style={s.loginBtn}>Log in</button>
             <a href="#demo" style={s.demoNavBtn}>Request Demo</a>
           </div>
@@ -838,6 +839,34 @@ export default function Website({ onLogin }) {
           </svg>
         </button>
       </div>
+
+      {/* ── PASSPORT CTA BAND ── */}
+      <section style={{ background: "#0a1f12", padding: "72px 24px" }}>
+        <div style={{ maxWidth: 820, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
+          <div style={{ flex: "1 1 320px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(52,194,116,0.12)", border: "1px solid rgba(52,194,116,0.3)", borderRadius: 20, padding: "4px 14px", marginBottom: 16 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#34c274", letterSpacing: "0.07em", textTransform: "uppercase" }}>Free for workers</span>
+            </div>
+            <h2 style={{ fontSize: "clamp(24px,4vw,36px)", fontWeight: 900, color: "#fff", letterSpacing: "-1px", lineHeight: 1.1, marginBottom: 14 }}>
+              Are you a care worker?
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 440 }}>
+              Create your free Career Passport — one verified profile for all your credentials. Share it with any employer and never chase paperwork again.
+            </p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: "0 0 auto" }}>
+            <button
+              onClick={onPassport}
+              style={{ background: "#1a7a4a", color: "#fff", border: "none", borderRadius: 12, padding: "16px 32px", fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "'Segoe UI',system-ui,sans-serif", transition: "all 0.15s", letterSpacing: "-0.3px" }}
+              onMouseEnter={e => e.target.style.background = "#22a060"}
+              onMouseLeave={e => e.target.style.background = "#1a7a4a"}
+            >
+              Create my Passport →
+            </button>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textAlign: "center" }}>No credit card required</p>
+          </div>
+        </div>
+      </section>
 
       {/* ── FOOTER ── */}
       <footer style={s.footer}>

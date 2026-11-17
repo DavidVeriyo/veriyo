@@ -5,9 +5,10 @@ import Dashboard from "./Dashboard";
 import Reports from "./Reports";
 import Settings from "./Settings";
 import CandidatePortal from "./CandidatePortal";
+import Passport from "./Passport";
 
 export default function App() {
-  const [page, setPage]       = useState("home");   // home | login | app | candidate-portal
+  const [page, setPage]       = useState("home");   // home | login | app | candidate-portal | passport
   const [section, setSection] = useState("dashboard"); // dashboard | reports | settings
   const [user, setUser]       = useState(null);
   const [portalCandidate, setPortalCandidate] = useState(null);
@@ -22,6 +23,11 @@ export default function App() {
     setUser(null);
     setPage("home");
     setSection("dashboard");
+  }
+
+  // Career Passport — public, worker-facing, no login required
+  if (page === "passport") {
+    return <Passport onLogin={() => setPage("login")} />;
   }
 
   // Candidate portal — accessible without login (candidates don't have accounts)
@@ -40,5 +46,5 @@ export default function App() {
     return <Login onLogin={handleLogin} onBack={() => setPage("home")} />;
   }
 
-  return <Website onLogin={() => setPage("login")} />;
+  return <Website onLogin={() => setPage("login")} onPassport={() => setPage("passport")} />;
 }
